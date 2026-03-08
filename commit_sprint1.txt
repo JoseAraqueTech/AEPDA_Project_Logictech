@@ -1,9 +1,8 @@
 PROJECTE: AEPDA - LogicTech V.1
 AUTOR: Juan.Carlos Lopez
-DATA: 08/03/2025
+DATA: 08/03/2026
 
 FUNCIONALITATS IMPLEMENTADES
-
 - Alta d'usuaris.
 - Canvi d'usuari a soci.
 - Finalització de membresia de soci.
@@ -13,7 +12,6 @@ FUNCIONALITATS IMPLEMENTADES
 - Visualització d'una activitat amb els seus participants.
 
 CLASSES IMPLEMENTADES
-
 - Usuari.java
     Gestiona la informació dels usuaris i si són socis o no.
 
@@ -27,10 +25,8 @@ CLASSES IMPLEMENTADES
     Permet guardar i carregar dades en fitxers.
 
 PERSISTÈNCIA
-
 Les dades es guarden en fitxers CSV per poder recuperar la informació
 cuan es reinicia l'aplicació.
 
 OBSERVACIONS
-
 Aquest commit correspon a la primera entrega del projecte.
