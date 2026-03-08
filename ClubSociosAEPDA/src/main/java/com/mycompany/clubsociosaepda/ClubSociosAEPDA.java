@@ -27,8 +27,10 @@ public class ClubSociosAEPDA {
                 sc.nextLine();
                 switch (opcio) {
                     case 1:
+                        gestor.altaUsuari();
                         break;
                     case 2:
+                        gestor.activarMembresia();
                         break;
                     case 3:
                         break;
