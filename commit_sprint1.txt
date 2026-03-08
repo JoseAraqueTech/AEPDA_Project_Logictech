@@ -1,0 +1,36 @@
+PROJECTE: AEPDA - LogicTech V.1
+AUTOR: Juan.Carlos Lopez
+DATA: 08/03/2025
+
+FUNCIONALITATS IMPLEMENTADES
+
+- Alta d'usuaris.
+- Canvi d'usuari a soci.
+- Finalització de membresia de soci.
+- Alta d'activitats.
+- Inscripció d'usuaris a activitats (només si són socis).
+- Visualització d'activitats disponibles.
+- Visualització d'una activitat amb els seus participants.
+
+CLASSES IMPLEMENTADES
+
+- Usuari.java
+    Gestiona la informació dels usuaris i si són socis o no.
+
+- Activitat.java
+    Representa una activitat del club amb els seus participants.
+
+- GestorClub.java
+    Conté el menú i la gestió principal de l'aplicació.
+
+- PersistenciaClub.java
+    Permet guardar i carregar dades en fitxers.
+
+PERSISTÈNCIA
+
+Les dades es guarden en fitxers CSV per poder recuperar la informació
+cuan es reinicia l'aplicació.
+
+OBSERVACIONS
+
+Aquest commit correspon a la primera entrega del projecte.

@@ -4,6 +4,10 @@
  */
 package com.mycompany.clubsociosaepda;
 
+import com.mycompany.clubsociosaepda.ClasesAEPDA.Usuari;
+import com.mycompany.clubsociosaepda.ClasesAEPDA.Activitat;
+import com.mycompany.clubsociosaepda.PersistenciaAEPDA.PersistenciaClub;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -17,22 +21,23 @@ public class GestorClub {
     private ArrayList<Activitat> activitats;
     private Scanner sc;
 
-    private Usuari buscarUsuari(String Nom) {
-        for (Usuari u : usuaris) {
-            if (u.getNom().equalsIgnoreCase(Nom)) {
-                return u;
-            }
-        }
-        return null;
+    public GestorClub() throws IOException {
+        usuaris = PersistenciaClub.carregarUsuaris();
+        activitats = PersistenciaClub.carregarActivitats();
+        sc = new Scanner(System.in);
     }
-    
-    private Usuari buscarDni(String Dni) {
-        for (Usuari u : usuaris) {
-            if (u.getDni().equalsIgnoreCase(Dni)) {
-                return u;
-            }
-        }
-        return null;
+
+    public void menu() {
+        System.out.println("----- Gestio Club AEPDA -----");
+        System.out.println("1. Alta usuari");
+        System.out.println("2. Fer soci a usuari");
+        System.out.println("3. Finalitzar membresia");
+        System.out.println("4. Alta activitat");
+        System.out.println("5. Inscriure soci a activitat");
+        System.out.println("6. Mostrar activitats");
+        System.out.println("7. Mostrar activitat especifica");
+        System.out.println("0. Sortir");
+        System.out.print("Opcio: ");
     }
 
     private String demanarText(String msg) {
@@ -47,105 +52,184 @@ public class GestorClub {
         return t;
     }
 
-    private int demanarIntPositiu(String msg) {
+    private int demanarEnterMajorZero(String msg) {
         int n = 0;
         do {
             System.out.print(msg);
             if (sc.hasNextInt()) {
                 n = sc.nextInt();
+                sc.nextLine();
+                if (n <= 0) {
+                    System.out.println("ERROR: El numero ha de ser major que 0.");
+                }
+
             } else {
                 System.out.println("ERROR: Introdueix un numero valid.");
+                sc.nextLine();
             }
-            sc.nextLine();
         } while (n <= 0);
         return n;
     }
 
-    private String demanarDni() {
-        String dni;
-        boolean correcte;
-
-        do {
-            correcte = true;
-            dni = demanarText("DNI: ");
-
-            int llargada = dni.length();
-
-            // Comprobar longitud
-            if (llargada < 8 || llargada > 9) {
-                correcte = false;
-            } else {
-                int pos = 0;
-
-                // Comprueba que todos son digitos excepto el ultimo
-                for (char c : dni.toCharArray()) {
-                    if (pos < llargada - 1) {
-                        if (c < '0' || c > '9') {
-                            correcte = false;
-                        }
-                    }
-                    pos++;
-                }
-
-                // Comprueba que el ultimo sea una letra en mayúsculas
-                char ultim = dni.toCharArray()[llargada - 1];
-                boolean maj = (ultim >= 'A' && ultim <= 'Z');
-
-                if (!maj) {
-                    correcte = false;
-                }
+    private Usuari buscarUsuari(String dni) {
+        Usuari resultat = null;
+        for (Usuari u : usuaris) {
+            if (u.getDni().equalsIgnoreCase(dni)) {
+                resultat = u;
             }
+        }
+        return resultat;
+    }
 
-            if (!correcte) {
-                System.out.println("ERROR: Format incorrecte. Exemple: 12345678Z");
+    private Activitat buscarActivitat(String nom) {
+        Activitat resultat = null;
+        for (Activitat a : activitats) {
+            if (a.getNom().equalsIgnoreCase(nom)) {
+                resultat = a;
             }
-
-        } while (!correcte);
-
-        return dni;
+        }
+        return resultat;
     }
 
     public void altaUsuari() {
-        String nom = demanarText("Nom: ");
-        if (buscarUsuari(nom) == null) {
-            String dni = demanarDni();
+        String dni = demanarText("DNI: ");
+        Usuari existent = buscarUsuari(dni);
+        if (existent != null) {
+            System.out.println("ERROR: Aquest usuari ja existeix.");
+        } else {
+            String nom = demanarText("Nom: ");
             String email = demanarText("Email: ");
             usuaris.add(new Usuari(dni, nom, email));
-            System.out.println("Usuari registrat.");
-        } else {
-            System.out.println("ERROR: Ja existeix aquesta matricula.");
-        }
-    }
-
-    public void activarMembresia() {
-        String mat = demanarText("Dni: ");
-        Usuari c = buscarDni(mat);
-        if (c != null) {
-             System.out.print("Introdueix els mesos de membresia: ");
-                Scanner sc = new Scanner(System.in);
-                int mesos = sc.nextInt();
-
-                c.ferSoci(mesos);
-
-                System.out.println("L'usuari ara és soci.");
-                return; // Termina el método
-        } else {
-            System.out.println("ERROR: Usuari no trobat.");
+            System.out.println("Usuari registrat correctament.");
         }
     }
 
 
-    public void menu() {
-        System.out.println("----- Gestio Club AEPDA -----");
-        System.out.println("1. Alta usuari");
-        System.out.println("2. Fer soci a usuari");
-        System.out.println("3. Finalitzar membresia");
-        System.out.println("4. Alta activitat");
-        System.out.println("5. Inscriure soci a activitat");
-        System.out.println("6. Mostrar activitats");
-        System.out.println("7. Mostrar activitat especifica");
-        System.out.println("8. Guardar dades");
-        System.out.println("0. Sortir");
-        System.out.print("Opcio: ");
+    public void ferSoci() {
+        if (usuaris.isEmpty()) {
+            System.out.println("No hi ha usuaris registrats.");
+        } else {
+            String dni = demanarText("DNI usuari: ");
+            Usuari u = buscarUsuari(dni);
+            if (u == null) {
+                System.out.println("Usuari no trobat.");
+            } else {
+                if (u.esSoci()) {
+                    System.out.println("Aquest usuari ja es soci.");
+                } else {
+                    int mesos = demanarEnterMajorZero("Duracio membresia (mesos): ");
+                    u.ferSoci(mesos);
+                    System.out.println("Usuari convertit en soci correctament.");
+                }
+            }
+        }
     }
+
+    public void finalitzarMembresia() {
+        if (usuaris.isEmpty()) {
+            System.out.println("No hi ha usuaris registrats.");
+        } else {
+            String dni = demanarText("DNI soci: ");
+            Usuari u = buscarUsuari(dni);
+            if (u == null) {
+                System.out.println("Usuari no trobat.");
+            } else {
+                if (!u.esSoci()) {
+                    System.out.println("Aquest usuari no es soci.");
+                } else {
+                    u.finalitzarMembresia();
+                    System.out.println("Membresia finalitzada correctament.");
+                }
+            }
+        }
+    }
+
+    public void altaActivitat() {
+        String nom = demanarText("Nom activitat: ");
+        Activitat existent = buscarActivitat(nom);
+        if (existent != null) {
+            System.out.println("ERROR: Aquesta activitat ja existeix.");
+        } else {
+            String data = demanarText("Data activitat: ");
+            activitats.add(new Activitat(nom, data));
+            System.out.println("Activitat creada correctament.");
+        }
+    }
+
+    public void inscriureActivitat() throws IOException {
+        if (usuaris.isEmpty()) {
+            System.out.println("No hi ha usuaris registrats.");
+        } else {
+            if (activitats.isEmpty()) {
+                System.out.println("No hi ha activitats registrades.");
+            } else {
+                String dni = demanarText("DNI usuari: ");
+                Usuari u = buscarUsuari(dni);
+                if (u == null) {
+                    System.out.println("Usuari no trobat.");
+                } else {
+                    if (!u.esSoci()) {
+                        System.out.println("ERROR: Només els socis poden inscriure's.");
+                    } else {
+                        String nomAct = demanarText("Nom activitat: ");
+                        Activitat a = buscarActivitat(nomAct);
+                        if (a == null) {
+                            System.out.println("Activitat no trobada.");
+
+                        } else {
+                            a.afegirParticipant(u);
+                            PersistenciaClub.guardarUsuaris(usuaris);
+                            PersistenciaClub.guardarActivitats(activitats);
+                            System.out.println("Soci inscrit correctament.");
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void mostrarActivitats() {
+        if (activitats.isEmpty()) {
+            System.out.println("No hi ha activitats registrades.");
+        } else {
+            System.out.println("----- Activitats -----");
+            for (Activitat a : activitats) {
+                System.out.println(
+                        a.getNom() + " - " + a.getData()
+                );
+            }
+        }
+    }
+
+    public void mostrarActivitatEspecifica() {
+        if (activitats.isEmpty()) {
+            System.out.println("No hi ha activitats registrades.");
+        } else {
+            String nom = demanarText("Nom activitat: ");
+            Activitat a = buscarActivitat(nom);
+            if (a == null) {
+                System.out.println("Activitat no trobada.");
+            } else {
+                System.out.println("Activitat: " + a.getNom());
+                System.out.println("Data: " + a.getData());
+                if (a.getParticipants().isEmpty()) {
+                    System.out.println("No hi ha participants.");
+                } else {
+                    System.out.println("--- Participants ---");
+                    for (Usuari u : a.getParticipants()) {
+                        System.out.println(
+                                u.getDni() + " - " + u.getNom()
+                        );
+                    }
+                }
+            }
+        }
+    }
+
+    public void guardar() throws IOException {
+        PersistenciaClub.guardarUsuaris(usuaris);
+        PersistenciaClub.guardarActivitats(activitats);
+        System.out.println("Dades guardades correctament.");
+    }
+
 }

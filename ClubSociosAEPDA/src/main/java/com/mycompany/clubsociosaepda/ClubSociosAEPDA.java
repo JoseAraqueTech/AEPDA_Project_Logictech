@@ -30,21 +30,25 @@ public class ClubSociosAEPDA {
                         gestor.altaUsuari();
                         break;
                     case 2:
-                        gestor.activarMembresia();
+                        gestor.ferSoci();
                         break;
                     case 3:
+                        gestor.finalitzarMembresia();
                         break;
                     case 4:
+                        gestor.altaActivitat();
                         break;
                     case 5:
+                        gestor.inscriureActivitat();
                         break;
                     case 6:
+                        gestor.mostrarActivitats();
                         break;
                     case 7:
-                        break;
-                    case 8:
+                        gestor.mostrarActivitatEspecifica();
                         break;
                     case 0:
+                        gestor.guardar();
                         System.out.println("Sortint de la aplicacio de gestio AEPDA...");
                         break;
                     default:
@@ -54,4 +58,5 @@ public class ClubSociosAEPDA {
         } while (opcio != 0);
     }
 }
+
 
