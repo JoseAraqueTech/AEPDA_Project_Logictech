@@ -7,6 +7,7 @@ FUNCIONALITATS IMPLEMENTADES
 - Canvi d'usuari a soci.
 - Finalització de membresia de soci.
 - Alta d'activitats.
+- Esborra un activitat
 - Inscripció d'usuaris a activitats (només si són socis).
 - Visualització d'activitats disponibles.
 - Visualització d'una activitat amb els seus participants.
