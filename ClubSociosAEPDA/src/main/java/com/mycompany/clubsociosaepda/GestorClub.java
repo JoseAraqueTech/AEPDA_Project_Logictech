@@ -33,9 +33,10 @@ public class GestorClub {
         System.out.println("2. Fer soci a usuari");
         System.out.println("3. Finalitzar membresia");
         System.out.println("4. Alta activitat");
-        System.out.println("5. Inscriure soci a activitat");
-        System.out.println("6. Mostrar activitats");
-        System.out.println("7. Mostrar activitat especifica");
+        System.out.println("5. Eliminar activitat");
+        System.out.println("6. Inscriure soci a activitat");
+        System.out.println("7. Mostrar activitats");
+        System.out.println("8. Mostrar activitat especifica");
         System.out.println("0. Sortir");
         System.out.print("Opcio: ");
     }
@@ -104,7 +105,6 @@ public class GestorClub {
         }
     }
 
-
     public void ferSoci() {
         if (usuaris.isEmpty()) {
             System.out.println("No hi ha usuaris registrats.");
@@ -153,6 +153,22 @@ public class GestorClub {
             String data = demanarText("Data activitat: ");
             activitats.add(new Activitat(nom, data));
             System.out.println("Activitat creada correctament.");
+        }
+    }
+
+    public void eliminarActivitat() throws IOException {
+        if (activitats.isEmpty()) {
+            System.out.println("No hi ha activitats registrades.");
+        } else {
+            String nom = demanarText("Nom de l'activitat a eliminar: ");
+            Activitat a = buscarActivitat(nom);
+            if (a == null) {
+                System.out.println("Activitat no trobada.");
+            } else {
+                activitats.remove(a);
+                PersistenciaClub.guardarActivitats(activitats);
+                System.out.println("Activitat eliminada correctament.");
+            }
         }
     }
 
@@ -231,5 +247,4 @@ public class GestorClub {
         PersistenciaClub.guardarActivitats(activitats);
         System.out.println("Dades guardades correctament.");
     }
-
 }

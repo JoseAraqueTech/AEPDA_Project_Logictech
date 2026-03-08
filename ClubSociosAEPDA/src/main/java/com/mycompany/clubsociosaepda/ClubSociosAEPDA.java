@@ -1,7 +1,6 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  */
-
 package com.mycompany.clubsociosaepda;
 
 import java.io.IOException;
@@ -12,6 +11,7 @@ import java.util.Scanner;
  * @author josea
  */
 public class ClubSociosAEPDA {
+
     public static void main(String[] args) throws IOException {
         GestorClub gestor = new GestorClub();
         Scanner sc = new Scanner(System.in);
@@ -39,12 +39,15 @@ public class ClubSociosAEPDA {
                         gestor.altaActivitat();
                         break;
                     case 5:
-                        gestor.inscriureActivitat();
+                        gestor.eliminarActivitat();
                         break;
                     case 6:
-                        gestor.mostrarActivitats();
+                        gestor.inscriureActivitat();
                         break;
                     case 7:
+                        gestor.mostrarActivitats();
+                        break;
+                    case 8:
                         gestor.mostrarActivitatEspecifica();
                         break;
                     case 0:
@@ -58,5 +61,3 @@ public class ClubSociosAEPDA {
         } while (opcio != 0);
     }
 }
-
-
