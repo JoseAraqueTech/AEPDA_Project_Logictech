@@ -52,7 +52,8 @@ public class GestorClub {
         } while (t.isEmpty());
         return t;
     }
-
+    
+    //Método que comprueba que el numero entero qeu se introduzca sea mayor a cero
     private int demanarEnterMajorZero(String msg) {
         int n = 0;
         do {
@@ -71,7 +72,9 @@ public class GestorClub {
         } while (n <= 0);
         return n;
     }
-
+    
+    //Método que recorre el arrayList de Usuari buscando que 
+    //El valor coincida con los datos introducidos
     private Usuari buscarUsuari(String dni) {
         Usuari resultat = null;
         for (Usuari u : usuaris) {
@@ -82,6 +85,8 @@ public class GestorClub {
         return resultat;
     }
 
+    //Método que recorre el arrayList de Activitat buscando que 
+    //El valor coincida con los datos introducidos
     private Activitat buscarActivitat(String nom) {
         Activitat resultat = null;
         for (Activitat a : activitats) {
@@ -92,6 +97,8 @@ public class GestorClub {
         return resultat;
     }
 
+    //Método que pide, Dni, nombre y email para luego
+    //De confirmar que no haya conflictos crear un nuevo usuario
     public void altaUsuari() {
         String dni = demanarText("DNI: ");
         Usuari existent = buscarUsuari(dni);
@@ -105,6 +112,9 @@ public class GestorClub {
         }
     }
 
+    //Método para darse de alta como socio, comprueba que hayan usuarios
+    //Pedirá el dni para buscar al usuario específico, si no hay
+    //Conflictos se pedirá la duracion de la memebresia y se dará de alta
     public void ferSoci() {
         if (usuaris.isEmpty()) {
             System.out.println("No hi ha usuaris registrats.");
@@ -125,6 +135,9 @@ public class GestorClub {
         }
     }
 
+    
+    //Método que finalizará la membresia, pedira lo mismo que el metodo fersoci
+    //Si no hay conflictos, finalizará la membresía
     public void finalitzarMembresia() {
         if (usuaris.isEmpty()) {
             System.out.println("No hi ha usuaris registrats.");
@@ -144,6 +157,8 @@ public class GestorClub {
         }
     }
 
+    //Dar de alta actividades, pedirá, nombre
+    //Si no hay conflictos, fecha de la actividad y la dará de alta
     public void altaActivitat() {
         String nom = demanarText("Nom activitat: ");
         Activitat existent = buscarActivitat(nom);
@@ -156,6 +171,9 @@ public class GestorClub {
         }
     }
 
+    //Dar de baja la actividad, comprueba que hayan actividades creadas
+    //Pedirá el nombre de la actividad y la buscara por el arrayList de Activitat
+    //Si la encuentra borrará la actividad y guardará los datos actualizados
     public void eliminarActivitat() throws IOException {
         if (activitats.isEmpty()) {
             System.out.println("No hi ha activitats registrades.");
@@ -172,6 +190,12 @@ public class GestorClub {
         }
     }
 
+    //Comprueba que hayan usuarios creados previamente
+    //Comprueba que hayan actividades creadas previamente
+    //Pedirá DNI y lo buscará por el arrayList
+    //Si no es socio no lo dejará inscribirse
+    //si es socio pedirá el nombre de la actividad y
+    //Agregará al usuario y guardará los datos
     public void inscriureActivitat() throws IOException {
         if (usuaris.isEmpty()) {
             System.out.println("No hi ha usuaris registrats.");
@@ -217,6 +241,9 @@ public class GestorClub {
         }
     }
 
+    //Comprueba actividades existentes, pide nombre
+    // y comprueba que existe en el arraylist
+    //Mostrará el nombre, fecha y participantes(DNI y nombre)
     public void mostrarActivitatEspecifica() {
         if (activitats.isEmpty()) {
             System.out.println("No hi ha activitats registrades.");
@@ -242,6 +269,7 @@ public class GestorClub {
         }
     }
 
+    //Método donde se guardan los datos de usuarios y actividades
     public void guardar() throws IOException {
         PersistenciaClub.guardarUsuaris(usuaris);
         PersistenciaClub.guardarActivitats(activitats);
