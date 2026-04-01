@@ -11,10 +11,12 @@ import java.util.Scanner;
  * @author josea
  */
 public class ClubSociosAEPDA {
+    private static GestorClub gestor;
+    private static Scanner sc;
 
     public static void main(String[] args) throws IOException {
-        GestorClub gestor = new GestorClub();
-        Scanner sc = new Scanner(System.in);
+        gestor = new GestorClub();
+        sc = new Scanner(System.in);
         int opcio;
         do {
             gestor.menu();
@@ -50,6 +52,15 @@ public class ClubSociosAEPDA {
                     case 8:
                         gestor.mostrarActivitatEspecifica();
                         break;
+                    case 9:
+                        mostrarBaldes();
+                        break;
+                    case 10:
+                        assignarBalda();
+                        break;
+                    case 11:
+                        alliberarBalda();
+                        break;
                     case 0:
                         gestor.guardar();
                         System.out.println("Sortint de la aplicacio de gestio AEPDA...");
@@ -60,4 +71,22 @@ public class ClubSociosAEPDA {
             }
         } while (opcio != 0);
     }
+    
+ private static void mostrarBaldes() {
+    System.out.println(gestor.mostrarBaldes());
+}
+
+private static void assignarBalda() {
+    System.out.print("DNI del soci: ");
+    String dni = sc.nextLine();
+    System.out.print("Codi de la balda (ex: A-1): ");
+    String codi = sc.nextLine();
+    System.out.println(gestor.assignarBalda(dni, codi));
+}
+
+private static void alliberarBalda() {
+    System.out.print("Codi de la balda a alliberar: ");
+    String codi = sc.nextLine();
+    System.out.println(gestor.alliberarBalda(codi));
+}
 }

@@ -6,6 +6,7 @@ package com.mycompany.clubsociosaepda;
 
 import com.mycompany.clubsociosaepda.ClasesAEPDA.Usuari;
 import com.mycompany.clubsociosaepda.ClasesAEPDA.Activitat;
+import com.mycompany.clubsociosaepda.ClasesAEPDA.Balda;
 import com.mycompany.clubsociosaepda.PersistenciaAEPDA.PersistenciaClub;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,11 +20,13 @@ public class GestorClub {
 
     private ArrayList<Usuari> usuaris;
     private ArrayList<Activitat> activitats;
+    private ArrayList<Balda> baldes;
     private Scanner sc;
 
     public GestorClub() throws IOException {
         usuaris = PersistenciaClub.carregarUsuaris();
         activitats = PersistenciaClub.carregarActivitats();
+        baldes = generarBaldes();
         sc = new Scanner(System.in);
     }
 
@@ -37,6 +40,9 @@ public class GestorClub {
         System.out.println("6. Inscriure soci a activitat");
         System.out.println("7. Mostrar activitats");
         System.out.println("8. Mostrar activitat especifica");
+        System.out.println("9. Mostrar balda");
+        System.out.println("10. Assignar balda");
+        System.out.println("11. Alliberar balda");
         System.out.println("0. Sortir");
         System.out.print("Opcio: ");
     }
@@ -275,4 +281,82 @@ public class GestorClub {
         PersistenciaClub.guardarActivitats(activitats);
         System.out.println("Dades guardades correctament.");
     }
+    
+    //Método para buscar baldas y que no de error si introduce la letra en mayuscula   minuscula
+    
+    private Balda buscarBalda(String codi){
+        Balda resultat = null;
+        for (Balda b : baldes) {
+            if (b.getcodi().equalsIgnoreCase(codi)){
+                resultat = b;
+            }
+        }
+        return resultat;
+    }
+    
+    //Este método crea todas las baldas de las tres zonas automaticamente
+    
+    private ArrayList<Balda> generarBaldes() {
+        ArrayList<Balda> llista =  new ArrayList<>();
+        
+        String[] zona1 = { "A","B","C","D","E"};
+        for (String lletra : zona1) {
+            for (int i = 1; i <=18; i++) {
+                llista.add(new Balda(lletra + "-" + i));
+            }
+        }
+        //Zona 2: V-Z numeros 1 al 18
+        String[] zona2 = {"V","W","X","Y","Z"};
+        for (String lletra : zona2) {
+            for (int i = 1; i <=8; i++) {
+                llista.add(new Balda(lletra + "-" +i));
+            }
+        }
+        //zona3 H -L i numeros del 1 al 13
+        String [] zona3 = {"H", "I", "J","K","L"};
+        for (String lletra : zona3){
+            for (int i = 1; i <=13; i++) {
+                llista.add(new Balda(lletra + "-" + i));
+            }
+        }
+        return llista;
+    }
+    
+  public String mostrarBaldes() {
+    String resultat = "----- Baldes -----\n";
+    for (Balda b : baldes) {
+        resultat += b.toString() + "\n";
+    }
+    return resultat;
+}
+
+public String assignarBalda(String dni, String codi) {
+    Usuari u = buscarUsuari(dni);
+    if (u == null) {
+        return "Usuari no trobat.";
+    } else if (!u.esSoci()) {
+        return "ERROR: L'usuari no es soci.";
+    } else if (u.getMesosMembresia() < 3) {
+        return "ERROR: Mínim 3 mesos de membresía per tenir balda.";
+    }
+    Balda b = buscarBalda(codi);
+    if (b == null) {
+        return "Balda no trobada.";
+    } else if (b.isOcupada()) {
+        return "ERROR: Aquesta balda ja està ocupada.";
+    }
+    b.assignar(u);
+    return "Balda " + codi.toUpperCase() + " assignada a " + u.getNom();
+}
+
+public String alliberarBalda(String codi) {
+    Balda b = buscarBalda(codi);
+    if (b == null) {
+        return "Balda no trobada.";
+    } else if (!b.isOcupada()) {
+        return "Aquesta balda ja està lliure.";
+    }
+    b.alliberar();
+    return "Balda " + codi.toUpperCase() + " alliberada correctament.";
+}
 }
