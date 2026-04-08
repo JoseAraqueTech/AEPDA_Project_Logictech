@@ -13,6 +13,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.time.LocalDate;
+
 
 /**
  *
@@ -88,24 +90,28 @@ public class PersistenciaClub {
         bw.close();
     }
 
-    public static ArrayList<Activitat> carregarActivitats() throws IOException {
-        crearCarpeta();
-        ArrayList<Activitat> activitats = new ArrayList<>();
-        File f = new File(fitxerActivitats);
-        if (!f.exists()) {
-            return activitats;
-        } else {
-            BufferedReader br = new BufferedReader(new FileReader(f));
-            String linia;
-            while ((linia = br.readLine()) != null) {
-                String[] d = linia.split(";");
-                String nom = d[0];
-                String data = d[1];
-                activitats.add(new Activitat(nom, data));
-            }
-            br.close();
-        }
+   public static ArrayList<Activitat> carregarActivitats() throws IOException {
+    crearCarpeta();
+    ArrayList<Activitat> activitats = new ArrayList<>();
+    File f = new File(fitxerActivitats);
+
+    if (!f.exists()) {
         return activitats;
+    } else {
+        BufferedReader br = new BufferedReader(new FileReader(f));
+        String linia;
+
+        while ((linia = br.readLine()) != null) {
+            String[] d = linia.split(";");
+            String nom = d[0];
+            LocalDate data = LocalDate.parse(d[1]); // ← CONVERSIÓ CORRECTA
+
+            activitats.add(new Activitat(nom, data));
+        }
+        br.close();
     }
+    return activitats;
+}
+
 }
 

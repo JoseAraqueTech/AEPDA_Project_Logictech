@@ -10,6 +10,10 @@ import com.mycompany.clubsociosaepda.PersistenciaAEPDA.PersistenciaClub;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+
+
 
 /**
  *
@@ -159,17 +163,31 @@ public class GestorClub {
 
     //Dar de alta actividades, pedirá, nombre
     //Si no hay conflictos, fecha de la actividad y la dará de alta
-    public void altaActivitat() {
-        String nom = demanarText("Nom activitat: ");
-        Activitat existent = buscarActivitat(nom);
-        if (existent != null) {
-            System.out.println("ERROR: Aquesta activitat ja existeix.");
-        } else {
-            String data = demanarText("Data activitat: ");
-            activitats.add(new Activitat(nom, data));
-            System.out.println("Activitat creada correctament.");
-        }
+   public void altaActivitat() {
+    String nom = demanarText("Nom activitat: ");
+    Activitat existent = buscarActivitat(nom);
+
+    if (existent != null) {
+        System.out.println("ERROR: Aquesta activitat ja existeix.");
+    } else {
+        LocalDate data = null;
+        boolean dataValida = false;
+
+        do {
+            String dataText = demanarText("Data activitat (YYYY-MM-DD): ");
+            try {
+                data = LocalDate.parse(dataText);
+                dataValida = true;
+            } catch (DateTimeParseException e) {
+                System.out.println("ERROR: Format de data incorrecte. Exemple correcte: 2024-05-10");
+            }
+        } while (!dataValida);
+
+        activitats.add(new Activitat(nom, data));
+        System.out.println("Activitat creada correctament.");
     }
+}
+
 
     //Dar de baja la actividad, comprueba que hayan actividades creadas
     //Pedirá el nombre de la actividad y la buscara por el arrayList de Activitat

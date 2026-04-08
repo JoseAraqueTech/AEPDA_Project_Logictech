@@ -4,6 +4,9 @@
  */
 package com.mycompany.clubsociosaepda.ClasesAEPDA;
 
+import java.util.Arrays;
+import java.util.regex.Pattern;
+
 /**
  *
  * @author juan-
@@ -17,6 +20,9 @@ public class Usuari {
     private int mesosMembresia;
 
     public Usuari(String dni, String nom, String email) {
+        if (!validateNif(dni.toUpperCase())){
+            throw new IllegalArgumentException("DNI  no vàlid." +  dni);
+        }
         this.dni = dni;
         this.nom = nom;
         this.email = email;
@@ -52,5 +58,16 @@ public class Usuari {
     public void finalitzarMembresia() {
         soci = false;
         mesosMembresia = 0;
+    }
+    private boolean validateNif(String nif) {
+        Pattern REGEXP = Pattern.compile("[0-9]{8}[A-Z]");
+        String DIGITO_CONTROL = "TRWAGMYFPDXBNJZSQVHLCKE";
+        String[] INVALIDOS = new String[]{"00000000T", "00000001R", "99999999R"};
+
+        return Arrays.binarySearch(INVALIDOS, nif) < 0
+                && REGEXP.matcher(nif).matches()
+                && nif.charAt(8) == DIGITO_CONTROL.charAt(
+                        Integer.parseInt(nif.substring(0, 8)) % 23
+                );
     }
 }
