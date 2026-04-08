@@ -33,6 +33,12 @@ public class PersistenciaClub {
             c.mkdir();
         }
     }
+    /**
+     * Saves all users to the CSV file.
+     *
+     * @param usuaris the list of users to save
+     * @throws IOException if an I/O error occurs while writing the file
+     */
 
     public static void guardarUsuaris(ArrayList<Usuari> usuaris) throws IOException {
         crearCarpeta();
@@ -49,6 +55,12 @@ public class PersistenciaClub {
         }
         bw.close();
     }
+    /**
+     * Loads all users from the CSV file.
+     *
+     * @return a list of loaded users
+     * @throws IOException if an I/O error occurs while reading the file
+     */
 
     public static ArrayList<Usuari> carregarUsuaris() throws IOException {
         crearCarpeta();
@@ -62,7 +74,8 @@ public class PersistenciaClub {
             while ((linia = br.readLine()) != null) {
                 String[] d = linia.split(";");
                 String dni = d[0];
-                String nom = d[1];
+
+                 String nom = d[1];
                 String email = d[2];
                 boolean soci = Boolean.parseBoolean(d[3]);
                 int mesos = Integer.parseInt(d[4]);
@@ -76,6 +89,12 @@ public class PersistenciaClub {
         }
         return usuaris;
     }
+    /**
+     * Saves all activities to the CSV file.
+     *
+     * @param activitats the list of activities to save
+     * @throws IOException if an I/O error occurs while writing the file
+     */
 
     public static void guardarActivitats(ArrayList<Activitat> activitats) throws IOException {
         crearCarpeta();
@@ -89,6 +108,12 @@ public class PersistenciaClub {
         }
         bw.close();
     }
+    /**
+     * Loads all activities from the CSV file.
+     *
+     * @return a list of loaded activities
+     * @throws IOException if an I/O error occurs while reading the file
+     */
 
    public static ArrayList<Activitat> carregarActivitats() throws IOException {
     crearCarpeta();
