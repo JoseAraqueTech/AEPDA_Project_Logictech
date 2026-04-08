@@ -7,10 +7,24 @@ import java.io.IOException;
 import java.util.Scanner;
 
 /**
+ * Entry point of the Club AEPDA management application.
+ * <p>
+ * This class initializes the system and launches the main menu loop.
+ * </p>
  *
- * @author josea
+ * @author Andrés/Jose/Enric/Juan
+ * @version 1.0
+ * @since 2026-04-08
  */
+
+
 public class ClubSociosAEPDA {
+    /**
+     * Starts the application by creating a club manager and displaying the menu.
+     *
+     * @param args command-line arguments (not used)
+     * @throws IOException if loading or saving data fails
+     */
 
     public static void main(String[] args) throws IOException {
         GestorClub gestor = new GestorClub();
