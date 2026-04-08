@@ -16,20 +16,38 @@ import java.time.format.DateTimeParseException;
 
 
 /**
+ * Provides the main logic for managing users, memberships and activities.
+ * <p>
+ * This class handles all menu operations, including user registration,
+ * membership activation, activity creation, and participant management.
+ * It also interacts with the persistence layer to load and save data.
+ * </p>
  *
- * @author juan-
+ * @author Andrés/Jose/Enric/Juan
+ * @version 1.0
+ * @since 2026-04-08
  */
+
+
 public class GestorClub {
 
     private ArrayList<Usuari> usuaris;
     private ArrayList<Activitat> activitats;
     private Scanner sc;
+    /**
+     * Creates a new club manager and loads all users and activities from disk.
+     *
+     * @throws IOException if an error occurs while loading stored data
+     */
 
     public GestorClub() throws IOException {
         usuaris = PersistenciaClub.carregarUsuaris();
         activitats = PersistenciaClub.carregarActivitats();
         sc = new Scanner(System.in);
     }
+    /**
+     * Displays the main menu and processes user input until the program ends.
+     */
 
     public void menu() {
         System.out.println("----- Gestio Club AEPDA -----");
@@ -44,6 +62,15 @@ public class GestorClub {
         System.out.println("0. Sortir");
         System.out.print("Opcio: ");
     }
+    /**
+     * Requests a non-empty text string from the user.
+     * <p>
+     * The method continues asking until the user enters a valid non-blank value.
+     * </p>
+     *
+     * @param missatge the message displayed to the user
+     * @return the text entered by the user
+     */
 
     private String demanarText(String msg) {
         String t;
@@ -57,7 +84,16 @@ public class GestorClub {
         return t;
     }
     
-    //Método que comprueba que el numero entero qeu se introduzca sea mayor a cero
+        /**
+     * Requests an integer value greater than zero from the user.
+     * <p>
+     * The method repeatedly asks for input until a valid positive number is entered.
+     * </p>
+     *
+     * @param missatge the message displayed to the user
+     * @return a positive integer value
+     */
+
     private int demanarEnterMajorZero(String msg) {
         int n = 0;
         do {
@@ -77,8 +113,16 @@ public class GestorClub {
         return n;
     }
     
-    //Método que recorre el arrayList de Usuari buscando que 
-    //El valor coincida con los datos introducidos
+        /**
+     * Searches for a user by DNI.
+     * <p>
+     * The search is case-insensitive and returns the first matching user.
+     * </p>
+     *
+     * @param dni the DNI of the user to search for
+     * @return the matching user, or {@code null} if no user is found
+     */
+
     private Usuari buscarUsuari(String dni) {
         Usuari resultat = null;
         for (Usuari u : usuaris) {
@@ -89,8 +133,16 @@ public class GestorClub {
         return resultat;
     }
 
-    //Método que recorre el arrayList de Activitat buscando que 
-    //El valor coincida con los datos introducidos
+        /**
+     * Searches for an activity by its name.
+     * <p>
+     * The comparison is case-insensitive and returns the first matching activity.
+     * </p>
+     *
+     * @param nom the name of the activity to search for
+     * @return the matching activity, or {@code null} if no activity is found
+     */
+
     private Activitat buscarActivitat(String nom) {
         Activitat resultat = null;
         for (Activitat a : activitats) {
@@ -100,9 +152,12 @@ public class GestorClub {
         }
         return resultat;
     }
+    /**
+     * Registers a new user after validating that the DNI is unique.
+     * The DNI is validated using the official control-letter algorithm.
+     */
 
-    //Método que pide, Dni, nombre y email para luego
-    //De confirmar que no haya conflictos crear un nuevo usuario
+   
     public void altaUsuari() {
         String dni = demanarText("DNI: ");
         Usuari existent = buscarUsuari(dni);
@@ -116,9 +171,11 @@ public class GestorClub {
         }
     }
 
-    //Método para darse de alta como socio, comprueba que hayan usuarios
-    //Pedirá el dni para buscar al usuario específico, si no hay
-    //Conflictos se pedirá la duracion de la memebresia y se dará de alta
+       /**
+     * Activates the membership of an existing user for a specified number of months.
+     * The user must already exist in the system.
+     */
+
     public void ferSoci() {
         if (usuaris.isEmpty()) {
             System.out.println("No hi ha usuaris registrats.");
@@ -140,8 +197,10 @@ public class GestorClub {
     }
 
     
-    //Método que finalizará la membresia, pedira lo mismo que el metodo fersoci
-    //Si no hay conflictos, finalizará la membresía
+      /**
+     * Ends the membership of an existing user and resets the membership duration.
+     */
+
     public void finalitzarMembresia() {
         if (usuaris.isEmpty()) {
             System.out.println("No hi ha usuaris registrats.");
@@ -161,8 +220,11 @@ public class GestorClub {
         }
     }
 
-    //Dar de alta actividades, pedirá, nombre
-    //Si no hay conflictos, fecha de la actividad y la dará de alta
+       /**
+     * Creates a new activity after validating that the name is not already in use.
+     * The activity date is entered by the user and parsed as a LocalDate.
+     */
+
    public void altaActivitat() {
     String nom = demanarText("Nom activitat: ");
     Activitat existent = buscarActivitat(nom);
@@ -189,9 +251,11 @@ public class GestorClub {
 }
 
 
-    //Dar de baja la actividad, comprueba que hayan actividades creadas
-    //Pedirá el nombre de la actividad y la buscara por el arrayList de Activitat
-    //Si la encuentra borrará la actividad y guardará los datos actualizados
+      /**
+     * Removes an existing activity from the system.
+     * The activity must exist in order to be deleted.
+     */
+
     public void eliminarActivitat() throws IOException {
         if (activitats.isEmpty()) {
             System.out.println("No hi ha activitats registrades.");
@@ -208,12 +272,11 @@ public class GestorClub {
         }
     }
 
-    //Comprueba que hayan usuarios creados previamente
-    //Comprueba que hayan actividades creadas previamente
-    //Pedirá DNI y lo buscará por el arrayList
-    //Si no es socio no lo dejará inscribirse
-    //si es socio pedirá el nombre de la actividad y
-    //Agregará al usuario y guardará los datos
+       /**
+     * Registers a user as a participant in a specific activity.
+     * Both the user and the activity must exist.
+     */
+
     public void inscriureActivitat() throws IOException {
         if (usuaris.isEmpty()) {
             System.out.println("No hi ha usuaris registrats.");
@@ -245,6 +308,9 @@ public class GestorClub {
             }
         }
     }
+    /**
+     * Displays a list of all registered activities with their basic information.
+     */
 
     public void mostrarActivitats() {
         if (activitats.isEmpty()) {
@@ -259,9 +325,10 @@ public class GestorClub {
         }
     }
 
-    //Comprueba actividades existentes, pide nombre
-    // y comprueba que existe en el arraylist
-    //Mostrará el nombre, fecha y participantes(DNI y nombre)
+        /**
+     * Displays detailed information about a specific activity, including participants.
+     */
+
     public void mostrarActivitatEspecifica() {
         if (activitats.isEmpty()) {
             System.out.println("No hi ha activitats registrades.");
@@ -287,7 +354,12 @@ public class GestorClub {
         }
     }
 
-    //Método donde se guardan los datos de usuarios y actividades
+        /**
+     * Saves all users and activities to disk.
+     *
+     * @throws IOException if an error occurs while writing the data files
+     */
+
     public void guardar() throws IOException {
         PersistenciaClub.guardarUsuaris(usuaris);
         PersistenciaClub.guardarActivitats(activitats);
