@@ -126,7 +126,7 @@ public static ArrayList<Activitat> carregarActivitats() throws IOException {
 }
 
     /** Saves all assignments to file */
-    public static void guardarAssignacons(List<Asignacion> assignacions) throws IOException {
+    public static void guardarAssignacions(List<Asignacion> assignacions) throws IOException {
         crearCarpeta();
         BufferedWriter bw = new BufferedWriter(new FileWriter(fitxerAssignacions));
         for (Asignacion a : assignacions) {
@@ -143,22 +143,22 @@ bw.close();
     }
 
     /** @return list of saved assignments as string arrays */
-    public static ArrayList<String[]> carregarAssignacons() throws IOException {
+    public static ArrayList<String[]> carregarAssignacions() throws IOException {
         crearCarpeta();
-        ArrayList<String[]> assignacons = new ArrayList<>();
+        ArrayList<String[]> assignacions = new ArrayList<>();
         File f = new File(fitxerAssignacions);
         if (!f.exists()) {
-            return assignacons;
+            return assignacions;
         } else {
             BufferedReader br = new BufferedReader(new FileReader(f));
             String linia;
             while ((linia = br.readLine()) != null) {
                 String[] d = linia.split(";");
-                assignacons.add(d);
+                assignacions.add(d);
             }
             br.close();
         }
-        return assignacons;
+        return assignacions;
     }
 }
 
