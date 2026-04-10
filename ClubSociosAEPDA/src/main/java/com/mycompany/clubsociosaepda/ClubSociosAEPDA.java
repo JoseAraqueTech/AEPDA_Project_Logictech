@@ -64,10 +64,10 @@ public class ClubSociosAEPDA {
                         break;
                     case 0:
                         gestor.guardar();
-                        System.out.println("Sortint de la aplicacio de gestio AEPDA...");
+                        System.out.println("Sortint de l'aplicacio de gestió AEPDA...");
                         break;
                     default:
-                        System.out.println("Opcio incorrecta.");
+                        System.out.println("Opció incorrecta.");
                 }
             }
         } while (opcio != 0);

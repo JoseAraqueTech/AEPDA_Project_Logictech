@@ -11,6 +11,7 @@ import com.mycompany.clubsociosaepda.ClasesAEPDA.Asignacion;
 import com.mycompany.clubsociosaepda.PersistenciaAEPDA.PersistenciaClub;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

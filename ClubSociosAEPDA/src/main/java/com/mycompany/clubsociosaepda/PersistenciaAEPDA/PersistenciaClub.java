@@ -15,6 +15,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -110,13 +111,16 @@ public static ArrayList<Activitat> carregarActivitats() throws IOException {
         } else {
             BufferedReader br = new BufferedReader(new FileReader(f));
             String linia;
-            while ((linia = br.readLine()) != null) {
-                String[] d = linia.split(";");
-                String nom = d[0];
-                String data = d[1];
-                activitats.add(new Activitat(nom, data));
-            }
-            br.close();
+             while ((linia = br.readLine()) != null) {
+            String[] d = linia.split(";");
+            String nom = d[0];
+            DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate data = LocalDate.parse(d[1], df);
+
+
+            activitats.add(new Activitat(nom, data));
+        }
+        br.close();
         }
         return activitats;
 }
