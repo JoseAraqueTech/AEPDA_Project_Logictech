@@ -5,6 +5,8 @@
 package com.mycompany.clubsociosaepda.PersistenciaAEPDA;
 
 import com.mycompany.clubsociosaepda.ClasesAEPDA.Activitat;
+import com.mycompany.clubsociosaepda.ClasesAEPDA.Asignacion;
+import com.mycompany.clubsociosaepda.ClasesAEPDA.Balda;
 import com.mycompany.clubsociosaepda.ClasesAEPDA.Usuari;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -12,12 +14,15 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.time.LocalDate;
-
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
- *
+ * Handles file-based persistence for the club.
+ * Saves and loads users, activities and shelf assignments to/from CSV files.
+ * 
  * @author juan-
  */
 public class PersistenciaClub {
@@ -26,21 +31,18 @@ public class PersistenciaClub {
     private static final String separador = File.separator;
     private static final String fitxerUsuaris = carpeta + separador + "usuaris.csv";
     private static final String fitxerActivitats = carpeta + separador + "activitats.csv";
+    private static final String fitxerAssignacions = carpeta + separador + "assignacions.csv";
 
-    private static void crearCarpeta() {
+    /** Creates the data folder if it doesn't exist */
+private static void crearCarpeta() {
         File c = new File(carpeta);
         if (!c.exists()) {
             c.mkdir();
         }
     }
-    /**
-     * Saves all users to the CSV file.
-     *
-     * @param usuaris the list of users to save
-     * @throws IOException if an I/O error occurs while writing the file
-     */
 
-    public static void guardarUsuaris(ArrayList<Usuari> usuaris) throws IOException {
+    /** Saves all users to file */
+public static void guardarUsuaris(ArrayList<Usuari> usuaris) throws IOException {
         crearCarpeta();
         BufferedWriter bw = new BufferedWriter(new FileWriter(fitxerUsuaris));
         for (Usuari u : usuaris) {
@@ -55,14 +57,9 @@ public class PersistenciaClub {
         }
         bw.close();
     }
-    /**
-     * Loads all users from the CSV file.
-     *
-     * @return a list of loaded users
-     * @throws IOException if an I/O error occurs while reading the file
-     */
 
-    public static ArrayList<Usuari> carregarUsuaris() throws IOException {
+    /** @return list of saved users */
+public static ArrayList<Usuari> carregarUsuaris() throws IOException {
         crearCarpeta();
         ArrayList<Usuari> usuaris = new ArrayList<>();
         File f = new File(fitxerUsuaris);
@@ -74,8 +71,7 @@ public class PersistenciaClub {
             while ((linia = br.readLine()) != null) {
                 String[] d = linia.split(";");
                 String dni = d[0];
-
-                 String nom = d[1];
+                String nom = d[1];
                 String email = d[2];
                 boolean soci = Boolean.parseBoolean(d[3]);
                 int mesos = Integer.parseInt(d[4]);
@@ -89,14 +85,9 @@ public class PersistenciaClub {
         }
         return usuaris;
     }
-    /**
-     * Saves all activities to the CSV file.
-     *
-     * @param activitats the list of activities to save
-     * @throws IOException if an I/O error occurs while writing the file
-     */
 
-    public static void guardarActivitats(ArrayList<Activitat> activitats) throws IOException {
+    /** Saves all activities to file */
+public static void guardarActivitats(ArrayList<Activitat> activitats) throws IOException {
         crearCarpeta();
         BufferedWriter bw = new BufferedWriter(new FileWriter(fitxerActivitats));
         for (Activitat a : activitats) {
@@ -108,35 +99,62 @@ public class PersistenciaClub {
         }
         bw.close();
     }
-    /**
-     * Loads all activities from the CSV file.
-     *
-     * @return a list of loaded activities
-     * @throws IOException if an I/O error occurs while reading the file
-     */
 
-   public static ArrayList<Activitat> carregarActivitats() throws IOException {
-    crearCarpeta();
-    ArrayList<Activitat> activitats = new ArrayList<>();
-    File f = new File(fitxerActivitats);
-
-    if (!f.exists()) {
-        return activitats;
-    } else {
-        BufferedReader br = new BufferedReader(new FileReader(f));
-        String linia;
-
-        while ((linia = br.readLine()) != null) {
-            String[] d = linia.split(";");
-            String nom = d[0];
-            LocalDate data = LocalDate.parse(d[1]); // ← CONVERSIÓ CORRECTA
-
-            activitats.add(new Activitat(nom, data));
+    /** @return list of saved activities */
+public static ArrayList<Activitat> carregarActivitats() throws IOException {
+        crearCarpeta();
+        ArrayList<Activitat> activitats = new ArrayList<>();
+        File f = new File(fitxerActivitats);
+        if (!f.exists()) {
+            return activitats;
+        } else {
+            BufferedReader br = new BufferedReader(new FileReader(f));
+            String linia;
+            while ((linia = br.readLine()) != null) {
+                String[] d = linia.split(";");
+                String nom = d[0];
+                String data = d[1];
+                activitats.add(new Activitat(nom, data));
+            }
+            br.close();
         }
-        br.close();
-    }
-    return activitats;
+        return activitats;
 }
 
+    /** Saves all assignments to file */
+    public static void guardarAssignacons(List<Asignacion> assignacions) throws IOException {
+        crearCarpeta();
+        BufferedWriter bw = new BufferedWriter(new FileWriter(fitxerAssignacions));
+        for (Asignacion a : assignacions) {
+            bw.write(
+                    a.getBalda().getId() + ";"
+                    + a.getSocio().getDni() + ";"
+                    + a.getFechaAsignacion() + ";"
+                    + a.getFechaVencimiento() + ";"
+                    + a.isActiva()
+            );
+            bw.newLine();
+        }
+bw.close();
+    }
+
+    /** @return list of saved assignments as string arrays */
+    public static ArrayList<String[]> carregarAssignacons() throws IOException {
+        crearCarpeta();
+        ArrayList<String[]> assignacons = new ArrayList<>();
+        File f = new File(fitxerAssignacions);
+        if (!f.exists()) {
+            return assignacons;
+        } else {
+            BufferedReader br = new BufferedReader(new FileReader(f));
+            String linia;
+            while ((linia = br.readLine()) != null) {
+                String[] d = linia.split(";");
+                assignacons.add(d);
+            }
+            br.close();
+        }
+        return assignacons;
+    }
 }
 
