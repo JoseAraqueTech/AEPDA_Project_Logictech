@@ -3,7 +3,7 @@
  */
 package com.mycompany.clubsociosaepda;
 
-import java.io.IOException;
+import com.mycompany.clubsociosaepda.ExceptionAEPDA.PersistenciaException;
 import java.util.Scanner;
 
 /**
@@ -12,7 +12,7 @@ import java.util.Scanner;
  */
 public class ClubSociosAEPDA {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws PersistenciaException {
         GestorClub gestor = new GestorClub();
         Scanner sc = new Scanner(System.in);
         int opcio;

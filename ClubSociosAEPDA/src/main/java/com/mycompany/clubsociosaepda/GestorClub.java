@@ -9,7 +9,8 @@ import com.mycompany.clubsociosaepda.ClasesAEPDA.Activitat;
 import com.mycompany.clubsociosaepda.ClasesAEPDA.Balda;
 import com.mycompany.clubsociosaepda.ClasesAEPDA.Asignacion;
 import com.mycompany.clubsociosaepda.PersistenciaAEPDA.PersistenciaClub;
-import java.io.IOException;
+import com.mycompany.clubsociosaepda.ExceptionAEPDA.PersistenciaException;
+import java.time.LocalDate;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -46,16 +47,49 @@ public class GestorClub {
         /**
      * Creates a new club manager and loads all users and activities from disk.
      *
-     * @throws IOException if an error occurs while loading stored data
+     * @throws PersistenciaException if an error occurs while loading stored data
      */
 
-    public GestorClub() throws IOException {
+    public GestorClub() throws PersistenciaException {
         usuaris = PersistenciaClub.carregarUsuaris();
         activitats = PersistenciaClub.carregarActivitats();
         baldas = new HashMap<>();
         historialAsignaciones = new ArrayList<>();
         inicializarBaldas();
-        carregarAssignacions();
+        try {
+            ArrayList<String[]> dadesAssign = PersistenciaClub.carregarAssignacions();
+            for (String[] d : dadesAssign) {
+                int idBalda = Integer.parseInt(d[0]);
+                String dniSocio = d[1];
+                LocalDate fechaAsignacion = LocalDate.parse(d[2]);
+                LocalDate fechaVencimiento = LocalDate.parse(d[3]);
+                boolean activa = Boolean.parseBoolean(d[4]);
+
+                Balda balda = baldas.get(idBalda);
+                Usuari soci = buscarUsuari(dniSocio);
+
+                if (balda != null && soci != null && !balda.estaOcupada()) {
+                    try {
+                        long mesesDuracion = java.time.temporal.ChronoUnit.MONTHS.between(fechaAsignacion, fechaVencimiento);
+                        int meses = (int) mesesDuracion;
+                        if (meses <= 0) {
+                            meses = 1;
+                        }
+                        assignarBalda(idBalda, soci, meses);
+                        if (!activa) {
+                            Asignacion a = balda.getAsignacionActual();
+                            if (a != null) {
+                                a.cancelar();
+                            }
+                        }
+                    } catch (com.mycompany.clubsociosaepda.ExceptionAEPDA.BaldaNoEncontradaException | com.mycompany.clubsociosaepda.ExceptionAEPDA.BaldaOcupadaException ex) {
+                        System.out.println("Error en carregarAssignacons: " + ex.getMessage());
+                    }
+                }
+            }
+        } catch (PersistenciaException err) {
+            System.out.println("ERROR: " + err.getMessage());
+        }
         sc = new Scanner(System.in);
     }
 
@@ -283,7 +317,7 @@ public class GestorClub {
      * Removes an existing activity from the system. The activity must exist in
      * order to be deleted.
      */
-    public void eliminarActivitat() throws IOException {
+    public void eliminarActivitat() throws PersistenciaException {
         if (activitats.isEmpty()) {
             System.out.println("No hi ha activitats registrades.");
         } else {
@@ -303,7 +337,7 @@ public class GestorClub {
      * Registers a user as a participant in a specific activity. Both the user
      * and the activity must exist.
      */
-    public void inscriureActivitat() throws IOException {
+    public void inscriureActivitat() throws PersistenciaException {
         if (usuaris.isEmpty()) {
             System.out.println("No hi ha usuaris registrats.");
         } else {
@@ -385,9 +419,9 @@ public class GestorClub {
     /**
      * Saves all users, activities and assignations to disk.
      *
-     * @throws IOException if an error occurs while writing the data files
+     * @throws PersistenciaException if an error occurs while writing the data files
      */
-    public void guardar() throws IOException {
+    public void guardar() throws PersistenciaException {
         PersistenciaClub.guardarUsuaris(usuaris);
         PersistenciaClub.guardarActivitats(activitats);
         PersistenciaClub.guardarAssignacions(getAsignacionesActivas());
@@ -440,7 +474,7 @@ public class GestorClub {
             System.out.println("ERROR: " + e.getMessage());
         } catch (com.mycompany.clubsociosaepda.ExceptionAEPDA.BaldaOcupadaException e) {
             System.out.println("ERROR: " + e.getMessage());
-        } catch (java.io.IOException e) {
+        } catch (PersistenciaException e) {
             System.out.println("ERROR: " + e.getMessage());
         }
     }
@@ -596,7 +630,7 @@ public class GestorClub {
         return baldas;
     }
 
-    private void carregarAssignacions() throws IOException {
+    private void carregarAssignacions() throws PersistenciaException {
         ArrayList<String[]> dades = PersistenciaClub.carregarAssignacions();
         Map<Integer, Balda> mapBaldas = baldas;
         for (String[] d : dades) {

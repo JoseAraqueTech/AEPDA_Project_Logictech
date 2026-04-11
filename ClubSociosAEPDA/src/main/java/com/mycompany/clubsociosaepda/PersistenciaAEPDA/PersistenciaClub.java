@@ -8,24 +8,18 @@ import com.mycompany.clubsociosaepda.ClasesAEPDA.Activitat;
 import com.mycompany.clubsociosaepda.ClasesAEPDA.Asignacion;
 import com.mycompany.clubsociosaepda.ClasesAEPDA.Balda;
 import com.mycompany.clubsociosaepda.ClasesAEPDA.Usuari;
+import com.mycompany.clubsociosaepda.ExceptionAEPDA.PersistenciaException;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Handles file-based persistence for the club.
- * Saves and loads users, activities and shelf assignments to/from CSV files.
- * 
- * @author juan-
- */
 public class PersistenciaClub {
 
     private static final String carpeta = "AEPDA";
@@ -34,40 +28,33 @@ public class PersistenciaClub {
     private static final String fitxerActivitats = carpeta + separador + "activitats.csv";
     private static final String fitxerAssignacions = carpeta + separador + "assignacions.csv";
 
-    /** Creates the data folder if it doesn't exist */
-private static void crearCarpeta() {
+    private static void crearCarpeta() {
         File c = new File(carpeta);
         if (!c.exists()) {
             c.mkdir();
         }
     }
 
-    /** Saves all users to file */
-public static void guardarUsuaris(ArrayList<Usuari> usuaris) throws IOException {
+    public static void guardarUsuaris(ArrayList<Usuari> usuaris) throws PersistenciaException {
         crearCarpeta();
-        BufferedWriter bw = new BufferedWriter(new FileWriter(fitxerUsuaris));
-        for (Usuari u : usuaris) {
-            bw.write(
-                    u.getDni() + ";"
-                    + u.getNom() + ";"
-                    + u.getEmail() + ";"
-                    + u.esSoci() + ";"
-                    + u.getMesosMembresia()
-            );
-            bw.newLine();
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(fitxerUsuaris))) {
+            for (Usuari u : usuaris) {
+                bw.write(u.getDni() + ";" + u.getNom() + ";" + u.getEmail() + ";" + u.esSoci() + ";" + u.getMesosMembresia());
+                bw.newLine();
+            }
+        } catch (java.io.IOException e) {
+            throw new PersistenciaException("Error al guardar usuarios", e);
         }
-        bw.close();
     }
 
-    /** @return list of saved users */
-public static ArrayList<Usuari> carregarUsuaris() throws IOException {
+    public static ArrayList<Usuari> carregarUsuaris() throws PersistenciaException {
         crearCarpeta();
         ArrayList<Usuari> usuaris = new ArrayList<>();
         File f = new File(fitxerUsuaris);
         if (!f.exists()) {
             return usuaris;
-        } else {
-            BufferedReader br = new BufferedReader(new FileReader(f));
+        }
+        try (BufferedReader br = new BufferedReader(new FileReader(f))) {
             String linia;
             while ((linia = br.readLine()) != null) {
                 String[] d = linia.split(";");
@@ -82,83 +69,74 @@ public static ArrayList<Usuari> carregarUsuaris() throws IOException {
                 }
                 usuaris.add(u);
             }
-            br.close();
+        } catch (java.io.IOException e) {
+            throw new PersistenciaException("Error al cargar usuarios", e);
         }
         return usuaris;
     }
 
-    /** Saves all activities to file */
-public static void guardarActivitats(ArrayList<Activitat> activitats) throws IOException {
+    public static void guardarActivitats(ArrayList<Activitat> activitats) throws PersistenciaException {
         crearCarpeta();
-        BufferedWriter bw = new BufferedWriter(new FileWriter(fitxerActivitats));
-        for (Activitat a : activitats) {
-            bw.write(
-                    a.getNom() + ";"
-                    + a.getData()
-            );
-            bw.newLine();
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(fitxerActivitats))) {
+            for (Activitat a : activitats) {
+                bw.write(a.getNom() + ";" + a.getData());
+                bw.newLine();
+            }
+        } catch (java.io.IOException e) {
+            throw new PersistenciaException("Error al guardar actividades", e);
         }
-        bw.close();
     }
 
-    /** @return list of saved activities */
-public static ArrayList<Activitat> carregarActivitats() throws IOException {
+    public static ArrayList<Activitat> carregarActivitats() throws PersistenciaException {
         crearCarpeta();
         ArrayList<Activitat> activitats = new ArrayList<>();
         File f = new File(fitxerActivitats);
         if (!f.exists()) {
             return activitats;
-        } else {
-            BufferedReader br = new BufferedReader(new FileReader(f));
-            String linia;
-             while ((linia = br.readLine()) != null) {
-            String[] d = linia.split(";");
-            String nom = d[0];
-            DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            LocalDate data = LocalDate.parse(d[1], df);
-
-
-            activitats.add(new Activitat(nom, data));
         }
-        br.close();
-        }
-        return activitats;
-}
-
-    /** Saves all assignments to file */
-    public static void guardarAssignacions(List<Asignacion> assignacions) throws IOException {
-        crearCarpeta();
-        BufferedWriter bw = new BufferedWriter(new FileWriter(fitxerAssignacions));
-        for (Asignacion a : assignacions) {
-            bw.write(
-                    a.getBalda().getId() + ";"
-                    + a.getSocio().getDni() + ";"
-                    + a.getFechaAsignacion() + ";"
-                    + a.getFechaVencimiento() + ";"
-                    + a.isActiva()
-            );
-            bw.newLine();
-        }
-bw.close();
-    }
-
-    /** @return list of saved assignments as string arrays */
-    public static ArrayList<String[]> carregarAssignacions() throws IOException {
-        crearCarpeta();
-        ArrayList<String[]> assignacions = new ArrayList<>();
-        File f = new File(fitxerAssignacions);
-        if (!f.exists()) {
-            return assignacions;
-        } else {
-            BufferedReader br = new BufferedReader(new FileReader(f));
+        try (BufferedReader br = new BufferedReader(new FileReader(f))) {
             String linia;
             while ((linia = br.readLine()) != null) {
                 String[] d = linia.split(";");
-                assignacions.add(d);
+                String nom = d[0];
+                DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                LocalDate data = LocalDate.parse(d[1], df);
+                activitats.add(new Activitat(nom, data));
             }
-            br.close();
+        } catch (java.io.IOException e) {
+            throw new PersistenciaException("Error al cargar actividades", e);
         }
-        return assignacions;
+        return activitats;
+    }
+
+    public static void guardarAssignacions(List<Asignacion> assignacons) throws PersistenciaException {
+        crearCarpeta();
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(fitxerAssignacions))) {
+            for (Asignacion a : assignacons) {
+                bw.write(a.getBalda().getId() + ";" + a.getSocio().getDni() + ";" + a.getFechaAsignacion() + ";" + a.getFechaVencimiento() + ";" + a.isActiva());
+                bw.newLine();
+            }
+        } catch (java.io.IOException e) {
+            throw new PersistenciaException("Error al guardar asignaciones", e);
+        }
+    }
+
+    public static ArrayList<String[]> carregarAssignacions() throws PersistenciaException {
+        crearCarpeta();
+        ArrayList<String[]> assignacons = new ArrayList<>();
+        File f = new File(fitxerAssignacions);
+        if (!f.exists()) {
+            return assignacons;
+        }
+        try (BufferedReader br = new BufferedReader(new FileReader(f))) {
+            String linia;
+            while ((linia = br.readLine()) != null) {
+                String[] d = linia.split(";");
+                assignacons.add(d);
+            }
+        } catch (java.io.IOException e) {
+            throw new PersistenciaException("Error al cargar asignaciones", e);
+        }
+        return assignacons;
     }
 }
-
