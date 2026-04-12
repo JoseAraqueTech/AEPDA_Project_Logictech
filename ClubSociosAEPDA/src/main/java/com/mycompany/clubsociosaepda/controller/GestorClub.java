@@ -207,12 +207,22 @@ public class GestorClub {
         if (buscarActivitat(nom) != null) {
             throw new AEDPAException("Ja existeix aquesta activitat.");
         }
-        LocalDate data;
-        try {
-            data = LocalDate.parse(demanarText("Data (YYYY-MM-DD): "));
+      LocalDate data = null;
+boolean dataCorrecta = false;
+
+while (!dataCorrecta) {
+    try {
+        data = LocalDate.parse(demanarText("Data (YYYY-MM-DD): "));
+        int any = data.getYear();
+        if (any >= 1980 && any <= 2050) {
+            dataCorrecta = true;
+        } else {
+            System.out.println("ERROR: L'any ha d'estar entre 1980 i 2050.");
+        }
         } catch (DateTimeParseException e) {
             throw new AEDPAException("Format de data incorrecte.");
         }
+}
         System.out.println("1. Torneig");
         System.out.println("2. Curs");
         int tipus;
