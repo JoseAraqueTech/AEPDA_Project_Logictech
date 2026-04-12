@@ -2,24 +2,27 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.mycompany.clubsociosaepda.PersistenciaAEPDA;
+package com.mycompany.clubsociosaepda.persistence;
 
-import com.mycompany.clubsociosaepda.ClasesAEPDA.Activitat;
-import com.mycompany.clubsociosaepda.ClasesAEPDA.Asignacion;
-import com.mycompany.clubsociosaepda.ClasesAEPDA.Balda;
-import com.mycompany.clubsociosaepda.ClasesAEPDA.Usuari;
-import com.mycompany.clubsociosaepda.ExceptionAEPDA.PersistenciaException;
+import com.mycompany.clubsociosaepda.model.Activitat;
+import com.mycompany.clubsociosaepda.model.Asignacion;
+import com.mycompany.clubsociosaepda.model.Usuari;
+import com.mycompany.clubsociosaepda.model.Torneig;
+import com.mycompany.clubsociosaepda.model.CursPintura;
+import com.mycompany.clubsociosaepda.exception.PersistenciaException;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
+/**
+ * Clase encargada de la persistencia de datos del club.
+ * Gestiona la lectura y escritura de usuarios, actividades y asignaciones
+ * en ficheros CSV dentro de una carpeta local.
+ */
 public class PersistenciaClub {
 
     private static final String carpeta = "AEPDA";
@@ -28,6 +31,9 @@ public class PersistenciaClub {
     private static final String fitxerActivitats = carpeta + separador + "activitats.csv";
     private static final String fitxerAssignacions = carpeta + separador + "assignacions.csv";
 
+    /**
+     * Crea la carpeta de almacenamiento si no existe.
+     */
     private static void crearCarpeta() {
         File c = new File(carpeta);
         if (!c.exists()) {
@@ -35,6 +41,11 @@ public class PersistenciaClub {
         }
     }
 
+    /**
+     * Guarda la lista de usuarios en un fichero CSV.
+     * @param usuaris lista de usuarios a guardar
+     * @throws PersistenciaException si ocurre un error al escribir en el fichero
+     */
     public static void guardarUsuaris(ArrayList<Usuari> usuaris) throws PersistenciaException {
         crearCarpeta();
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(fitxerUsuaris))) {
@@ -47,6 +58,11 @@ public class PersistenciaClub {
         }
     }
 
+    /**
+    * Carga los usuarios desde el fichero CSV.
+    * @return lista de usuarios cargados desde el fichero
+    * @throws PersistenciaException si ocurre un error al leer el fichero
+    */
     public static ArrayList<Usuari> carregarUsuaris() throws PersistenciaException {
         crearCarpeta();
         ArrayList<Usuari> usuaris = new ArrayList<>();
@@ -75,11 +91,24 @@ public class PersistenciaClub {
         return usuaris;
     }
 
+    /**
+     * Guarda las actividades en un fichero CSV incluyendo su tipo.
+     * @param activitats lista de actividades a guardar
+     * @throws PersistenciaException si ocurre un error al escribir en el fichero
+     */
     public static void guardarActivitats(ArrayList<Activitat> activitats) throws PersistenciaException {
         crearCarpeta();
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(fitxerActivitats))) {
             for (Activitat a : activitats) {
-                bw.write(a.getNom() + ";" + a.getData());
+                String tipus;
+                String extra = "-";
+                if (a instanceof Torneig) {
+                    tipus = "TORNEIG";
+                } else {
+                    tipus = "CURS";
+                    extra = ((CursPintura) a).getProfessor();
+                }
+                bw.write(a.getNom() + ";" + a.getData() + ";" + tipus + ";" + extra);
                 bw.newLine();
             }
         } catch (java.io.IOException e) {
@@ -87,6 +116,11 @@ public class PersistenciaClub {
         }
     }
 
+    /**
+    * Carga las actividades desde el fichero CSV respetando su tipo.
+    * @return lista de actividades cargadas desde el fichero
+    * @throws PersistenciaException si ocurre un error al leer el fichero
+    */
     public static ArrayList<Activitat> carregarActivitats() throws PersistenciaException {
         crearCarpeta();
         ArrayList<Activitat> activitats = new ArrayList<>();
@@ -99,9 +133,16 @@ public class PersistenciaClub {
             while ((linia = br.readLine()) != null) {
                 String[] d = linia.split(";");
                 String nom = d[0];
-                DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                LocalDate data = LocalDate.parse(d[1], df);
-                activitats.add(new Activitat(nom, data));
+                LocalDate data = LocalDate.parse(d[1]);
+                String tipus = d[2];
+                Activitat a;
+                if (tipus.equals("TORNEIG")) {
+                    a = new Torneig(nom, data);
+                } else {
+                    String professor = d[3];
+                    a = new CursPintura(nom, data, professor);
+                }
+                activitats.add(a);
             }
         } catch (java.io.IOException e) {
             throw new PersistenciaException("Error al cargar actividades", e);
@@ -109,11 +150,21 @@ public class PersistenciaClub {
         return activitats;
     }
 
-    public static void guardarAssignacions(List<Asignacion> assignacons) throws PersistenciaException {
+    
+    /**
+     * Guarda las asignaciones de baldas en un fichero CSV.
+     * @param assignacons lista de asignaciones a guardar
+     * @throws PersistenciaException si ocurre un error al escribir en el fichero
+     */
+    public static void guardarAssignacions(ArrayList<Asignacion> assignacons) throws PersistenciaException {
         crearCarpeta();
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(fitxerAssignacions))) {
             for (Asignacion a : assignacons) {
-                bw.write(a.getBalda().getId() + ";" + a.getSocio().getDni() + ";" + a.getFechaAsignacion() + ";" + a.getFechaVencimiento() + ";" + a.isActiva());
+                bw.write(a.getBalda().getId() + ";" +
+                         a.getSocio().getDni() + ";" +
+                         a.getFechaAsignacion() + ";" +
+                         a.getFechaVencimiento() + ";" +
+                         a.isActiva());
                 bw.newLine();
             }
         } catch (java.io.IOException e) {
@@ -121,6 +172,11 @@ public class PersistenciaClub {
         }
     }
 
+    /**
+     * Carga las asignaciones de baldas desde el fichero CSV.
+     * @return lista de asignaciones en formato de datos separados
+     * @throws PersistenciaException si ocurre un error al leer el fichero
+     */
     public static ArrayList<String[]> carregarAssignacions() throws PersistenciaException {
         crearCarpeta();
         ArrayList<String[]> assignacons = new ArrayList<>();
@@ -131,8 +187,7 @@ public class PersistenciaClub {
         try (BufferedReader br = new BufferedReader(new FileReader(f))) {
             String linia;
             while ((linia = br.readLine()) != null) {
-                String[] d = linia.split(";");
-                assignacons.add(d);
+                assignacons.add(linia.split(";"));
             }
         } catch (java.io.IOException e) {
             throw new PersistenciaException("Error al cargar asignaciones", e);

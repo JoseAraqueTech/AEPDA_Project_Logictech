@@ -1,11 +1,11 @@
-package com.mycompany.clubsociosaepda.ClasesAEPDA;
+package com.mycompany.clubsociosaepda.model;
 
 import java.time.LocalDate;
 
 /**
  * Represents the assignment of a shelf to a member.
- * Stores the shelf, member, assignment dates and active status.
- * 
+ * Almacena la balda asignada, el usuario, las fechas de asignación
+ * y el estado (activa o no).
  * @author josea
  */
 public class Asignacion {
