@@ -77,6 +77,14 @@ public class Usuari {
     }
 
     /**
+     * Obtiene las participaciones del usuario
+     * @return número de participaciones del usuario
+     */
+    public int getParticipaciones() {
+        return participaciones;
+    }
+    
+    /**
      * Convierte al usuario en socio durante un número de meses.
      * @param mesos número de meses de membresía
      */
