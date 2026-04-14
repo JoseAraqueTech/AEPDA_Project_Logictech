@@ -3,90 +3,37 @@
  */
 package com.mycompany.clubsociosaepda;
 
-import java.io.IOException;
-import java.util.Scanner;
+import com.mycompany.clubsociosaepda.exception.PersistenciaException;
+import com.mycompany.clubsociosaepda.view.Menu;
 
 /**
  *
  * @author josea
  */
-public class ClubSociosAEPDA {
-    private static GestorClub gestor;
-    private static Scanner sc;
 
-    public static void main(String[] args) throws IOException {
-        gestor = new GestorClub();
-        sc = new Scanner(System.in);
-        int opcio;
-        do {
-            gestor.menu();
-            if (!sc.hasNextInt()) {
-                System.out.println("Opcio incorrecta.");
-                sc.nextLine();
-                opcio = -1;
-            } else {
-                opcio = sc.nextInt();
-                sc.nextLine();
-                switch (opcio) {
-                    case 1:
-                        gestor.altaUsuari();
-                        break;
-                    case 2:
-                        gestor.ferSoci();
-                        break;
-                    case 3:
-                        gestor.finalitzarMembresia();
-                        break;
-                    case 4:
-                        gestor.altaActivitat();
-                        break;
-                    case 5:
-                        gestor.eliminarActivitat();
-                        break;
-                    case 6:
-                        gestor.inscriureActivitat();
-                        break;
-                    case 7:
-                        gestor.mostrarActivitats();
-                        break;
-                    case 8:
-                        gestor.mostrarActivitatEspecifica();
-                        break;
-                    case 9:
-                        mostrarBaldes();
-                        break;
-                    case 10:
-                        assignarBalda();
-                        break;
-                    case 11:
-                        alliberarBalda();
-                        break;
-                    case 0:
-                        gestor.guardar();
-                        System.out.println("Sortint de la aplicacio de gestio AEPDA...");
-                        break;
-                    default:
-                        System.out.println("Opcio incorrecta.");
-                }
-            }
-        } while (opcio != 0);
+/**
+ * Clase principal de la aplicación.
+ * 
+ * <p>Se encarga de iniciar el programa.</p>
+ */
+public class ClubSociosAEPDA {
+
+    /**
+     * Método principal.
+     * 
+     * @param args argumentos de ejecución
+     */
+    public static void main(String[] args) {
+
+        try {
+            Menu menu = new Menu();
+            menu.start();
+        } 
+        catch (PersistenciaException e) {
+            System.out.println("ERROR inesperado: " + e.getMessage());
+        }
+        
     }
     
- private static void mostrarBaldes() {
-    System.out.println(gestor.mostrarBaldes());
 }
 
-private static void assignarBalda() {
-    System.out.print("DNI del soci: ");
-    String dni = sc.nextLine();
-    System.out.print("Codi de la balda (ex: A-1): ");
-    String codi = sc.nextLine();
-    System.out.println(gestor.assignarBalda(dni, codi));
-}
-
-private static void alliberarBalda() {
-    System.out.print("Codi de la balda a alliberar: ");
-    String codi = sc.nextLine();
-    System.out.println(gestor.alliberarBalda(codi));
-}
-}
