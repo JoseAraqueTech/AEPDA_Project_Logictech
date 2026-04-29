@@ -77,6 +77,8 @@ public class Usuari {
     }
 
     /**
+<<<<<<< HEAD
+=======
      * Obtiene las participaciones del usuario
      * @return número de participaciones del usuario
      */
@@ -85,6 +87,7 @@ public class Usuari {
     }
     
     /**
+>>>>>>> main
      * Convierte al usuario en socio durante un número de meses.
      * @param mesos número de meses de membresía
      */

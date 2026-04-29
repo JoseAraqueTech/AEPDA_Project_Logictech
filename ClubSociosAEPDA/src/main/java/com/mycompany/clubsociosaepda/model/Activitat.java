@@ -73,5 +73,9 @@ public abstract class Activitat {
     /**
      * Define el comportamiento de la actividad.
      */
+<<<<<<< HEAD
+    public abstract String gestionarActivitat();
+=======
     public abstract void gestionarActivitat();
+>>>>>>> main
 }

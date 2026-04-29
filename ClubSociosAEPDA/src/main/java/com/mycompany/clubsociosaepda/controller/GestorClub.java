@@ -30,7 +30,11 @@ public class GestorClub {
     private ArrayList<Usuari> usuaris;
     private ArrayList<Activitat> activitats;
     private Map<Integer, Balda> baldas;
+<<<<<<< HEAD
+    
+=======
     private Scanner sc;
+>>>>>>> main
 
     /**
      * Constructor del gestor del club.
@@ -43,9 +47,17 @@ public class GestorClub {
         baldas = new HashMap<>();
         inicializarBaldas();
         carregarAssignacions(); 
+<<<<<<< HEAD
+      
+    }
+/**
+     * Creates all shelves in the system.
+     */
+=======
         sc = new Scanner(System.in);
     }
 
+>>>>>>> main
     private void inicializarBaldas() {
         crearBalda(1, "Pasillo 1 - Balda A");
         crearBalda(2, "Pasillo 1 - Balda B");
@@ -56,7 +68,14 @@ public class GestorClub {
         crearBalda(7, "Pasillo 4 - Balda A");
         crearBalda(8, "Pasillo 4 - Balda B");
     }
+<<<<<<< HEAD
+ 
+    /**
+     * Returns all active shelf assignments.
+     */
+=======
 
+>>>>>>> main
     private ArrayList<Asignacion> getAsignacionesActivas() {
         ArrayList<Asignacion> lista = new ArrayList<>();
         for (Balda b : baldas.values()) {
@@ -66,7 +85,13 @@ public class GestorClub {
         }
         return lista;
     }
+<<<<<<< HEAD
+     /**
+     * Loads shelf assignments from persistence.
+     */
+=======
     
+>>>>>>> main
     private void carregarAssignacions() throws PersistenciaException {
         ArrayList<String[]> dades = PersistenciaClub.carregarAssignacions();
         for (String[] d : dades) {
@@ -88,6 +113,14 @@ public class GestorClub {
         baldas.put(id, new Balda(id, ubicacion));
     }
 
+<<<<<<< HEAD
+    
+
+    
+/**
+     * Searches a user by DNI.
+     */
+=======
     private String demanarText(String msg) {
         String t;
         do {
@@ -118,6 +151,7 @@ public class GestorClub {
         return n;
     }
 
+>>>>>>> main
     private Usuari buscarUsuari(String dni) {
         for (Usuari u : usuaris) {
             if (u.getDni().equalsIgnoreCase(dni)) {
@@ -126,7 +160,13 @@ public class GestorClub {
         }
         return null;
     }
+<<<<<<< HEAD
+/**
+     * Searches an activity by name.
+     */
+=======
 
+>>>>>>> main
     private Activitat buscarActivitat(String nom) {
         for (Activitat a : activitats) {
             if (a.getNom().equalsIgnoreCase(nom)) {
@@ -142,6 +182,26 @@ public class GestorClub {
      * También comprueba que no exista ya un usuario con el mismo DNI.
      * @throws AEDPAException si el DNI o email no son válidos o ya existe el usuario
      */
+<<<<<<< HEAD
+    public void altaUsuari(String dni, String nom, String email) throws AEDPAException {
+
+        if (!Usuari.esDniValid(dni)) {
+            throw new AEDPAException("DNI no valid.");
+    }
+
+         if (buscarUsuari(dni) != null) {
+            throw new AEDPAException("Aquest usuari ja existeix.");
+    }
+
+         if (!Usuari.esEmailValid(email)) {
+            throw new AEDPAException("Email no valid.");
+    }
+
+    usuaris.add(new Usuari(dni, nom, email));
+}
+
+
+=======
     public void altaUsuari() throws AEDPAException {
         String dni = demanarText("DNI: ");
         if (!Usuari.esDniValid(dni)) {
@@ -158,24 +218,37 @@ public class GestorClub {
         usuaris.add(new Usuari(dni, nom, email));
     }
 
+>>>>>>> main
     /**
      * Convierte un usuario en socio.
      * Solicita el DNI del usuario y los meses de membresía.
      * @throws AEDPAException si no hay usuarios, no existe el usuario
      * o ya es socio
      */
+<<<<<<< HEAD
+    public void ferSoci(String dni, int mesos) throws AEDPAException {
+        if (usuaris.isEmpty()) {
+            throw new AEDPAException("No hi ha usuaris.");
+        }
+        Usuari u = buscarUsuari(dni);
+=======
     public void ferSoci() throws AEDPAException {
         if (usuaris.isEmpty()) {
             throw new AEDPAException("No hi ha usuaris.");
         }
         Usuari u = buscarUsuari(demanarText("DNI: "));
+>>>>>>> main
         if (u == null) {
             throw new AEDPAException("Usuari no trobat.");
         }
         if (u.esSoci()) {
             throw new AEDPAException("Ja es soci.");
         }
+<<<<<<< HEAD
+        u.ferSoci(mesos);
+=======
         u.ferSoci(demanarEnterMajorZero("Mesos: "));
+>>>>>>> main
     }
 
     /**
@@ -183,6 +256,14 @@ public class GestorClub {
      * @throws AEDPAException si no hay usuarios, no existe el usuario
      * o no es socio
      */
+<<<<<<< HEAD
+    public void finalitzarMembresia(String dni) throws AEDPAException {
+         Usuari u = buscarUsuari(dni);
+
+        if (u == null)
+            throw new AEDPAException("Usuari no trobat.");
+        
+=======
     public void finalitzarMembresia() throws AEDPAException {
         if (usuaris.isEmpty()) {
             throw new AEDPAException("No hi ha usuaris.");
@@ -191,6 +272,7 @@ public class GestorClub {
         if (u == null) {
             throw new AEDPAException("Usuari no trobat.");
         }
+>>>>>>> main
         if (!u.esSoci()) {
             throw new AEDPAException("No es soci.");
         }
@@ -202,6 +284,28 @@ public class GestorClub {
      * Permite elegir entre tipo Torneig o Curs de Pintura.
      * @throws AEDPAException si la actividad ya existe o el formato de fecha es incorrecto
      */
+<<<<<<< HEAD
+    public void altaActivitat(String nom, LocalDate data, int tipus, String professor) throws AEDPAException {
+       if (buscarActivitat(nom) != null)
+            throw new AEDPAException("Ja existeix aquesta activitat.");
+
+        int any = data.getYear();
+        if (any < 1980 || any > 2050)
+            throw new AEDPAException("L'any ha d'estar entre 1980 i 2050.");
+
+        Activitat a;
+
+        if (tipus == 1) {
+            a = new Torneig(nom, data);
+        } else if (tipus == 2) {
+            if (professor == null || professor.isEmpty())
+                throw new AEDPAException("El professor no pot estar buit.");
+            a = new CursPintura(nom, data, professor);
+        } else {
+            throw new AEDPAException("Tipus d'activitat invalid.");
+        }
+
+=======
     public void altaActivitat() throws AEDPAException {
         String nom = demanarText("Nom: ");
         if (buscarActivitat(nom) != null) {
@@ -242,6 +346,7 @@ while (!dataCorrecta) {
             String professor = demanarText("Professor: ");
             a = new CursPintura(nom, data, professor);
         }
+>>>>>>> main
         activitats.add(a);
     }
 
@@ -250,6 +355,14 @@ while (!dataCorrecta) {
      * @throws AEDPAException si no hay actividades o no se encuentra la actividad
      * @throws PersistenciaException si hay error al guardar los datos
      */
+<<<<<<< HEAD
+    public void eliminarActivitat(String nom) throws AEDPAException, PersistenciaException {
+        Activitat a = buscarActivitat(nom);
+
+        if (a == null)
+            throw new AEDPAException("Activitat no trobada.");
+
+=======
     public void eliminarActivitat() throws AEDPAException, PersistenciaException {
         if (activitats.isEmpty()) {
             throw new AEDPAException("No hi ha activitats.");
@@ -258,6 +371,7 @@ while (!dataCorrecta) {
         if (a == null) {
             throw new AEDPAException("No trobada.");
         }
+>>>>>>> main
         activitats.remove(a);
         PersistenciaClub.guardarActivitats(activitats);
     }
@@ -273,6 +387,25 @@ while (!dataCorrecta) {
      * el usuario no existe, la actividad no existe o no puede participar
      * @throws PersistenciaException si ocurre un error al guardar los datos
      */
+<<<<<<< HEAD
+    
+     public void inscriureActivitat(String dni, String nomAct) throws AEDPAException, PersistenciaException {
+
+        Usuari u = buscarUsuari(dni);
+        if (u == null)
+            throw new AEDPAException("Usuari no trobat.");
+
+        if (!u.potParticipar())
+            throw new AEDPAException("Ha superat el limit de participacions.");
+
+        Activitat a = buscarActivitat(nomAct);
+        if (a == null)
+            throw new AEDPAException("Activitat no trobada.");
+
+        a.afegirParticipant(u);
+        u.incrementarParticipaciones();
+
+=======
     public void inscriureActivitat() throws PersistenciaException, AEDPAException {
         if (usuaris.isEmpty()) {
             throw new AEDPAException("No hi ha usuaris.");
@@ -298,22 +431,53 @@ while (!dataCorrecta) {
         if (u.necesitaSerSoci()) {
             System.out.println("AVIS: Aquest usuari ha de fer-se soci a partir d'ara.");
         }
+>>>>>>> main
         PersistenciaClub.guardarActivitats(activitats);
     }
 
     /**
      * Muestra todas las actividades registradas.
      */
+<<<<<<< HEAD
+    public ArrayList<String> mostrarActivitats() {
+        ArrayList<String> llista = new ArrayList<>();
+
+        for (Activitat a : activitats) {
+            llista.add(a.getNom() + " - " + a.getData());
+        }
+
+        return llista;
+=======
     public void mostrarActivitats() {
         for (Activitat a : activitats) {
             System.out.println(a.getNom() + " - " + a.getData());
         }
+>>>>>>> main
     }
 
     /**
      * Muestra la información de una actividad concreta junto a sus participantes.
      * @throws AEDPAException si no hay actividades o no se encuentra
      */
+<<<<<<< HEAD
+    public String mostrarActivitatEspecifica(String nom) throws AEDPAException {
+        Activitat a = buscarActivitat(nom);
+
+        if (a == null)
+            throw new AEDPAException("Activitat no trobada.");
+
+        String resultat = a.getNom() + "\n";
+
+        if (a.getParticipants().isEmpty()) {
+            resultat += "Sense participants.";
+        } else {
+            for (Usuari u : a.getParticipants()) {
+                resultat += u.getNom() + "\n";
+            }
+        }
+
+        return resultat;
+=======
     public void mostrarActivitatEspecifica() throws AEDPAException {
         if (activitats.isEmpty()) {
             throw new AEDPAException("No hi ha activitats.");
@@ -328,12 +492,32 @@ while (!dataCorrecta) {
                 System.out.println(u.getNom());
             }
         }
+>>>>>>> main
     }
 
     /**
      * Muestra todas las baldas del sistema junto a su estado
      * (ocupada o libre) y el usuario asignado si corresponde.
      */    
+<<<<<<< HEAD
+   public ArrayList<String> mostrarBaldas() {
+        ArrayList<String> llista = new ArrayList<>();
+
+        for (Balda b : baldas.values()) {
+            String estat = b.estaOcupada() ? "OCUPADA" : "LLIURE";
+            String text = "Balda " + b.getId() + " - " + estat;
+
+            if (b.estaOcupada()) {
+                text += " (Soci: " + b.getAsignacionActual().getSocio().getNom() + ")";
+            }
+
+            llista.add(text);
+        }
+
+        return llista;
+    }
+    
+=======
     public void mostrarBaldas() {
         if (baldas.isEmpty()) {
             System.out.println("No hi ha baldes.");
@@ -352,10 +536,23 @@ while (!dataCorrecta) {
             }
         }
     }
+>>>>>>> main
 
     /**
      * Muestra el número de baldas libres y ocupadas.
      */
+<<<<<<< HEAD
+    public String mostrarDisponibilitatBaldas() {
+        int lliures = 0;
+        int ocupades = 0;
+
+        for (Balda b : baldas.values()) {
+            if (b.estaOcupada()) ocupades++;
+            else lliures++;
+        }
+
+        return "Lliures: " + lliures + " | Ocupades: " + ocupades;
+=======
     public void mostrarDisponibilidadBaldas() {
         int libres = 0;
         int ocupadas = 0;
@@ -364,6 +561,7 @@ while (!dataCorrecta) {
             else libres++;
         }
         System.out.println("Lliures: " + libres + " | Ocupades: " + ocupadas);
+>>>>>>> main
     }
 
     /**
@@ -371,6 +569,26 @@ while (!dataCorrecta) {
      * @throws AEDPAException si no hay usuarios, la balda no existe,
      * está ocupada o el usuario no es válido
      */
+<<<<<<< HEAD
+     public void asignarBalda(int id, String dni, int mesos) throws AEDPAException {
+        Balda b = baldas.get(id);
+
+        if (b == null)
+            throw new AEDPAException("Balda no existeix.");
+
+        if (b.estaOcupada())
+            throw new AEDPAException("Balda ocupada.");
+
+        Usuari u = buscarUsuari(dni);
+
+        if (u == null || !u.esSoci())
+            throw new AEDPAException("Usuari no valid.");
+
+        if (mesos <= 0)
+            throw new AEDPAException("Els mesos han de ser majors que 0.");
+
+        b.asignar(new Asignacion(b, u, mesos));
+=======
     public void asignarBalda() throws AEDPAException {
         if (usuaris.isEmpty()) {
             throw new AEDPAException("No hi ha usuaris.");
@@ -383,14 +601,20 @@ while (!dataCorrecta) {
             throw new AEDPAException("Usuari no valid.");
         }
         b.asignar(new Asignacion(b, u, demanarEnterMajorZero("Mesos: ")));
+>>>>>>> main
     }
 
     /**
      * Libera una balda ocupada.
      * @throws AEDPAException si la balda no existe o ya está libre
      */
+<<<<<<< HEAD
+    public void liberarBalda(int id) throws AEDPAException {
+       Balda b = baldas.get(id);
+=======
     public void liberarBalda() throws AEDPAException {
         Balda b = baldas.get(demanarEnterMajorZero("ID: "));
+>>>>>>> main
         if (b == null) throw new AEDPAException("No existeix.");
         if (!b.estaOcupada()) throw new AEDPAException("Ja lliure.");
         b.liberar();

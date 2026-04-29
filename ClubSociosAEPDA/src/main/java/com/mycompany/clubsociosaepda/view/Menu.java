@@ -6,6 +6,10 @@ package com.mycompany.clubsociosaepda.view;
 import com.mycompany.clubsociosaepda.controller.GestorClub;
 import com.mycompany.clubsociosaepda.exception.AEDPAException;
 import com.mycompany.clubsociosaepda.exception.PersistenciaException;
+<<<<<<< HEAD
+import java.time.LocalDate;
+=======
+>>>>>>> main
 import java.util.Scanner;
 
 /**
@@ -41,6 +45,42 @@ public class Menu {
                 try {
                     switch (opcio) {
                         case 1:
+<<<<<<< HEAD
+                            altaUsuari();
+                            break;
+                        case 2:
+                            ferSoci();
+                            break;
+                        case 3:
+                            finalitzarMembresia();
+                            break;
+                        case 4:
+                            altaActivitat();
+                            break;
+                        case 5:
+                            eliminarActivitat();
+                            break;
+                        case 6:
+                            inscriureActivitat();
+                            break;
+                        case 7:
+                            mostrarActivitats();
+                            break;
+                        case 8:
+                            mostrarActivitatEspecifica();
+                            break;
+                        case 9:
+                            mostrarBaldas();
+                            break;
+                        case 10:
+                            mostrarDisponibilidadBaldas();
+                            break;
+                        case 11:
+                            asignarBalda();
+                            break;
+                        case 12:
+                            liberarBalda();
+=======
                             gestor.altaUsuari();
                             break;
                         case 2:
@@ -75,6 +115,7 @@ public class Menu {
                             break;
                         case 12:
                             gestor.liberarBalda();
+>>>>>>> main
                             break;
                         case 0:
                             gestor.guardar();
@@ -109,4 +150,161 @@ public class Menu {
         System.out.println("0. Sortir");
         System.out.print("Opcio: ");
     }
+<<<<<<< HEAD
+      /**
+     * Registers a new user.
+     */
+    private void altaUsuari() throws AEDPAException {
+        String dni = demanarText("DNI: ");
+        String nom = demanarText("Nom: ");
+        String email = demanarText("Email: ");
+
+        gestor.altaUsuari(dni, nom, email);
+        System.out.println("Usuari creat correctament.");
+    }
+
+    /**
+     * Converts a user into a member.
+     */
+    private void ferSoci() throws AEDPAException {
+        String dni = demanarText("DNI: ");
+        int mesos = demanarEnter("Mesos: ");
+
+        gestor.ferSoci(dni, mesos);
+        System.out.println("Usuari convertit en soci.");
+    }
+
+    /**
+     * Ends a user's membership.
+     */
+    private void finalitzarMembresia() throws AEDPAException {
+        String dni = demanarText("DNI: ");
+        gestor.finalitzarMembresia(dni);
+        System.out.println("Membresia finalitzada.");
+    }
+
+    /**
+     * Creates a new activity.
+     */
+    private void altaActivitat() throws AEDPAException {
+        String nom = demanarText("Nom activitat: ");
+        LocalDate data = LocalDate.parse(demanarText("Data (YYYY-MM-DD): "));
+        int tipus = demanarEnter("Tipus (1=Torneig, 2=Curs): ");
+
+        String professor = null;
+        if (tipus == 2) {
+            professor = demanarText("Professor: ");
+        }
+
+        gestor.altaActivitat(nom, data, tipus, professor);
+        System.out.println("Activitat creada correctament.");
+    }
+
+    /**
+     * Deletes an activity.
+     */
+    private void eliminarActivitat() throws AEDPAException, PersistenciaException {
+        String nom = demanarText("Nom activitat: ");
+        gestor.eliminarActivitat(nom);
+        System.out.println("Activitat eliminada.");
+    }
+
+    /**
+     * Registers a user in an activity.
+     */
+    private void inscriureActivitat() throws AEDPAException, PersistenciaException {
+        String dni = demanarText("DNI: ");
+        String nomAct = demanarText("Nom activitat: ");
+
+        gestor.inscriureActivitat(dni, nomAct);
+        System.out.println("Usuari inscrit correctament.");
+    }
+
+    /**
+     * Displays all activities.
+     */
+    private void mostrarActivitats() {
+        for (String s : gestor.mostrarActivitats()) {
+            System.out.println(s);
+        }
+    }
+
+    /**
+     * Displays detailed information of a specific activity.
+     */
+    private void mostrarActivitatEspecifica() throws AEDPAException {
+        String nom = demanarText("Nom activitat: ");
+        System.out.println(gestor.mostrarActivitatEspecifica(nom));
+    }
+
+    /**
+     * Displays all shelves.
+     */
+    private void mostrarBaldas() {
+        for (String s : gestor.mostrarBaldas()) {
+            System.out.println(s);
+        }
+    }
+
+    /**
+     * Displays shelf availability.
+     */
+    private void mostrarDisponibilidadBaldas() {
+        System.out.println(gestor.mostrarDisponibilitatBaldas());
+    }
+
+    /**
+     * Assigns a shelf to a member.
+     */
+    private void asignarBalda() throws AEDPAException {
+        int id = demanarEnter("ID balda: ");
+        String dni = demanarText("DNI: ");
+        int mesos = demanarEnter("Mesos: ");
+
+        gestor.asignarBalda(id, dni, mesos);
+        System.out.println("Balda assignada.");
+    }
+
+    /**
+     * Frees a shelf.
+     */
+    private void liberarBalda() throws AEDPAException {
+        int id = demanarEnter("ID balda: ");
+        gestor.liberarBalda(id);
+        System.out.println("Balda alliberada.");
+    }
+
+    /**
+     * Reads a text input from the user.
+     */
+    private String demanarText(String msg) {
+        System.out.print(msg);
+        return sc.nextLine();
+    }
+private int demanarEnterMajorZero(String msg) {
+    int n = 0;
+
+    do {
+        System.out.print(msg);
+        try {
+            n = Integer.parseInt(sc.nextLine());
+            if (n <= 0) {
+                System.out.println("ERROR: Must be greater than 0.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("ERROR: Invalid number.");
+        }
+    } while (n <= 0);
+
+    return n;
+}
+    /**
+     * Reads an integer input from the user.
+     */
+    private int demanarEnter(String msg) {
+        System.out.print(msg);
+        return Integer.parseInt(sc.nextLine());
+    }
+=======
+>>>>>>> main
 }
