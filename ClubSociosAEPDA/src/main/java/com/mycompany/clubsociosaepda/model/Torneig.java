@@ -32,6 +32,7 @@ public class Torneig extends Activitat {
      * Comprueba si el número de participantes es par o impar
      * y muestra la información correspondiente.
      */
+<<<<<<< HEAD
    @Override
     public String gestionarActivitat() {
     String resultat = "";
@@ -51,4 +52,19 @@ public class Torneig extends Activitat {
     return resultat;
 }
 
+=======
+    public void gestionarActivitat() {
+        int total = participants.size();
+        if (total == 0) {
+            System.out.println("No hi ha participants en el torneig.");
+        } else {
+            if (total % 2 == 0) {
+                System.out.println("Tots els participants juguen.");
+            } else {
+                System.out.println("Un participant queda sense jugar.");
+            }
+            System.out.println("S'ha comprat menjar per al torneig.");
+        }
+    }
+>>>>>>> main
 }

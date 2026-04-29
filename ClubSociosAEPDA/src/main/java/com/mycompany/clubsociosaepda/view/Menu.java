@@ -6,7 +6,10 @@ package com.mycompany.clubsociosaepda.view;
 import com.mycompany.clubsociosaepda.controller.GestorClub;
 import com.mycompany.clubsociosaepda.exception.AEDPAException;
 import com.mycompany.clubsociosaepda.exception.PersistenciaException;
+<<<<<<< HEAD
 import java.time.LocalDate;
+=======
+>>>>>>> main
 import java.util.Scanner;
 
 /**
@@ -42,6 +45,7 @@ public class Menu {
                 try {
                     switch (opcio) {
                         case 1:
+<<<<<<< HEAD
                             altaUsuari();
                             break;
                         case 2:
@@ -76,6 +80,42 @@ public class Menu {
                             break;
                         case 12:
                             liberarBalda();
+=======
+                            gestor.altaUsuari();
+                            break;
+                        case 2:
+                            gestor.ferSoci();
+                            break;
+                        case 3:
+                            gestor.finalitzarMembresia();
+                            break;
+                        case 4:
+                            gestor.altaActivitat();
+                            break;
+                        case 5:
+                            gestor.eliminarActivitat();
+                            break;
+                        case 6:
+                            gestor.inscriureActivitat();
+                            break;
+                        case 7:
+                            gestor.mostrarActivitats();
+                            break;
+                        case 8:
+                            gestor.mostrarActivitatEspecifica();
+                            break;
+                        case 9:
+                            gestor.mostrarBaldas();
+                            break;
+                        case 10:
+                            gestor.mostrarDisponibilidadBaldas();
+                            break;
+                        case 11:
+                            gestor.asignarBalda();
+                            break;
+                        case 12:
+                            gestor.liberarBalda();
+>>>>>>> main
                             break;
                         case 0:
                             gestor.guardar();
@@ -110,6 +150,7 @@ public class Menu {
         System.out.println("0. Sortir");
         System.out.print("Opcio: ");
     }
+<<<<<<< HEAD
       /**
      * Registers a new user.
      */
@@ -264,4 +305,6 @@ private int demanarEnterMajorZero(String msg) {
         System.out.print(msg);
         return Integer.parseInt(sc.nextLine());
     }
+=======
+>>>>>>> main
 }

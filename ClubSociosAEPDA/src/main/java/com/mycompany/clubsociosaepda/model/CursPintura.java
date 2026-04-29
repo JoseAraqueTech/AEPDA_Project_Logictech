@@ -36,6 +36,7 @@ public class CursPintura extends Activitat {
     /**
      * Gestiona el funcionamiento del curso.
      */
+<<<<<<< HEAD
    @Override
     public String gestionarActivitat() {
     String resultat = "";
@@ -51,4 +52,16 @@ public class CursPintura extends Activitat {
 
     return resultat;
 }
+=======
+    public void gestionarActivitat() {
+        if (participants.isEmpty()) {
+            System.out.println("No hi ha participants en el curs.");
+        } else {
+            System.out.println("Curs impartit per: " + professor);
+            System.out.println("Participants inscrits: " + participants.size());
+        }
+
+        System.out.println("En aquest curs no es compra menjar.");
+    }
+>>>>>>> main
 }
