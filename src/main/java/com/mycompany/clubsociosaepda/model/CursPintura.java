@@ -36,6 +36,10 @@ public class CursPintura extends Activitat {
     /**
      * Gestiona el funcionamiento del curso.
      */
+<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/model/CursPintura.java
+=======
+<<<<<<< HEAD
+>>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/model/CursPintura.java
    @Override
     public String gestionarActivitat() {
     String resultat = "";
@@ -51,4 +55,19 @@ public class CursPintura extends Activitat {
 
     return resultat;
 }
+<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/model/CursPintura.java
+=======
+=======
+    public void gestionarActivitat() {
+        if (participants.isEmpty()) {
+            System.out.println("No hi ha participants en el curs.");
+        } else {
+            System.out.println("Curs impartit per: " + professor);
+            System.out.println("Participants inscrits: " + participants.size());
+        }
+
+        System.out.println("En aquest curs no es compra menjar.");
+    }
+>>>>>>> main
+>>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/model/CursPintura.java
 }

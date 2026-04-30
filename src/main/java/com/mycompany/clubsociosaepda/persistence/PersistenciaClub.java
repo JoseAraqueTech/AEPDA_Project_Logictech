@@ -50,14 +50,29 @@ public class PersistenciaClub {
         crearCarpeta();
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(fitxerUsuaris))) {
             for (Usuari u : usuaris) {
+<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/persistence/PersistenciaClub.java
                 bw.write(u.getDni() + ";" + u.getNom() + ";" + u.getEmail() + ";" + u.esSoci() + ";" + u.getMesosMembresia());
+=======
+<<<<<<< HEAD
+                bw.write(u.getDni() + ";" + u.getNom() + ";" + u.getEmail() + ";" + u.esSoci() + ";" + u.getMesosMembresia());
+=======
+                bw.write(u.getDni() + ";" + u.getNom() + ";" + u.getEmail() + ";" + u.esSoci() + ";" + u.getMesosMembresia() + ";" + u.getParticipaciones());
+>>>>>>> main
+>>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/persistence/PersistenciaClub.java
                 bw.newLine();
             }
         } catch (java.io.IOException e) {
             throw new PersistenciaException("Error al guardar usuarios", e);
         }
     }
+<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/persistence/PersistenciaClub.java
 
+=======
+<<<<<<< HEAD
+=======
+
+>>>>>>> main
+>>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/persistence/PersistenciaClub.java
     /**
     * Carga los usuarios desde el fichero CSV.
     * @return lista de usuarios cargados desde el fichero
@@ -79,10 +94,31 @@ public class PersistenciaClub {
                 String email = d[2];
                 boolean soci = Boolean.parseBoolean(d[3]);
                 int mesos = Integer.parseInt(d[4]);
+<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/persistence/PersistenciaClub.java
+=======
+<<<<<<< HEAD
+>>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/persistence/PersistenciaClub.java
                 Usuari u = new Usuari(dni, nom, email);
                 if (soci) {
                     u.ferSoci(mesos);
                 }
+<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/persistence/PersistenciaClub.java
+=======
+=======
+                int participaciones = 0;
+                if (d.length > 5) {
+                    participaciones = Integer.parseInt(d[5]);
+                }
+                Usuari u = new Usuari(dni, nom, email);
+
+                if (soci) {
+                    u.ferSoci(mesos);
+                }
+                for (int i = 0; i < participaciones; i++) {
+                    u.incrementarParticipaciones();
+                }
+>>>>>>> main
+>>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/persistence/PersistenciaClub.java
                 usuaris.add(u);
             }
         } catch (java.io.IOException e) {
@@ -153,6 +189,7 @@ public class PersistenciaClub {
     
     /**
      * Guarda las asignaciones de baldas en un fichero CSV.
+<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/persistence/PersistenciaClub.java
      * @param assignacions lista de asignaciones a guardar
      * @throws PersistenciaException si ocurre un error al escribir en el fichero
      */
@@ -160,6 +197,15 @@ public class PersistenciaClub {
         crearCarpeta();
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(fitxerAssignacions))) {
             for (Asignacion a : assignacions) {
+=======
+     * @param assignacons lista de asignaciones a guardar
+     * @throws PersistenciaException si ocurre un error al escribir en el fichero
+     */
+    public static void guardarAssignacions(ArrayList<Asignacion> assignacons) throws PersistenciaException {
+        crearCarpeta();
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(fitxerAssignacions))) {
+            for (Asignacion a : assignacons) {
+>>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/persistence/PersistenciaClub.java
                 bw.write(a.getBalda().getId() + ";" +
                          a.getSocio().getDni() + ";" +
                          a.getFechaAsignacion() + ";" +
@@ -179,19 +225,48 @@ public class PersistenciaClub {
      */
     public static ArrayList<String[]> carregarAssignacions() throws PersistenciaException {
         crearCarpeta();
+<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/persistence/PersistenciaClub.java
+=======
+<<<<<<< HEAD
+        ArrayList<String[]> assignacons = new ArrayList<>();
+        File f = new File(fitxerAssignacions);
+        if (!f.exists()) {
+            return assignacons;
+=======
+>>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/persistence/PersistenciaClub.java
         ArrayList<String[]> assignacions = new ArrayList<>();
         File f = new File(fitxerAssignacions);
         if (!f.exists()) {
             return assignacions;
+<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/persistence/PersistenciaClub.java
+=======
+>>>>>>> main
+>>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/persistence/PersistenciaClub.java
         }
         try (BufferedReader br = new BufferedReader(new FileReader(f))) {
             String linia;
             while ((linia = br.readLine()) != null) {
+<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/persistence/PersistenciaClub.java
                 assignacions.add(linia.split(";"));
+=======
+<<<<<<< HEAD
+                assignacons.add(linia.split(";"));
+=======
+                assignacions.add(linia.split(";"));
+>>>>>>> main
+>>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/persistence/PersistenciaClub.java
             }
         } catch (java.io.IOException e) {
             throw new PersistenciaException("Error al cargar asignaciones", e);
         }
+<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/persistence/PersistenciaClub.java
         return assignacions;
+=======
+<<<<<<< HEAD
+        return assignacons;
+=======
+        return assignacions;
+>>>>>>> main
+>>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/persistence/PersistenciaClub.java
     }
 }

@@ -77,6 +77,20 @@ public class Usuari {
     }
 
     /**
+<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/model/Usuari.java
+=======
+<<<<<<< HEAD
+=======
+     * Obtiene las participaciones del usuario
+     * @return número de participaciones del usuario
+     */
+    public int getParticipaciones() {
+        return participaciones;
+    }
+    
+    /**
+>>>>>>> main
+>>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/model/Usuari.java
      * Convierte al usuario en socio durante un número de meses.
      * @param mesos número de meses de membresía
      */

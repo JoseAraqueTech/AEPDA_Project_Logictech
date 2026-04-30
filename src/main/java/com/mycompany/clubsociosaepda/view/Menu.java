@@ -6,7 +6,14 @@ package com.mycompany.clubsociosaepda.view;
 import com.mycompany.clubsociosaepda.controller.GestorClub;
 import com.mycompany.clubsociosaepda.exception.AEDPAException;
 import com.mycompany.clubsociosaepda.exception.PersistenciaException;
+<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/view/Menu.java
 import java.time.LocalDate;
+=======
+<<<<<<< HEAD
+import java.time.LocalDate;
+=======
+>>>>>>> main
+>>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/view/Menu.java
 import java.util.Scanner;
 
 /**
@@ -42,6 +49,10 @@ public class Menu {
                 try {
                     switch (opcio) {
                         case 1:
+<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/view/Menu.java
+=======
+<<<<<<< HEAD
+>>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/view/Menu.java
                             altaUsuari();
                             break;
                         case 2:
@@ -76,6 +87,45 @@ public class Menu {
                             break;
                         case 12:
                             liberarBalda();
+<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/view/Menu.java
+=======
+=======
+                            gestor.altaUsuari();
+                            break;
+                        case 2:
+                            gestor.ferSoci();
+                            break;
+                        case 3:
+                            gestor.finalitzarMembresia();
+                            break;
+                        case 4:
+                            gestor.altaActivitat();
+                            break;
+                        case 5:
+                            gestor.eliminarActivitat();
+                            break;
+                        case 6:
+                            gestor.inscriureActivitat();
+                            break;
+                        case 7:
+                            gestor.mostrarActivitats();
+                            break;
+                        case 8:
+                            gestor.mostrarActivitatEspecifica();
+                            break;
+                        case 9:
+                            gestor.mostrarBaldas();
+                            break;
+                        case 10:
+                            gestor.mostrarDisponibilidadBaldas();
+                            break;
+                        case 11:
+                            gestor.asignarBalda();
+                            break;
+                        case 12:
+                            gestor.liberarBalda();
+>>>>>>> main
+>>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/view/Menu.java
                             break;
                         case 0:
                             gestor.guardar();
@@ -110,6 +160,10 @@ public class Menu {
         System.out.println("0. Sortir");
         System.out.print("Opcio: ");
     }
+<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/view/Menu.java
+=======
+<<<<<<< HEAD
+>>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/view/Menu.java
       /**
      * Registers a new user.
      */
@@ -248,7 +302,11 @@ private int demanarEnterMajorZero(String msg) {
         try {
             n = Integer.parseInt(sc.nextLine());
             if (n <= 0) {
+<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/view/Menu.java
                 System.out.println("ERROR: Mas grande que 0.");
+=======
+                System.out.println("ERROR: Must be greater than 0.");
+>>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/view/Menu.java
             }
         } catch (NumberFormatException e) {
             System.out.println("ERROR: Invalid number.");
@@ -264,4 +322,9 @@ private int demanarEnterMajorZero(String msg) {
         System.out.print(msg);
         return Integer.parseInt(sc.nextLine());
     }
+<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/view/Menu.java
+=======
+=======
+>>>>>>> main
+>>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/view/Menu.java
 }
