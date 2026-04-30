@@ -248,7 +248,7 @@ private int demanarEnterMajorZero(String msg) {
         try {
             n = Integer.parseInt(sc.nextLine());
             if (n <= 0) {
-                System.out.println("ERROR: Must be greater than 0.");
+                System.out.println("ERROR: Mas grande que 0.");
             }
         } catch (NumberFormatException e) {
             System.out.println("ERROR: Invalid number.");
