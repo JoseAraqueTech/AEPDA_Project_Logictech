@@ -73,13 +73,5 @@ public abstract class Activitat {
     /**
      * Define el comportamiento de la actividad.
      */
-<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/model/Activitat.java
     public abstract String gestionarActivitat();
-=======
-<<<<<<< HEAD
-    public abstract String gestionarActivitat();
-=======
-    public abstract void gestionarActivitat();
->>>>>>> main
->>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/model/Activitat.java
 }

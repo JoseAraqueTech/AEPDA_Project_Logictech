@@ -14,18 +14,10 @@ import com.mycompany.clubsociosaepda.persistence.PersistenciaClub;
 import com.mycompany.clubsociosaepda.exception.AEDPAException;
 import com.mycompany.clubsociosaepda.exception.PersistenciaException;
 import java.time.LocalDate;
-<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-=======
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
->>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
 
 /**
  * Clase que gestiona toda la lógica del club.
@@ -37,15 +29,7 @@ public class GestorClub {
     private ArrayList<Usuari> usuaris;
     private ArrayList<Activitat> activitats;
     private Map<Integer, Balda> baldas;
-<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
     
-=======
-<<<<<<< HEAD
-    
-=======
-    private Scanner sc;
->>>>>>> main
->>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
 
     /**
      * Constructor del gestor del club.
@@ -58,23 +42,11 @@ public class GestorClub {
         baldas = new HashMap<>();
         inicializarBaldas();
         carregarAssignacions(); 
-<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
-=======
-<<<<<<< HEAD
->>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
       
     }
 /**
      * Creates all shelves in the system.
      */
-<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
-=======
-=======
-        sc = new Scanner(System.in);
-    }
-
->>>>>>> main
->>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
     private void inicializarBaldas() {
         crearBalda(1, "Pasillo 1 - Balda A");
         crearBalda(2, "Pasillo 1 - Balda B");
@@ -85,20 +57,10 @@ public class GestorClub {
         crearBalda(7, "Pasillo 4 - Balda A");
         crearBalda(8, "Pasillo 4 - Balda B");
     }
-<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
-=======
-<<<<<<< HEAD
->>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
  
     /**
      * Returns all active shelf assignments.
      */
-<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
-=======
-=======
-
->>>>>>> main
->>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
     private ArrayList<Asignacion> getAsignacionesActivas() {
         ArrayList<Asignacion> lista = new ArrayList<>();
         for (Balda b : baldas.values()) {
@@ -108,19 +70,9 @@ public class GestorClub {
         }
         return lista;
     }
-<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
      /**
      * Loads shelf assignments from persistence.
      */
-=======
-<<<<<<< HEAD
-     /**
-     * Loads shelf assignments from persistence.
-     */
-=======
-    
->>>>>>> main
->>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
     private void carregarAssignacions() throws PersistenciaException {
         ArrayList<String[]> dades = PersistenciaClub.carregarAssignacions();
         for (String[] d : dades) {
@@ -142,51 +94,12 @@ public class GestorClub {
         baldas.put(id, new Balda(id, ubicacion));
     }
 
-<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
-=======
-<<<<<<< HEAD
->>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
     
 
     
 /**
      * Searches a user by DNI.
      */
-<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
-=======
-=======
-    private String demanarText(String msg) {
-        String t;
-        do {
-            System.out.print(msg);
-            t = sc.nextLine();
-            if (t.isEmpty()) {
-                System.out.println("ERROR: No pot estar buit.");
-            }
-        } while (t.isEmpty());
-        return t;
-    }
-
-    private int demanarEnterMajorZero(String msg) {
-        int n = 0;
-        do {
-            System.out.print(msg);
-            if (sc.hasNextInt()) {
-                n = sc.nextInt();
-                sc.nextLine();
-                if (n <= 0) {
-                    System.out.println("ERROR: Major que 0.");
-                }
-            } else {
-                System.out.println("ERROR: Numero invalid.");
-                sc.nextLine();
-            }
-        } while (n <= 0);
-        return n;
-    }
-
->>>>>>> main
->>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
     private Usuari buscarUsuari(String dni) {
         for (Usuari u : usuaris) {
             if (u.getDni().equalsIgnoreCase(dni)) {
@@ -195,19 +108,9 @@ public class GestorClub {
         }
         return null;
     }
-<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
 /**
      * Searches an activity by name.
      */
-=======
-<<<<<<< HEAD
-/**
-     * Searches an activity by name.
-     */
-=======
-
->>>>>>> main
->>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
     private Activitat buscarActivitat(String nom) {
         for (Activitat a : activitats) {
             if (a.getNom().equalsIgnoreCase(nom)) {
@@ -223,10 +126,6 @@ public class GestorClub {
      * También comprueba que no exista ya un usuario con el mismo DNI.
      * @throws AEDPAException si el DNI o email no son válidos o ya existe el usuario
      */
-<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
-=======
-<<<<<<< HEAD
->>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
     public void altaUsuari(String dni, String nom, String email) throws AEDPAException {
 
         if (!Usuari.esDniValid(dni)) {
@@ -245,67 +144,24 @@ public class GestorClub {
 }
 
 
-<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
-=======
-=======
-    public void altaUsuari() throws AEDPAException {
-        String dni = demanarText("DNI: ");
-        if (!Usuari.esDniValid(dni)) {
-            throw new AEDPAException("DNI no valid.");
-        }
-        if (buscarUsuari(dni) != null) {
-            throw new AEDPAException("Aquest usuari ja existeix.");
-        }
-        String nom = demanarText("Nom: ");
-        String email = demanarText("Email: ");
-        if (!Usuari.esEmailValid(email)) {
-            throw new AEDPAException("Email no valid.");
-        }
-        usuaris.add(new Usuari(dni, nom, email));
-    }
-
->>>>>>> main
->>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
     /**
      * Convierte un usuario en socio.
      * Solicita el DNI del usuario y los meses de membresía.
      * @throws AEDPAException si no hay usuarios, no existe el usuario
      * o ya es socio
      */
-<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
-=======
-<<<<<<< HEAD
->>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
     public void ferSoci(String dni, int mesos) throws AEDPAException {
         if (usuaris.isEmpty()) {
             throw new AEDPAException("No hi ha usuaris.");
         }
         Usuari u = buscarUsuari(dni);
-<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
-=======
-=======
-    public void ferSoci() throws AEDPAException {
-        if (usuaris.isEmpty()) {
-            throw new AEDPAException("No hi ha usuaris.");
-        }
-        Usuari u = buscarUsuari(demanarText("DNI: "));
->>>>>>> main
->>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
         if (u == null) {
             throw new AEDPAException("Usuari no trobat.");
         }
         if (u.esSoci()) {
             throw new AEDPAException("Ja es soci.");
         }
-<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
         u.ferSoci(mesos);
-=======
-<<<<<<< HEAD
-        u.ferSoci(mesos);
-=======
-        u.ferSoci(demanarEnterMajorZero("Mesos: "));
->>>>>>> main
->>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
     }
 
     /**
@@ -313,29 +169,12 @@ public class GestorClub {
      * @throws AEDPAException si no hay usuarios, no existe el usuario
      * o no es socio
      */
-<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
-=======
-<<<<<<< HEAD
->>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
     public void finalitzarMembresia(String dni) throws AEDPAException {
          Usuari u = buscarUsuari(dni);
 
         if (u == null)
             throw new AEDPAException("Usuari no trobat.");
         
-<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
-=======
-=======
-    public void finalitzarMembresia() throws AEDPAException {
-        if (usuaris.isEmpty()) {
-            throw new AEDPAException("No hi ha usuaris.");
-        }
-        Usuari u = buscarUsuari(demanarText("DNI: "));
-        if (u == null) {
-            throw new AEDPAException("Usuari no trobat.");
-        }
->>>>>>> main
->>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
         if (!u.esSoci()) {
             throw new AEDPAException("No es soci.");
         }
@@ -347,10 +186,6 @@ public class GestorClub {
      * Permite elegir entre tipo Torneig o Curs de Pintura.
      * @throws AEDPAException si la actividad ya existe o el formato de fecha es incorrecto
      */
-<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
-=======
-<<<<<<< HEAD
->>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
     public void altaActivitat(String nom, LocalDate data, int tipus, String professor) throws AEDPAException {
        if (buscarActivitat(nom) != null)
             throw new AEDPAException("Ja existeix aquesta activitat.");
@@ -371,51 +206,6 @@ public class GestorClub {
             throw new AEDPAException("Tipus d'activitat invalid.");
         }
 
-<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
-=======
-=======
-    public void altaActivitat() throws AEDPAException {
-        String nom = demanarText("Nom: ");
-        if (buscarActivitat(nom) != null) {
-            throw new AEDPAException("Ja existeix aquesta activitat.");
-        }
-      LocalDate data = null;
-boolean dataCorrecta = false;
-
-while (!dataCorrecta) {
-    try {
-        data = LocalDate.parse(demanarText("Data (YYYY-MM-DD): "));
-        int any = data.getYear();
-        if (any >= 1980 && any <= 2050) {
-            dataCorrecta = true;
-        } else {
-            System.out.println("ERROR: L'any ha d'estar entre 1980 i 2050.");
-        }
-        } catch (DateTimeParseException e) {
-            throw new AEDPAException("Format de data incorrecte.");
-        }
-}
-        System.out.println("1. Torneig");
-        System.out.println("2. Curs");
-        int tipus;
-        boolean correcte = false;
-        do {
-            tipus = demanarEnterMajorZero("Tipus (1 o 2): ");
-            if (tipus == 1 || tipus == 2) {
-                correcte = true;
-            } else {
-                System.out.println("ERROR: Nomes pots introduir 1 o 2.");
-            }
-        } while (!correcte);
-        Activitat a;
-        if (tipus == 1) {
-            a = new Torneig(nom, data);
-        } else {
-            String professor = demanarText("Professor: ");
-            a = new CursPintura(nom, data, professor);
-        }
->>>>>>> main
->>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
         activitats.add(a);
     }
 
@@ -424,29 +214,12 @@ while (!dataCorrecta) {
      * @throws AEDPAException si no hay actividades o no se encuentra la actividad
      * @throws PersistenciaException si hay error al guardar los datos
      */
-<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
-=======
-<<<<<<< HEAD
->>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
     public void eliminarActivitat(String nom) throws AEDPAException, PersistenciaException {
         Activitat a = buscarActivitat(nom);
 
         if (a == null)
             throw new AEDPAException("Activitat no trobada.");
 
-<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
-=======
-=======
-    public void eliminarActivitat() throws AEDPAException, PersistenciaException {
-        if (activitats.isEmpty()) {
-            throw new AEDPAException("No hi ha activitats.");
-        }
-        Activitat a = buscarActivitat(demanarText("Nom: "));
-        if (a == null) {
-            throw new AEDPAException("No trobada.");
-        }
->>>>>>> main
->>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
         activitats.remove(a);
         PersistenciaClub.guardarActivitats(activitats);
     }
@@ -462,10 +235,6 @@ while (!dataCorrecta) {
      * el usuario no existe, la actividad no existe o no puede participar
      * @throws PersistenciaException si ocurre un error al guardar los datos
      */
-<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
-=======
-<<<<<<< HEAD
->>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
     
      public void inscriureActivitat(String dni, String nomAct) throws AEDPAException, PersistenciaException {
 
@@ -483,46 +252,12 @@ while (!dataCorrecta) {
         a.afegirParticipant(u);
         u.incrementarParticipaciones();
 
-<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
-=======
-=======
-    public void inscriureActivitat() throws PersistenciaException, AEDPAException {
-        if (usuaris.isEmpty()) {
-            throw new AEDPAException("No hi ha usuaris.");
-        }
-        if (activitats.isEmpty()) {
-            throw new AEDPAException("No hi ha activitats.");
-        }
-        String dni = demanarText("DNI: ");
-        Usuari u = buscarUsuari(dni);
-        if (u == null) {
-            throw new AEDPAException("Usuari no trobat.");
-        }
-        if (!u.potParticipar()) {
-            throw new AEDPAException("Ha superat el limit de participacions. Ha de fer-se soci o pagar.");
-        }
-        String nomAct = demanarText("Activitat: ");
-        Activitat a = buscarActivitat(nomAct);
-        if (a == null) {
-            throw new AEDPAException("Activitat no trobada.");
-        }
-        a.afegirParticipant(u);
-        u.incrementarParticipaciones();
-        if (u.necesitaSerSoci()) {
-            System.out.println("AVIS: Aquest usuari ha de fer-se soci a partir d'ara.");
-        }
->>>>>>> main
->>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
         PersistenciaClub.guardarActivitats(activitats);
     }
 
     /**
      * Muestra todas las actividades registradas.
      */
-<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
-=======
-<<<<<<< HEAD
->>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
     public ArrayList<String> mostrarActivitats() {
         ArrayList<String> llista = new ArrayList<>();
 
@@ -531,25 +266,12 @@ while (!dataCorrecta) {
         }
 
         return llista;
-<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
-=======
-=======
-    public void mostrarActivitats() {
-        for (Activitat a : activitats) {
-            System.out.println(a.getNom() + " - " + a.getData());
-        }
->>>>>>> main
->>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
     }
 
     /**
      * Muestra la información de una actividad concreta junto a sus participantes.
      * @throws AEDPAException si no hay actividades o no se encuentra
      */
-<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
-=======
-<<<<<<< HEAD
->>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
     public String mostrarActivitatEspecifica(String nom) throws AEDPAException {
         Activitat a = buscarActivitat(nom);
 
@@ -567,35 +289,12 @@ while (!dataCorrecta) {
         }
 
         return resultat;
-<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
-=======
-=======
-    public void mostrarActivitatEspecifica() throws AEDPAException {
-        if (activitats.isEmpty()) {
-            throw new AEDPAException("No hi ha activitats.");
-        }
-        Activitat a = buscarActivitat(demanarText("Nom: "));
-        if (a == null) throw new AEDPAException("No trobada.");
-        System.out.println(a.getNom());
-        if (a.getParticipants().isEmpty()) {
-            System.out.println("Sense participants.");
-        } else {
-            for (Usuari u : a.getParticipants()) {
-                System.out.println(u.getNom());
-            }
-        }
->>>>>>> main
->>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
     }
 
     /**
      * Muestra todas las baldas del sistema junto a su estado
      * (ocupada o libre) y el usuario asignado si corresponde.
      */    
-<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
-=======
-<<<<<<< HEAD
->>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
    public ArrayList<String> mostrarBaldas() {
         ArrayList<String> llista = new ArrayList<>();
 
@@ -613,37 +312,10 @@ while (!dataCorrecta) {
         return llista;
     }
     
-<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
-=======
-=======
-    public void mostrarBaldas() {
-        if (baldas.isEmpty()) {
-            System.out.println("No hi ha baldes.");
-        } else {
-            for (Balda b : baldas.values()) {
-                String estat;
-                if (b.estaOcupada()) {
-                    estat = "OCUPADA";
-                } else {
-                    estat = "LLIURE";
-                }
-                System.out.println("Balda " + b.getId() + " - " + estat);
-                if (b.estaOcupada()) {
-                    System.out.println("  Soci: " + b.getAsignacionActual().getSocio().getNom());
-                }
-            }
-        }
-    }
->>>>>>> main
->>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
 
     /**
      * Muestra el número de baldas libres y ocupadas.
      */
-<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
-=======
-<<<<<<< HEAD
->>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
     public String mostrarDisponibilitatBaldas() {
         int lliures = 0;
         int ocupades = 0;
@@ -654,19 +326,6 @@ while (!dataCorrecta) {
         }
 
         return "Lliures: " + lliures + " | Ocupades: " + ocupades;
-<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
-=======
-=======
-    public void mostrarDisponibilidadBaldas() {
-        int libres = 0;
-        int ocupadas = 0;
-        for (Balda b : baldas.values()) {
-            if (b.estaOcupada()) ocupadas++;
-            else libres++;
-        }
-        System.out.println("Lliures: " + libres + " | Ocupades: " + ocupadas);
->>>>>>> main
->>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
     }
 
     /**
@@ -674,10 +333,6 @@ while (!dataCorrecta) {
      * @throws AEDPAException si no hay usuarios, la balda no existe,
      * está ocupada o el usuario no es válido
      */
-<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
-=======
-<<<<<<< HEAD
->>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
      public void asignarBalda(int id, String dni, int mesos) throws AEDPAException {
         Balda b = baldas.get(id);
 
@@ -696,47 +351,16 @@ while (!dataCorrecta) {
             throw new AEDPAException("Els mesos han de ser majors que 0.");
 
         b.asignar(new Asignacion(b, u, mesos));
-<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
-=======
-=======
-    public void asignarBalda() throws AEDPAException {
-        if (usuaris.isEmpty()) {
-            throw new AEDPAException("No hi ha usuaris.");
-        }
-        Balda b = baldas.get(demanarEnterMajorZero("ID: "));
-        if (b == null) throw new AEDPAException("No existeix.");
-        if (b.estaOcupada()) throw new AEDPAException("Ja ocupada.");
-        Usuari u = buscarUsuari(demanarText("DNI: "));
-        if (u == null || !u.esSoci()) {
-            throw new AEDPAException("Usuari no valid.");
-        }
-        b.asignar(new Asignacion(b, u, demanarEnterMajorZero("Mesos: ")));
->>>>>>> main
->>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
     }
 
     /**
      * Libera una balda ocupada.
      * @throws AEDPAException si la balda no existe o ya está libre
      */
-<<<<<<< HEAD:src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
     public void liberarBalda(int id) throws AEDPAException {
        Balda b = baldas.get(id);
-        if (b == null) 
-            throw new AEDPAException("No existeix.");
-        if (!b.estaOcupada()) 
-            throw new AEDPAException("Ja lliure.");
-=======
-<<<<<<< HEAD
-    public void liberarBalda(int id) throws AEDPAException {
-       Balda b = baldas.get(id);
-=======
-    public void liberarBalda() throws AEDPAException {
-        Balda b = baldas.get(demanarEnterMajorZero("ID: "));
->>>>>>> main
         if (b == null) throw new AEDPAException("No existeix.");
         if (!b.estaOcupada()) throw new AEDPAException("Ja lliure.");
->>>>>>> 4dc81785ae46c94ce68047d3d7c3a53e2b12ba70:ClubSociosAEPDA/src/main/java/com/mycompany/clubsociosaepda/controller/GestorClub.java
         b.liberar();
     }
 
