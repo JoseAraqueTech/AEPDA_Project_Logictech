@@ -6,6 +6,7 @@ package com.mycompany.clubsociosaepda.view;
 import com.mycompany.clubsociosaepda.controller.GestorClub;
 import com.mycompany.clubsociosaepda.exception.AEDPAException;
 import com.mycompany.clubsociosaepda.exception.PersistenciaException;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Scanner;
 
@@ -17,7 +18,7 @@ public class Menu {
     private GestorClub gestor;
     private Scanner sc;
 
-    public Menu() throws PersistenciaException {
+    public Menu() throws PersistenciaException, AEDPAException {
         gestor = new GestorClub();
         sc = new Scanner(System.in);
     }
@@ -28,7 +29,7 @@ public class Menu {
      * hasta que se selecciona la opción de salida.
      * @throws PersistenciaException si ocurre un error al guardar los datos
      */
-    public void start() throws PersistenciaException {
+    public void start() throws PersistenciaException, AEDPAException, Exception {
         int opcio;
         do {
             mostrarMenu();
@@ -77,6 +78,12 @@ public class Menu {
                         case 12:
                             liberarBalda();
                             break;
+                        case 13:
+                            altaBalda();
+                            break;
+                        case 14:
+                            modificarBalda();
+                            break;
                         case 0:
                             gestor.guardar();
                             break;
@@ -107,6 +114,9 @@ public class Menu {
         System.out.println("10. Disponibilitat baldes");
         System.out.println("11. Assignar balda");
         System.out.println("12. Alliberar balda");
+        System.out.println("13. Alta balda");
+        System.out.println("14. Modificar balda");
+
         System.out.println("0. Sortir");
         System.out.print("Opcio: ");
     }
@@ -264,4 +274,20 @@ private int demanarEnterMajorZero(String msg) {
         System.out.print(msg);
         return Integer.parseInt(sc.nextLine());
     }
+    
+     private void altaBalda() throws IOException, AEDPAException, Exception {
+        int id = demanarEnter("ID: ");
+        String ubicacion = demanarText("Ubicacion: ");
+        gestor.crearBalda(id, ubicacion);
+        System.out.println("Alumno registrado correctamente.");
+    }
+    
+          private void modificarBalda() throws IOException, AEDPAException, Exception {
+              int id = demanarEnter("ID de la balda a cambiar");
+        int idNou = demanarEnter("ID nueva de la balda a cambiar: ");
+        String ubicacion = demanarText("Ubicacion nueva: ");
+        gestor.modBalda(id, idNou, ubicacion);
+        System.out.println("Alumno registrado correctamente.");
+    }
+     
 }

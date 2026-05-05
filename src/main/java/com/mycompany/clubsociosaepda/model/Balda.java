@@ -7,8 +7,8 @@ package com.mycompany.clubsociosaepda.model;
  * @author josea
  */
 public class Balda {
-    private final int id;
-    private final String ubicacion;
+    private int id;
+    private String ubicacion;
     private boolean ocupada;
     private Asignacion asignacionActual;
 
@@ -31,6 +31,15 @@ public class Balda {
     public int getId() {
         return id;
     }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion;
+    }
+    
 
     /**
      * Obtiene la ubicación de la balda.
