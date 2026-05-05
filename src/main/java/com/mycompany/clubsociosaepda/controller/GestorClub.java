@@ -93,9 +93,6 @@ public class GestorClub {
     private void crearBalda(int id, String ubicacion) {
         baldas.put(id, new Balda(id, ubicacion));
     }
-
-    
-
     
 /**
      * Searches a user by DNI.
@@ -123,7 +120,7 @@ public class GestorClub {
     /**
      * Registra un nuevo usuario en el sistema.
      * Solicita los datos y valida que el DNI y el email sean correctos.
-     * También comprueba que no exista ya un usuario con el mismo DNI.
+     * También comprueba que no exista ya un usuario con el mismo DNI
      * @throws AEDPAException si el DNI o email no son válidos o ya existe el usuario
      */
     public void altaUsuari(String dni, String nom, String email) throws AEDPAException {
