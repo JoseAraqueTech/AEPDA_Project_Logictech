@@ -36,7 +36,7 @@ public class GestorClub {
      * Carga los datos desde los ficheros y inicializa las baldas del sistema.
      * @throws PersistenciaException si hay error al cargar datos
      */
-    public GestorClub() throws PersistenciaException {
+    public GestorClub() throws PersistenciaException, AEDPAException {
         usuaris = PersistenciaClub.carregarUsuaris();
         activitats = PersistenciaClub.carregarActivitats();
         baldas = new HashMap<>();
@@ -47,15 +47,15 @@ public class GestorClub {
 /**
      * Creates all shelves in the system.
      */
-    private void inicializarBaldas() {
-        crearBalda(1, "Pasillo 1 - Balda A");
-        crearBalda(2, "Pasillo 1 - Balda B");
-        crearBalda(3, "Pasillo 2 - Balda A");
-        crearBalda(4, "Pasillo 2 - Balda B");
-        crearBalda(5, "Pasillo 3 - Balda A");
-        crearBalda(6, "Pasillo 3 - Balda B");
-        crearBalda(7, "Pasillo 4 - Balda A");
-        crearBalda(8, "Pasillo 4 - Balda B");
+    private void inicializarBaldas() throws AEDPAException {
+        crearBalda(1, "T - 1");
+        crearBalda(2, "T - 2");
+        crearBalda(3, "U - 1");
+        crearBalda(4, "U - 2");
+        crearBalda(5, "V - 1");
+        crearBalda(6, "V - 2");
+        crearBalda(7, "W - 1");
+        crearBalda(8, "W - 2");
     }
  
     /**
@@ -70,6 +70,7 @@ public class GestorClub {
         }
         return lista;
     }
+    
      /**
      * Loads shelf assignments from persistence.
      */
@@ -90,12 +91,13 @@ public class GestorClub {
         }
     }
     
-    private void crearBalda(int id, String ubicacion) {
+    public void crearBalda(int id, String ubicacion) throws AEDPAException {
+        Balda b = baldas.get(id);
+         if (b != null) {
+            throw new AEDPAException("La balda ja existeix.");
+            }
         baldas.put(id, new Balda(id, ubicacion));
     }
-
-    
-
     
 /**
      * Searches a user by DNI.
@@ -123,7 +125,7 @@ public class GestorClub {
     /**
      * Registra un nuevo usuario en el sistema.
      * Solicita los datos y valida que el DNI y el email sean correctos.
-     * También comprueba que no exista ya un usuario con el mismo DNI.
+     * También comprueba que no exista ya un usuario con el mismo DNI
      * @throws AEDPAException si el DNI o email no son válidos o ya existe el usuario
      */
     public void altaUsuari(String dni, String nom, String email) throws AEDPAException {
@@ -222,6 +224,18 @@ public class GestorClub {
 
         activitats.remove(a);
         PersistenciaClub.guardarActivitats(activitats);
+    }
+
+    public void modBalda(int id, int idNou, String ubicacion) throws AEDPAException, PersistenciaException {
+        Balda b = baldas.get(id);
+
+        if (b == null)
+            throw new AEDPAException("Balda no trobada.");
+
+        b.setUbicacion(ubicacion);
+        b.setId(idNou);
+        
+
     }
 
     
@@ -352,6 +366,7 @@ public class GestorClub {
 
         b.asignar(new Asignacion(b, u, mesos));
     }
+     
 
     /**
      * Libera una balda ocupada.
