@@ -1,12 +1,13 @@
 com\mycompany\clubsociosaepda\exception\AEDPAException.class
 com\mycompany\clubsociosaepda\model\CursPintura.class
-com\mycompany\clubsociosaepda\model\Asignacion.class
 com\mycompany\clubsociosaepda\model\Usuari.class
-com\mycompany\clubsociosaepda\view\Menu.class
 com\mycompany\clubsociosaepda\ClubSociosAEPDA.class
+com\mycompany\clubsociosaepda\model\Balda.class
+com\mycompany\clubsociosaepda\model\Torneig.class
+com\mycompany\clubsociosaepda\view\AskData.class
+com\mycompany\clubsociosaepda\model\Asignacion.class
+com\mycompany\clubsociosaepda\view\Menu.class
 com\mycompany\clubsociosaepda\persistence\PersistenciaClub.class
 com\mycompany\clubsociosaepda\model\Activitat.class
-com\mycompany\clubsociosaepda\model\Balda.class
 com\mycompany\clubsociosaepda\controller\GestorClub.class
 com\mycompany\clubsociosaepda\exception\PersistenciaException.class
-com\mycompany\clubsociosaepda\model\Torneig.class
