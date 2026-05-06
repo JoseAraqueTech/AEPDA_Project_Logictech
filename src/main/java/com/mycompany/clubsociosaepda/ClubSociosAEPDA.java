@@ -3,6 +3,7 @@
  */
 package com.mycompany.clubsociosaepda;
 
+import com.mycompany.clubsociosaepda.exception.AEDPAException;
 import com.mycompany.clubsociosaepda.exception.PersistenciaException;
 import com.mycompany.clubsociosaepda.view.Menu;
 
@@ -23,7 +24,7 @@ public class ClubSociosAEPDA {
      * 
      * @param args argumentos de ejecución
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws AEDPAException, Exception {
 
         try {
             Menu menu = new Menu();
