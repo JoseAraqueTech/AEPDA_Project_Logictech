@@ -61,7 +61,7 @@ public class PersistenciaClub {
         }
     }
     
-    
+     
     
     /**
     * Carga los usuarios desde el fichero CSV.
