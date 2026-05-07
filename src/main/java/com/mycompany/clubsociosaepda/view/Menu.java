@@ -85,6 +85,12 @@ public class Menu {
                     case 14:
                         modificarBalda();
                         break;
+                    case 15:
+                        mostrarUsuari();
+                        break;
+                    case 16:
+                        eliminarUsuari();
+                        break;
                     case 0:
                         gestor.guardar();
                         break;
@@ -117,6 +123,8 @@ public class Menu {
         System.out.println("12. Alliberar balda");
         System.out.println("13. Alta balda");
         System.out.println("14. Modificar balda");
+        System.out.println("15. Mostrar usuari");
+        System.out.println("16. Eliminar usuari");
         System.out.println("0. Sortir");
         System.out.print("Opcio: ");
     }
@@ -315,4 +323,17 @@ public class Menu {
         gestor.modBalda(id, idNou, ubicacion);
         System.out.println("Balda modificada correctament.");
     }
+     private void eliminarUsuari() throws AEDPAException, PersistenciaException, IOException {
+        String dni = ask.askString("DNI de l'usuari a eliminar: ");
+        gestor.eliminarUsuari(dni);
+    System.out.println("Usuari eliminat correctament.");
+}
+     
+     private void mostrarUsuari() throws AEDPAException, IOException {
+         String dni = ask.askString("DNI de l'usuari: ");
+         String info = gestor.mostrarUsuari(dni);
+    System.out.println(info);
+}
+
+
 }

@@ -450,5 +450,50 @@ public class GestorClub {
     }
         return a instanceof Torneig;
 }
+    
+        /**
+ * Elimina un usuari del sistema.
+ * @param dni DNI de l'usuari a eliminar
+ * @throws AEDPAException si l'usuari no existeix
+ * @throws PersistenciaException si hi ha problemes de persistència
+ */
+    public void eliminarUsuari(String dni) throws AEDPAException, PersistenciaException {
+
+        Usuari u = buscarUsuari(dni);
+            if (u == null) {
+                throw new AEDPAException("Usuari no trobat.");
+    }
+
+    usuaris.remove(u);
+
+    PersistenciaClub.guardarUsuaris(usuaris);
+}
+    
+    
+    /**
+ * Retorna la informació completa d'un usuari.
+ * @param dni DNI de l'usuari
+ * @return informació en format text
+ * @throws AEDPAException si l'usuari no existeix
+ */
+public String mostrarUsuari(String dni) throws AEDPAException {
+
+    Usuari u = buscarUsuari(dni);
+    if (u == null) {
+        throw new AEDPAException("Usuari no trobat.");
+    }
+
+    String info = "";
+    info += "Nom: " + u.getNom() + "\n";
+    info += "DNI: " + u.getDni() + "\n";
+    info += "Email: " + u.getEmail() + "\n";
+    info += "És soci: " + u.esSoci() + "\n";
+    info += "Mesos de membresia: " + u.getMesosMembresia() + "\n";
+    info += "Saldo pendent: " + u.getSaldo() + "€\n";
+
+    return info;
+}
+
+
 
 }
