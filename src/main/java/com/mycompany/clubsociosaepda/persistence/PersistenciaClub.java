@@ -50,7 +50,7 @@ public class PersistenciaClub {
         crearCarpeta();
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(fitxerUsuaris))) {
             for (Usuari u : usuaris) {
-                bw.write(u.getDni() + ";" + u.getNom() + ";" + u.getEmail() + ";" + u.esSoci() + ";" + u.getMesosMembresia());
+                bw.write(u.getDni() + ";" + u.getNom() + ";" + u.getEmail() + ";" + u.esSoci() + ";" + u.getMesosMembresia()+ ";" + u.getSaldo());
                 bw.newLine();
             }
         } catch (java.io.IOException e) {
@@ -78,10 +78,15 @@ public class PersistenciaClub {
                 String email = d[2];
                 boolean soci = Boolean.parseBoolean(d[3]);
                 int mesos = Integer.parseInt(d[4]);
-                Usuari u = new Usuari(dni, nom, email);
+                double saldo = 0.0;
+                 if (d.length > 5) {
+                saldo = Double.parseDouble(d[5]);
+                }
+                Usuari u = new Usuari(dni, nom, email, saldo);
                 if (soci) {
                     u.ferSoci(mesos);
                 }
+                u.afegirDeute(saldo);
                 usuaris.add(u);
             }
         } catch (java.io.IOException e) {

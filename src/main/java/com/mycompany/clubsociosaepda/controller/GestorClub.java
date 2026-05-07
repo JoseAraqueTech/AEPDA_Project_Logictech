@@ -128,7 +128,7 @@ public class GestorClub {
      * También comprueba que no exista ya un usuario con el mismo DNI
      * @throws AEDPAException si el DNI o email no son válidos o ya existe el usuario
      */
-    public void altaUsuari(String dni, String nom, String email) throws AEDPAException {
+    public void altaUsuari(String dni, String nom, String email,double saldo) throws AEDPAException {
 
         if (!Usuari.esDniValid(dni)) {
             throw new AEDPAException("DNI no valid.");
@@ -142,7 +142,7 @@ public class GestorClub {
             throw new AEDPAException("Email no valid.");
     }
 
-    usuaris.add(new Usuari(dni, nom, email));
+    usuaris.add(new Usuari(dni, nom, email, saldo));
 }
 
 
@@ -268,6 +268,55 @@ public class GestorClub {
 
         PersistenciaClub.guardarActivitats(activitats);
     }
+     
+     /**
+ * Gestiona el pagament del menjar d'un torneig per a un soci.
+ * @param dni DNI de l'usuari
+ * @param nomAct Nom del torneig
+ * @param preuComida Preu del menjar
+ * @param pagat Quantitat pagada ara
+ * @throws AEDPAException si l'activitat no és un torneig o l'usuari no és soci
+ * @throws PersistenciaException si hi ha problemes de persistència
+ */
+    public void gestionarComidaTorneig(String dni, String nomAct, double preuComida, double pagat)throws AEDPAException, PersistenciaException {
+
+   
+        Usuari u = buscarUsuari(dni);
+             if (u == null)
+                throw new AEDPAException("Usuari no trobat.");
+
+    // Només els socis poden comprar menjar
+            if (!u.esSoci())  
+                throw new AEDPAException("Només els socis poden comprar menjar del club.");
+
+   
+         Activitat a = buscarActivitat(nomAct);
+            if (a == null)
+                throw new AEDPAException("Activitat no trobada.");
+
+    
+             if (!(a instanceof Torneig))
+                throw new AEDPAException("Aquesta activitat no és un torneig.");
+             
+    
+            if (preuComida < 0 || pagat < 0)
+                throw new AEDPAException("Els imports no poden ser negatius.");
+
+    
+        double deute = preuComida - pagat;
+              if (deute < 0) {
+                     deute = 0;
+    }
+
+         // Afegir deute al saldo del soci
+             if (deute > 0) {
+                  u.afegirDeute(deute);
+    }
+
+         // Guardar usuaris amb el nou saldo
+          PersistenciaClub.guardarUsuaris(usuaris);
+}
+
 
     /**
      * Muestra todas las actividades registradas.
@@ -388,4 +437,18 @@ public class GestorClub {
         PersistenciaClub.guardarActivitats(activitats);
         PersistenciaClub.guardarAssignacions(getAsignacionesActivas());
     }
+    /**
+ * Indica si una activitat és un torneig.
+ * @param nomAct Nom de l'activitat
+ * @return true si l'activitat és un torneig, false en cas contrari
+ * @throws AEDPAException si l'activitat no existeix
+ */
+    public boolean esTorneig(String nomAct) throws AEDPAException {
+        Activitat a = buscarActivitat(nomAct);
+            if (a == null) {
+            throw new AEDPAException("Activitat no trobada.");
+    }
+        return a instanceof Torneig;
+}
+
 }

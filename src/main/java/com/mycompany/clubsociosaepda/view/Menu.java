@@ -130,7 +130,8 @@ public class Menu {
         String dni = ask.askString("DNI: ");
         String nom = ask.askString("Nom: ");
         String email = ask.askString("Email: ");
-        gestor.altaUsuari(dni, nom, email);
+        double saldo = ask.askDouble("Saldo soci:");
+        gestor.altaUsuari(dni, nom, email,saldo);
         System.out.println("Usuari creat correctament.");
     }
 
@@ -194,12 +195,42 @@ public class Menu {
      * @throws PersistenciaException si ocurre un error guardando datos
      * @throws IOException si ocurre un error leyendo datos
      */
-    private void inscriureActivitat() throws AEDPAException, PersistenciaException, IOException {
-        String dni = ask.askString("DNI: ");
-        String nomAct = ask.askString("Nom activitat: ");
+    private void inscriureActivitat()throws AEDPAException, PersistenciaException, IOException {
+
+    String dni = ask.askString("DNI: ");
+    String nomAct = ask.askString("Nom activitat: ");
+
+    if (gestor.esTorneig(nomAct)) {
+
+        String resposta = ask.askString("Vols menjar al torneig? (si/no): ");
+
+        if (resposta.equalsIgnoreCase("si")) {
+
+            double preuComida = Double.parseDouble(
+                    ask.askString("Preu del menjar: "));
+
+            double pagat = Double.parseDouble(
+                    ask.askString("Quant pagues ara: "));
+
+    
+            gestor.inscriureActivitat(dni, nomAct);
+            gestor.gestionarComidaTorneig(dni, nomAct, preuComida, pagat);
+
+            System.out.println("Usuari inscrit correctament (amb menjar).");
+
+        } else {
+
+            gestor.inscriureActivitat(dni, nomAct);
+            System.out.println("Usuari inscrit correctament.");
+        }
+
+    } else {
+
         gestor.inscriureActivitat(dni, nomAct);
         System.out.println("Usuari inscrit correctament.");
     }
+}
+
 
     /**
      * Muestra todas las actividades registradas.
