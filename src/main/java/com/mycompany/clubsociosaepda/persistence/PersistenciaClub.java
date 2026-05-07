@@ -15,8 +15,11 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Clase encargada de la persistencia de datos del club.
@@ -46,10 +49,10 @@ public class PersistenciaClub {
      * @param usuaris lista de usuarios a guardar
      * @throws PersistenciaException si ocurre un error al escribir en el fichero
      */
-    public static void guardarUsuaris(ArrayList<Usuari> usuaris) throws PersistenciaException {
+    public static void guardarUsuaris(Map<String, Usuari> usuaris) throws IOException,PersistenciaException {
         crearCarpeta();
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(fitxerUsuaris))) {
-            for (Usuari u : usuaris) {
+            for (Usuari u : usuaris.values()) {
                 bw.write(u.getDni() + ";" + u.getNom() + ";" + u.getEmail() + ";" + u.esSoci() + ";" + u.getMesosMembresia());
                 bw.newLine();
             }
@@ -57,14 +60,17 @@ public class PersistenciaClub {
             throw new PersistenciaException("Error al guardar usuarios", e);
         }
     }
+    
+    
+    
     /**
     * Carga los usuarios desde el fichero CSV.
     * @return lista de usuarios cargados desde el fichero
     * @throws PersistenciaException si ocurre un error al leer el fichero
     */
-    public static ArrayList<Usuari> carregarUsuaris() throws PersistenciaException {
+    public static Map<String, Usuari> carregarUsuaris() throws IOException,PersistenciaException {
         crearCarpeta();
-        ArrayList<Usuari> usuaris = new ArrayList<>();
+        Map<String, Usuari> usuaris = new HashMap<>();
         File f = new File(fitxerUsuaris);
         if (!f.exists()) {
             return usuaris;
@@ -82,7 +88,7 @@ public class PersistenciaClub {
                 if (soci) {
                     u.ferSoci(mesos);
                 }
-                usuaris.add(u);
+                usuaris.put(dni, u);
             }
         } catch (java.io.IOException e) {
             throw new PersistenciaException("Error al cargar usuarios", e);
@@ -90,6 +96,12 @@ public class PersistenciaClub {
         return usuaris;
     }
 
+
+    
+    
+    
+    
+    
     /**
      * Guarda las actividades en un fichero CSV incluyendo su tipo.
      * @param activitats lista de actividades a guardar

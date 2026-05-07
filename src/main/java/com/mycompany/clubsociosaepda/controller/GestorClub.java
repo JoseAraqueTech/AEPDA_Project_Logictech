@@ -26,7 +26,7 @@ import java.util.Map;
  */
 public class GestorClub {
 
-    private ArrayList<Usuari> usuaris;
+    private Map<String, Usuari> usuaris;
     private ArrayList<Activitat> activitats;
     private Map<Integer, Balda> baldas;
     
@@ -37,7 +37,7 @@ public class GestorClub {
      * @throws PersistenciaException si hay error al cargar datos
      */
     public GestorClub() throws PersistenciaException, AEDPAException {
-        usuaris = PersistenciaClub.carregarUsuaris();
+       // usuaris = PersistenciaClub.carregarUsuaris();
         activitats = PersistenciaClub.carregarActivitats();
         baldas = new HashMap<>();
         inicializarBaldas();
@@ -81,7 +81,7 @@ public class GestorClub {
             String dni = d[1];
             int mesos = 1;
             Balda b = baldas.get(idBalda);
-            Usuari u = buscarUsuari(dni);
+            Usuari u = usuaris.get(dni);
             if (b != null && u != null) {
                 if (!b.estaOcupada()) {
                     Asignacion a = new Asignacion(b, u, mesos);
@@ -92,8 +92,7 @@ public class GestorClub {
     }
     
     public void crearBalda(int id, String ubicacion) throws AEDPAException {
-        Balda b = baldas.get(id);
-         if (b != null) {
+         if (baldas.containsKey(id)) {
             throw new AEDPAException("La balda ja existeix.");
             }
         baldas.put(id, new Balda(id, ubicacion));
@@ -102,14 +101,6 @@ public class GestorClub {
 /**
      * Searches a user by DNI.
      */
-    private Usuari buscarUsuari(String dni) {
-        for (Usuari u : usuaris) {
-            if (u.getDni().equalsIgnoreCase(dni)) {
-                return u;
-            }
-        }
-        return null;
-    }
 /**
      * Searches an activity by name.
      */
@@ -134,7 +125,7 @@ public class GestorClub {
             throw new AEDPAException("DNI no valid.");
     }
 
-         if (buscarUsuari(dni) != null) {
+         if (usuaris.containsKey(dni)) {
             throw new AEDPAException("Aquest usuari ja existeix.");
     }
 
@@ -142,7 +133,7 @@ public class GestorClub {
             throw new AEDPAException("Email no valid.");
     }
 
-    usuaris.add(new Usuari(dni, nom, email));
+    usuaris.put(dni, new Usuari(dni, nom, email));
 }
 
 
@@ -156,7 +147,7 @@ public class GestorClub {
         if (usuaris.isEmpty()) {
             throw new AEDPAException("No hi ha usuaris.");
         }
-        Usuari u = buscarUsuari(dni);
+        Usuari u = usuaris.get(dni);
         if (u == null) {
             throw new AEDPAException("Usuari no trobat.");
         }
@@ -172,7 +163,7 @@ public class GestorClub {
      * o no es socio
      */
     public void finalitzarMembresia(String dni) throws AEDPAException {
-         Usuari u = buscarUsuari(dni);
+         Usuari u = usuaris.get(dni);
 
         if (u == null)
             throw new AEDPAException("Usuari no trobat.");
@@ -252,7 +243,7 @@ public class GestorClub {
     
      public void inscriureActivitat(String dni, String nomAct) throws AEDPAException, PersistenciaException {
 
-        Usuari u = buscarUsuari(dni);
+        Usuari u = usuaris.get(dni);
         if (u == null)
             throw new AEDPAException("Usuari no trobat.");
 
@@ -263,7 +254,7 @@ public class GestorClub {
         if (a == null)
             throw new AEDPAException("Activitat no trobada.");
 
-        a.afegirParticipant(u);
+        a.afegirParticipant(dni, u);
         u.incrementarParticipaciones();
 
         PersistenciaClub.guardarActivitats(activitats);
@@ -297,7 +288,7 @@ public class GestorClub {
         if (a.getParticipants().isEmpty()) {
             resultat += "Sense participants.";
         } else {
-            for (Usuari u : a.getParticipants()) {
+            for (Usuari u : a.getParticipants().values()) {
                 resultat += u.getNom() + "\n";
             }
         }
@@ -305,6 +296,7 @@ public class GestorClub {
         return resultat;
     }
 
+    
     /**
      * Muestra todas las baldas del sistema junto a su estado
      * (ocupada o libre) y el usuario asignado si corresponde.
@@ -356,7 +348,7 @@ public class GestorClub {
         if (b.estaOcupada())
             throw new AEDPAException("Balda ocupada.");
 
-        Usuari u = buscarUsuari(dni);
+        Usuari u = usuaris.get(dni);
 
         if (u == null || !u.esSoci())
             throw new AEDPAException("Usuari no valid.");
@@ -384,7 +376,7 @@ public class GestorClub {
      * @throws PersistenciaException si ocurre un error al guardar
      */
     public void guardar() throws PersistenciaException {
-        PersistenciaClub.guardarUsuaris(usuaris);
+        //PersistenciaClub.guardarUsuaris(usuaris);
         PersistenciaClub.guardarActivitats(activitats);
         PersistenciaClub.guardarAssignacions(getAsignacionesActivas());
     }

@@ -5,7 +5,8 @@
 package com.mycompany.clubsociosaepda.model;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Clase abstracta que representa una actividad del club.
@@ -15,7 +16,7 @@ public abstract class Activitat {
     
     protected String nom;
     protected LocalDate data;
-    protected ArrayList<Usuari> participants;
+    protected Map<String, Usuari> participants;
 
     /**
      * Constructor de la actividad.
@@ -25,7 +26,7 @@ public abstract class Activitat {
     public Activitat(String nom, LocalDate data) {
         this.nom = nom;
         this.data = data;
-        this.participants = new ArrayList<>();
+        this.participants = new HashMap();
     }
 
     /**
@@ -56,7 +57,7 @@ public abstract class Activitat {
      * Obtiene los participantes de la actividad.
      * @return lista de participantes
      */
-    public ArrayList<Usuari> getParticipants() {
+    public Map<String, Usuari> getParticipants() {
         return participants;
     }
 
@@ -64,9 +65,9 @@ public abstract class Activitat {
      * Añade un participante a la actividad.
      * @param u usuario a añadir
      */
-    public void afegirParticipant(Usuari u) {
-        if (!participants.contains(u)) {
-            participants.add(u);
+    public void afegirParticipant(String id, Usuari u) {
+        if (!participants.containsValue(u)) {
+            participants.put(id, u);
         }
     }
 
