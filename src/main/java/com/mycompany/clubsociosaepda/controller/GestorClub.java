@@ -26,7 +26,7 @@ import java.util.Map;
  */
 public class GestorClub {
 
-    private ArrayList<Usuari> usuaris;
+    private Map<String, Usuari> usuaris;
     private ArrayList<Activitat> activitats;
     private Map<Integer, Balda> baldas;
     
@@ -81,7 +81,7 @@ public class GestorClub {
             String dni = d[1];
             int mesos = 1;
             Balda b = baldas.get(idBalda);
-            Usuari u = buscarUsuari(dni);
+            Usuari u = usuaris.get(dni);
             if (b != null && u != null) {
                 if (!b.estaOcupada()) {
                     Asignacion a = new Asignacion(b, u, mesos);
@@ -99,20 +99,11 @@ public class GestorClub {
         baldas.put(id, new Balda(id, ubicacion));
     }
     
-/**
-     * Searches a user by DNI.
-     */
-    private Usuari buscarUsuari(String dni) {
-        for (Usuari u : usuaris) {
-            if (u.getDni().equalsIgnoreCase(dni)) {
-                return u;
-            }
-        }
-        return null;
-    }
-/**
+
+    /**
      * Searches an activity by name.
      */
+    
     private Activitat buscarActivitat(String nom) {
         for (Activitat a : activitats) {
             if (a.getNom().equalsIgnoreCase(nom)) {
@@ -134,7 +125,7 @@ public class GestorClub {
             throw new AEDPAException("DNI no valid.");
     }
 
-         if (buscarUsuari(dni) != null) {
+         if (usuaris.containsKey(dni)) {
             throw new AEDPAException("Aquest usuari ja existeix.");
     }
 
@@ -142,7 +133,7 @@ public class GestorClub {
             throw new AEDPAException("Email no valid.");
     }
 
-    usuaris.add(new Usuari(dni, nom, email, saldo));
+    usuaris.put(dni, new Usuari(dni, nom, email, saldo));
 }
 
 
@@ -156,7 +147,7 @@ public class GestorClub {
         if (usuaris.isEmpty()) {
             throw new AEDPAException("No hi ha usuaris.");
         }
-        Usuari u = buscarUsuari(dni);
+        Usuari u = usuaris.get(dni);
         if (u == null) {
             throw new AEDPAException("Usuari no trobat.");
         }
@@ -172,7 +163,7 @@ public class GestorClub {
      * o no es socio
      */
     public void finalitzarMembresia(String dni) throws AEDPAException {
-         Usuari u = buscarUsuari(dni);
+         Usuari u = usuaris.get(dni);
 
         if (u == null)
             throw new AEDPAException("Usuari no trobat.");
@@ -252,7 +243,7 @@ public class GestorClub {
     
      public void inscriureActivitat(String dni, String nomAct) throws AEDPAException, PersistenciaException {
 
-        Usuari u = buscarUsuari(dni);
+        Usuari u = usuaris.get(dni);
         if (u == null)
             throw new AEDPAException("Usuari no trobat.");
 
@@ -281,7 +272,7 @@ public class GestorClub {
     public void gestionarComidaTorneig(String dni, String nomAct, double preuComida, double pagat)throws AEDPAException, PersistenciaException {
 
    
-        Usuari u = buscarUsuari(dni);
+        Usuari u = usuaris.get(dni);
              if (u == null)
                 throw new AEDPAException("Usuari no trobat.");
 
@@ -405,7 +396,7 @@ public class GestorClub {
         if (b.estaOcupada())
             throw new AEDPAException("Balda ocupada.");
 
-        Usuari u = buscarUsuari(dni);
+        Usuari u = usuaris.get(dni);
 
         if (u == null || !u.esSoci())
             throw new AEDPAException("Usuari no valid.");
@@ -459,14 +450,14 @@ public class GestorClub {
  */
     public void eliminarUsuari(String dni) throws AEDPAException, PersistenciaException {
 
-        Usuari u = buscarUsuari(dni);
+        Usuari u = usuaris.get(dni);
             if (u == null) {
                 throw new AEDPAException("Usuari no trobat.");
     }
 
     usuaris.remove(u);
 
-    PersistenciaClub.guardarUsuaris(usuaris);
+    //PersistenciaClub.guardarUsuaris(usuaris);
 }
     
     
@@ -478,7 +469,7 @@ public class GestorClub {
  */
 public String mostrarUsuari(String dni) throws AEDPAException {
 
-    Usuari u = buscarUsuari(dni);
+    Usuari u = usuaris.get(dni);
     if (u == null) {
         throw new AEDPAException("Usuari no trobat.");
     }

@@ -17,6 +17,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Clase encargada de la persistencia de datos del club.
@@ -46,10 +48,10 @@ public class PersistenciaClub {
      * @param usuaris lista de usuarios a guardar
      * @throws PersistenciaException si ocurre un error al escribir en el fichero
      */
-    public static void guardarUsuaris(ArrayList<Usuari> usuaris) throws PersistenciaException {
+    public static void guardarUsuaris(Map<String, Usuari> usuaris) throws PersistenciaException {
         crearCarpeta();
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(fitxerUsuaris))) {
-            for (Usuari u : usuaris) {
+            for (Usuari u : usuaris.values()) {
                 bw.write(u.getDni() + ";" + u.getNom() + ";" + u.getEmail() + ";" + u.esSoci() + ";" + u.getMesosMembresia()+ ";" + u.getSaldo());
                 bw.newLine();
             }
@@ -62,9 +64,9 @@ public class PersistenciaClub {
     * @return lista de usuarios cargados desde el fichero
     * @throws PersistenciaException si ocurre un error al leer el fichero
     */
-    public static ArrayList<Usuari> carregarUsuaris() throws PersistenciaException {
+    public static Map<String, Usuari> carregarUsuaris() throws PersistenciaException {
         crearCarpeta();
-        ArrayList<Usuari> usuaris = new ArrayList<>();
+        Map<String, Usuari> usuaris = new HashMap();
         File f = new File(fitxerUsuaris);
         if (!f.exists()) {
             return usuaris;
@@ -87,7 +89,7 @@ public class PersistenciaClub {
                     u.ferSoci(mesos);
                 }
                 u.afegirDeute(saldo);
-                usuaris.add(u);
+                usuaris.put(dni, u);
             }
         } catch (java.io.IOException e) {
             throw new PersistenciaException("Error al cargar usuarios", e);
@@ -183,19 +185,19 @@ public class PersistenciaClub {
      */
     public static ArrayList<String[]> carregarAssignacions() throws PersistenciaException {
         crearCarpeta();
-        ArrayList<String[]> assignacons = new ArrayList<>();
+        ArrayList<String[]> assignacions = new ArrayList<>();
         File f = new File(fitxerAssignacions);
         if (!f.exists()) {
-            return assignacons;
+            return assignacions;
         }
         try (BufferedReader br = new BufferedReader(new FileReader(f))) {
             String linia;
             while ((linia = br.readLine()) != null) {
-                assignacons.add(linia.split(";"));
+                assignacions.add(linia.split(";"));
             }
         } catch (java.io.IOException e) {
             throw new PersistenciaException("Error al cargar asignaciones", e);
         }
-        return assignacons;
+        return assignacions;
     }
 }
