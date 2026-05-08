@@ -323,16 +323,32 @@ public class Menu {
         gestor.modBalda(id, idNou, ubicacion);
         System.out.println("Balda modificada correctament.");
     }
+    /**
+     * Elimina un Usuari.
+     * @throws IOException si ocurre un error leyendo datos
+     * @throws AEDPAException si ocurre un error de lógica
+     */
+    
      private void eliminarUsuari() throws AEDPAException, PersistenciaException, IOException {
         String dni = ask.askString("DNI de l'usuari a eliminar: ");
         gestor.eliminarUsuari(dni);
     System.out.println("Usuari eliminat correctament.");
 }
      
-     private void mostrarUsuari() throws AEDPAException, IOException {
-         String dni = ask.askString("DNI de l'usuari: ");
-         String info = gestor.mostrarUsuari(dni);
-    System.out.println(info);
+     /**
+     * Muestra la lista de usuarios.
+     * @throws IOException si ocurre un error leyendo datos
+     * @throws AEDPAException si ocurre un error de lógica
+     */
+     private void mostrarUsuari() throws IOException {
+    try {
+        String dni = ask.askString("Introdueix el DNI de l'usuari: ");
+        String info = gestor.mostrarUsuari(dni);
+        System.out.println("\n INFORMACIÓ DE L'USUARI");
+        System.out.println(info);
+    } catch (AEDPAException e) {
+        System.out.println("Error: " + e.getMessage());
+    }
 }
 
 

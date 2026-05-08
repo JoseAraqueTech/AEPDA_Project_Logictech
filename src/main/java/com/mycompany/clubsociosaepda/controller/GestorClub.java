@@ -467,22 +467,63 @@ public class GestorClub {
  * @return informació en format text
  * @throws AEDPAException si l'usuari no existeix
  */
-public String mostrarUsuari(String dni) throws AEDPAException {
+    public String mostrarUsuari(String dni) throws AEDPAException {
 
     Usuari u = usuaris.get(dni);
-    if (u == null) {
-        throw new AEDPAException("Usuari no trobat.");
+        if (u == null) {
+            throw new AEDPAException("Usuari no trobat.");
     }
 
-    String info = "";
-    info += "Nom: " + u.getNom() + "\n";
-    info += "DNI: " + u.getDni() + "\n";
-    info += "Email: " + u.getEmail() + "\n";
-    info += "És soci: " + u.esSoci() + "\n";
-    info += "Mesos de membresia: " + u.getMesosMembresia() + "\n";
-    info += "Saldo pendent: " + u.getSaldo() + "€\n";
+    StringBuilder info = new StringBuilder();
 
-    return info;
+    // Datos básicos
+    info.append("Nom: ").append(u.getNom()).append("\n");
+    info.append("DNI: ").append(u.getDni()).append("\n");
+    info.append("Email: ").append(u.getEmail()).append("\n");
+
+
+    info.append("És soci: ").append(u.esSoci()).append("\n");
+    info.append("Mesos de membresia: ").append(u.getMesosMembresia()).append("\n");
+
+  
+    boolean matriculaPagada = u.esSoci();
+    info.append("Matrícula pagada: ").append(matriculaPagada).append("\n");
+    info.append("Saldo pendent: ").append(u.getSaldo()).append(" €\n\n");
+    info.append("Baldas assignades:\n");
+    boolean teBalda = false;
+
+    for (Balda b : baldas.values()) {
+        if (b.estaOcupada() && b.getAsignacionActual().getSocio().getDni().equals(dni)) {
+            teBalda = true;
+            info.append(" - Balda ").append(b.getId())
+                .append(" (Ubicació: ").append(b.getUbicacion()).append(")")
+                .append(" | Activa: ").append(b.getAsignacionActual().isActiva())
+                .append(" | Venç: ").append(b.getAsignacionActual().getFechaVencimiento())
+                .append("\n");
+        }
+    }
+
+         if (!teBalda) {
+             info.append(" - Cap balda assignada.\n");
+    }
+
+    info.append("\n");
+    info.append("Activitats on participa:\n");
+    boolean participa = false;
+
+       for (Activitat a : activitats) {
+               if (a.getParticipants().contains(u)) {
+            participa = true;
+            info.append(" - ").append(a.getNom())
+                .append(" (").append(a.getData()).append(")\n");
+        }
+    }
+
+    if (!participa) {
+        info.append(" - No participa en cap activitat.\n");
+    }
+
+    return info.toString();
 }
 
 
