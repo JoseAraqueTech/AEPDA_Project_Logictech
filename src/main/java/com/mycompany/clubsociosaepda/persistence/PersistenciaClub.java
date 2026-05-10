@@ -49,11 +49,11 @@ public class PersistenciaClub {
      * @param usuaris lista de usuarios a guardar
      * @throws PersistenciaException si ocurre un error al escribir en el fichero
      */
-    public static void guardarUsuaris(Map<String, Usuari> usuaris) throws IOException,PersistenciaException {
+    public static void guardarUsuaris(Map<String, Usuari> usuaris) throws PersistenciaException {
         crearCarpeta();
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(fitxerUsuaris))) {
             for (Usuari u : usuaris.values()) {
-                bw.write(u.getDni() + ";" + u.getNom() + ";" + u.getEmail() + ";" + u.esSoci() + ";" + u.getMesosMembresia());
+                bw.write(u.getDni() + ";" + u.getNom() + ";" + u.getEmail() + ";" + u.esSoci() + ";" + u.getMesosMembresia()+ ";" + u.getSaldo());
                 bw.newLine();
             }
         } catch (java.io.IOException e) {
@@ -84,10 +84,15 @@ public class PersistenciaClub {
                 String email = d[2];
                 boolean soci = Boolean.parseBoolean(d[3]);
                 int mesos = Integer.parseInt(d[4]);
-                Usuari u = new Usuari(dni, nom, email);
+                double saldo = 0.0;
+                 if (d.length > 5) {
+                saldo = Double.parseDouble(d[5]);
+                }
+                Usuari u = new Usuari(dni, nom, email, saldo);
                 if (soci) {
                     u.ferSoci(mesos);
                 }
+                u.afegirDeute(saldo);
                 usuaris.put(dni, u);
             }
         } catch (java.io.IOException e) {
@@ -190,19 +195,19 @@ public class PersistenciaClub {
      */
     public static ArrayList<String[]> carregarAssignacions() throws PersistenciaException {
         crearCarpeta();
-        ArrayList<String[]> assignacons = new ArrayList<>();
+        ArrayList<String[]> assignacions = new ArrayList<>();
         File f = new File(fitxerAssignacions);
         if (!f.exists()) {
-            return assignacons;
+            return assignacions;
         }
         try (BufferedReader br = new BufferedReader(new FileReader(f))) {
             String linia;
             while ((linia = br.readLine()) != null) {
-                assignacons.add(linia.split(";"));
+                assignacions.add(linia.split(";"));
             }
         } catch (java.io.IOException e) {
             throw new PersistenciaException("Error al cargar asignaciones", e);
         }
-        return assignacons;
+        return assignacions;
     }
 }

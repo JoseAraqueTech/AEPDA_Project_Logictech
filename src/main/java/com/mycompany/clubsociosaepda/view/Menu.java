@@ -85,6 +85,12 @@ public class Menu {
                     case 14:
                         modificarBalda();
                         break;
+                    case 15:
+                        mostrarUsuari();
+                        break;
+                    case 16:
+                        eliminarUsuari();
+                        break;
                     case 0:
                         gestor.guardar();
                         break;
@@ -117,6 +123,8 @@ public class Menu {
         System.out.println("12. Alliberar balda");
         System.out.println("13. Alta balda");
         System.out.println("14. Modificar balda");
+        System.out.println("15. Mostrar usuari");
+        System.out.println("16. Eliminar usuari");
         System.out.println("0. Sortir");
         System.out.print("Opcio: ");
     }
@@ -130,7 +138,8 @@ public class Menu {
         String dni = ask.askString("DNI: ");
         String nom = ask.askString("Nom: ");
         String email = ask.askString("Email: ");
-        gestor.altaUsuari(dni, nom, email);
+        double saldo = ask.askDouble("Saldo soci:");
+        gestor.altaUsuari(dni, nom, email,saldo);
         System.out.println("Usuari creat correctament.");
     }
 
@@ -194,12 +203,42 @@ public class Menu {
      * @throws PersistenciaException si ocurre un error guardando datos
      * @throws IOException si ocurre un error leyendo datos
      */
-    private void inscriureActivitat() throws AEDPAException, PersistenciaException, IOException {
-        String dni = ask.askString("DNI: ");
-        String nomAct = ask.askString("Nom activitat: ");
+    private void inscriureActivitat()throws AEDPAException, PersistenciaException, IOException {
+
+    String dni = ask.askString("DNI: ");
+    String nomAct = ask.askString("Nom activitat: ");
+
+    if (gestor.esTorneig(nomAct)) {
+
+        String resposta = ask.askString("Vols menjar al torneig? (si/no): ");
+
+        if (resposta.equalsIgnoreCase("si")) {
+
+            double preuComida = Double.parseDouble(
+                    ask.askString("Preu del menjar: "));
+
+            double pagat = Double.parseDouble(
+                    ask.askString("Quant pagues ara: "));
+
+    
+            gestor.inscriureActivitat(dni, nomAct);
+            gestor.gestionarComidaTorneig(dni, nomAct, preuComida, pagat);
+
+            System.out.println("Usuari inscrit correctament (amb menjar).");
+
+        } else {
+
+            gestor.inscriureActivitat(dni, nomAct);
+            System.out.println("Usuari inscrit correctament.");
+        }
+
+    } else {
+
         gestor.inscriureActivitat(dni, nomAct);
         System.out.println("Usuari inscrit correctament.");
     }
+}
+
 
     /**
      * Muestra todas las actividades registradas.
@@ -284,4 +323,33 @@ public class Menu {
         gestor.modBalda(id, idNou, ubicacion);
         System.out.println("Balda modificada correctament.");
     }
+    /**
+     * Elimina un Usuari.
+     * @throws IOException si ocurre un error leyendo datos
+     * @throws AEDPAException si ocurre un error de lógica
+     */
+    
+     private void eliminarUsuari() throws AEDPAException, PersistenciaException, IOException {
+        String dni = ask.askString("DNI de l'usuari a eliminar: ");
+        gestor.eliminarUsuari(dni);
+    System.out.println("Usuari eliminat correctament.");
+}
+     
+     /**
+     * Muestra la lista de usuarios.
+     * @throws IOException si ocurre un error leyendo datos
+     * @throws AEDPAException si ocurre un error de lógica
+     */
+     private void mostrarUsuari() throws IOException {
+    try {
+        String dni = ask.askString("Introdueix el DNI de l'usuari: ");
+        String info = gestor.mostrarUsuari(dni);
+        System.out.println("\n INFORMACIÓ DE L'USUARI");
+        System.out.println(info);
+    } catch (AEDPAException e) {
+        System.out.println("Error: " + e.getMessage());
+    }
+}
+
+
 }
