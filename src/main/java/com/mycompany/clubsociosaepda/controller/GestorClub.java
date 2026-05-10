@@ -37,7 +37,7 @@ public class GestorClub {
      * @throws PersistenciaException si hay error al cargar datos
      */
     public GestorClub() throws PersistenciaException, AEDPAException {
-        usuaris = PersistenciaClub.carregarUsuaris();
+       // usuaris = PersistenciaClub.carregarUsuaris();
         activitats = PersistenciaClub.carregarActivitats();
         baldas = new HashMap<>();
         inicializarBaldas();
@@ -92,15 +92,17 @@ public class GestorClub {
     }
     
     public void crearBalda(int id, String ubicacion) throws AEDPAException {
-        Balda b = baldas.get(id);
-         if (b != null) {
+         if (baldas.containsKey(id)) {
             throw new AEDPAException("La balda ja existeix.");
             }
         baldas.put(id, new Balda(id, ubicacion));
     }
     
 
-    /**
+
+    
+/**
+ 
      * Searches an activity by name.
      */
     
@@ -133,7 +135,9 @@ public class GestorClub {
             throw new AEDPAException("Email no valid.");
     }
 
+
     usuaris.put(dni, new Usuari(dni, nom, email, saldo));
+
 }
 
 
@@ -254,7 +258,7 @@ public class GestorClub {
         if (a == null)
             throw new AEDPAException("Activitat no trobada.");
 
-        a.afegirParticipant(u);
+        a.afegirParticipant(dni, u);
         u.incrementarParticipaciones();
 
         PersistenciaClub.guardarActivitats(activitats);
@@ -337,7 +341,7 @@ public class GestorClub {
         if (a.getParticipants().isEmpty()) {
             resultat += "Sense participants.";
         } else {
-            for (Usuari u : a.getParticipants()) {
+            for (Usuari u : a.getParticipants().values()) {
                 resultat += u.getNom() + "\n";
             }
         }
@@ -345,6 +349,7 @@ public class GestorClub {
         return resultat;
     }
 
+    
     /**
      * Muestra todas las baldas del sistema junto a su estado
      * (ocupada o libre) y el usuario asignado si corresponde.
@@ -424,7 +429,7 @@ public class GestorClub {
      * @throws PersistenciaException si ocurre un error al guardar
      */
     public void guardar() throws PersistenciaException {
-        PersistenciaClub.guardarUsuaris(usuaris);
+        //PersistenciaClub.guardarUsuaris(usuaris);
         PersistenciaClub.guardarActivitats(activitats);
         PersistenciaClub.guardarAssignacions(getAsignacionesActivas());
     }
@@ -457,7 +462,7 @@ public class GestorClub {
 
     usuaris.remove(u);
 
-    //PersistenciaClub.guardarUsuaris(usuaris);
+    PersistenciaClub.guardarUsuaris(usuaris);
 }
     
     
@@ -476,7 +481,7 @@ public class GestorClub {
 
     StringBuilder info = new StringBuilder();
 
-    // Datos básicos
+    
     info.append("Nom: ").append(u.getNom()).append("\n");
     info.append("DNI: ").append(u.getDni()).append("\n");
     info.append("Email: ").append(u.getEmail()).append("\n");
@@ -512,7 +517,7 @@ public class GestorClub {
     boolean participa = false;
 
        for (Activitat a : activitats) {
-               if (a.getParticipants().contains(u)) {
+               if (a.getParticipants().containsKey(u.getDni())) {
             participa = true;
             info.append(" - ").append(a.getNom())
                 .append(" (").append(a.getData()).append(")\n");
@@ -520,7 +525,7 @@ public class GestorClub {
     }
 
     if (!participa) {
-        info.append(" - No participa en cap activitat.\n");
+        info.append("No participa en cap activitat.\n");
     }
 
     return info.toString();

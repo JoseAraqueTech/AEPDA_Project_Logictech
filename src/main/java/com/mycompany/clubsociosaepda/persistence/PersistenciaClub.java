@@ -15,6 +15,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,14 +60,17 @@ public class PersistenciaClub {
             throw new PersistenciaException("Error al guardar usuarios", e);
         }
     }
+    
+     
+    
     /**
     * Carga los usuarios desde el fichero CSV.
     * @return lista de usuarios cargados desde el fichero
     * @throws PersistenciaException si ocurre un error al leer el fichero
     */
-    public static Map<String, Usuari> carregarUsuaris() throws PersistenciaException {
+    public static Map<String, Usuari> carregarUsuaris() throws IOException,PersistenciaException {
         crearCarpeta();
-        Map<String, Usuari> usuaris = new HashMap();
+        Map<String, Usuari> usuaris = new HashMap<>();
         File f = new File(fitxerUsuaris);
         if (!f.exists()) {
             return usuaris;
@@ -97,6 +101,12 @@ public class PersistenciaClub {
         return usuaris;
     }
 
+
+    
+    
+    
+    
+    
     /**
      * Guarda las actividades en un fichero CSV incluyendo su tipo.
      * @param activitats lista de actividades a guardar
