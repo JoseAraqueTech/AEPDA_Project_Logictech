@@ -3,15 +3,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.clubsociosaepda.model;
+
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
 /**
- * Representa un usuario del club con identificación,
- * información de contacto y estado de membresía.
- * Controla también el número de participaciones en actividades.
+ * Representa un usuario del club con identificación, información de contacto y
+ * estado de membresía. Controla también el número de participaciones en
+ * actividades.
  */
-
 public class Usuari {
 
     protected String dni;
@@ -22,24 +22,27 @@ public class Usuari {
     private int participaciones;
     private double saldo;
 
-     /**
+    /**
      * Constructor del usuario.
+     *
      * @param dni DNI del usuario
      * @param nom nombre del usuario
      * @param email correo electrónico
+     * @param saldo saldo pendiente del usuario
      */
-    public Usuari(String dni, String nom, String email,double saldo) {
+    public Usuari(String dni, String nom, String email, double saldo) {
         this.dni = dni;
         this.nom = nom;
         this.email = email;
         this.soci = false;
         this.mesosMembresia = 0;
         this.participaciones = 0;
-        this.saldo = 0.0;
+        this.saldo = saldo;
     }
 
     /**
      * Obtiene el DNI del usuario.
+     *
      * @return el DNI en formato mayúsculas
      */
     public String getDni() {
@@ -48,6 +51,7 @@ public class Usuari {
 
     /**
      * Obtiene el nombre del usuario.
+     *
      * @return el nombre del usuario
      */
     public String getNom() {
@@ -56,6 +60,7 @@ public class Usuari {
 
     /**
      * Obtiene el email del usuario.
+     *
      * @return el correo electrónico
      */
     public String getEmail() {
@@ -64,6 +69,7 @@ public class Usuari {
 
     /**
      * Comprueba si el usuario es socio.
+     *
      * @return true si es socio, false en caso contrario
      */
     public boolean esSoci() {
@@ -72,6 +78,7 @@ public class Usuari {
 
     /**
      * Obtiene los meses de membresía.
+     *
      * @return número de meses de membresía
      */
     public int getMesosMembresia() {
@@ -80,6 +87,7 @@ public class Usuari {
 
     /**
      * Convierte al usuario en socio durante un número de meses.
+     *
      * @param mesos número de meses de membresía
      */
     public void ferSoci(int mesos) {
@@ -97,6 +105,7 @@ public class Usuari {
 
     /**
      * Indica si el usuario puede participar.
+     *
      * @return true si es socio o tiene menos de 3 participaciones
      */
     public boolean potParticipar() {
@@ -111,10 +120,12 @@ public class Usuari {
     }
 
     public boolean necesitaSerSoci() {
-    return !soci && participaciones >= 3;
+        return !soci && participaciones >= 3;
     }
+
     /**
      * Retorna el saldo pendent del soci.
+     *
      * @return saldo pendent
      */
     public double getSaldo() {
@@ -123,6 +134,7 @@ public class Usuari {
 
     /**
      * Afegeix deute al saldo del soci.
+     *
      * @param quantitat quantitat a afegir (ha de ser >= 0)
      */
     public void afegirDeute(double quantitat) {
@@ -133,6 +145,7 @@ public class Usuari {
 
     /**
      * Redueix el saldo pendent del soci.
+     *
      * @param quantitat quantitat a pagar (ha de ser >= 0)
      */
     public void pagar(double quantitat) {
@@ -143,9 +156,10 @@ public class Usuari {
             }
         }
     }
-    
+
     /**
      * Valida el formato de un email.
+     *
      * @param email email a validar
      * @return true si es válido
      */
@@ -156,7 +170,8 @@ public class Usuari {
 
     /**
      * Valida un DNI usando el algoritmo oficial de la letra de control.
-     * @param nif el DNI a validar
+     *
+     * @param dni el DNI a validar
      * @return true si es válido, false en caso contrario
      */
     public static boolean esDniValid(String dni) {
@@ -167,7 +182,7 @@ public class Usuari {
         return Arrays.binarySearch(INVALIDOS, dni) < 0
                 && REGEXP.matcher(dni).matches()
                 && dni.charAt(8) == DIGITO_CONTROL.charAt(
-                        Integer.parseInt(dni.substring(0, 8)) % 23
-                );
+                Integer.parseInt(dni.substring(0, 8)) % 23
+        );
     }
 }

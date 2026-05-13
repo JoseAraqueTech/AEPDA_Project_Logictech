@@ -26,7 +26,7 @@ public abstract class Activitat {
     public Activitat(String nom, LocalDate data) {
         this.nom = nom;
         this.data = data;
-        this.participants = new HashMap();
+        this.participants = new HashMap<>();
     }
 
     /**
@@ -63,6 +63,7 @@ public abstract class Activitat {
 
     /**
      * Añade un participante a la actividad.
+     * @param id identificador del usuario
      * @param u usuario a añadir
      */
     public void afegirParticipant(String id, Usuari u) {
@@ -73,6 +74,7 @@ public abstract class Activitat {
 
     /**
      * Define el comportamiento de la actividad.
+     * @return informacion de la actividad
      */
     public abstract String gestionarActivitat();
 }

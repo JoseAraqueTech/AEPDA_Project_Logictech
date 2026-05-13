@@ -3,8 +3,6 @@
  */
 package com.mycompany.clubsociosaepda;
 
-import com.mycompany.clubsociosaepda.exception.AEDPAException;
-import com.mycompany.clubsociosaepda.exception.PersistenciaException;
 import com.mycompany.clubsociosaepda.view.Menu;
 
 /**
@@ -24,13 +22,15 @@ public class ClubSociosAEPDA {
      * 
      * @param args argumentos de ejecución
      */
-    public static void main(String[] args) throws AEDPAException, Exception {
+    public static void main(String[] args) {
 
         try {
+
             Menu menu = new Menu();
             menu.start();
-        } 
-        catch (PersistenciaException e) {
+
+        } catch (Exception e) {
+
             System.out.println("ERROR inesperado: " + e.getMessage());
         }
         
