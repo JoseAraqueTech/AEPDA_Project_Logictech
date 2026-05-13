@@ -159,15 +159,15 @@ public class Usuari {
      * @param nif el DNI a validar
      * @return true si es válido, false en caso contrario
      */
-    public static boolean esDniValid(String nif) {
+    public static boolean esDniValid(String dni) {
         Pattern REGEXP = Pattern.compile("[0-9]{8}[A-Z]");
         String DIGITO_CONTROL = "TRWAGMYFPDXBNJZSQVHLCKE";
         String[] INVALIDOS = new String[]{"00000000T", "00000001R", "99999999R"};
 
-        return Arrays.binarySearch(INVALIDOS, nif) < 0
-                && REGEXP.matcher(nif).matches()
-                && nif.charAt(8) == DIGITO_CONTROL.charAt(
-                        Integer.parseInt(nif.substring(0, 8)) % 23
+        return Arrays.binarySearch(INVALIDOS, dni) < 0
+                && REGEXP.matcher(dni).matches()
+                && dni.charAt(8) == DIGITO_CONTROL.charAt(
+                        Integer.parseInt(dni.substring(0, 8)) % 23
                 );
     }
 }
