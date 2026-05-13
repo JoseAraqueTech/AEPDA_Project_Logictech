@@ -40,6 +40,7 @@ public class GestorClub {
        // usuaris = PersistenciaClub.carregarUsuaris();
         activitats = PersistenciaClub.carregarActivitats();
         baldas = new HashMap<>();
+        usuaris = new HashMap<>();
         inicializarBaldas();
         carregarAssignacions(); 
       
