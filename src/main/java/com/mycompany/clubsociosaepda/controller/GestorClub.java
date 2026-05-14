@@ -9,9 +9,9 @@ import com.mycompany.clubsociosaepda.model.Activitat;
 import com.mycompany.clubsociosaepda.model.Torneig;
 import com.mycompany.clubsociosaepda.model.CursPintura;
 import com.mycompany.clubsociosaepda.model.Balda;
-import com.mycompany.clubsociosaepda.model.Asignacion;
 import com.mycompany.clubsociosaepda.exception.AEDPAException;
 import com.mycompany.clubsociosaepda.exception.PersistenciaException;
+import com.mycompany.clubsociosaepda.model.enums.NivellPintura;
 import com.mycompany.clubsociosaepda.persistence.AepdaDAO;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -38,7 +38,7 @@ public class GestorClub {
     }
 
     // =========================================================================
-    // USUARIS
+    // USUARIOS
     // =========================================================================
 
     /**
@@ -134,7 +134,7 @@ public class GestorClub {
     }
 
     // =========================================================================
-    // ACTIVITATS
+    // ACTIVIDADES
     // =========================================================================
 
     /**
@@ -145,11 +145,13 @@ public class GestorClub {
      * @param data         fecha de la actividad
      * @param tipus        tipo (1 = Torneig, 2 = CursPintura)
      * @param professor    profesor (solo para CursPintura)
+     * @param nivell       nivel de curso de pintura
+     * 
      * @throws AEDPAException si la actividad ya existe, la fecha es inválida o
      *                        el tipo es incorrecto
      * @throws SQLException   si ocurre un error de base de datos
      */
-    public void altaActivitat(int id_activitat, String nom, LocalDate data, int tipus, String professor)
+    public void altaActivitat(int id_activitat, String nom, LocalDate data, int tipus, String professor, NivellPintura nivell)
             throws AEDPAException, SQLException {
         if (aepdadao.buscarActivitat(id_activitat)) {
             throw new AEDPAException("Ja existeix aquesta activitat.");
@@ -165,7 +167,7 @@ public class GestorClub {
             if (professor == null || professor.isEmpty()) {
                 throw new AEDPAException("El professor no pot estar buit.");
             }
-            a = new CursPintura(id_activitat, nom, data, professor);
+            a = new CursPintura(id_activitat, nom, data, professor, nivell);
         } else {
             throw new AEDPAException("Tipus d'activitat invalid.");
         }

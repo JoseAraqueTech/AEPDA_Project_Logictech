@@ -10,7 +10,6 @@ public class Balda {
     private int id;
     private String ubicacion;
     private boolean ocupada;
-    private Asignacion asignacionActual;
 
     /**
      * Constructor de la balda.
@@ -21,7 +20,6 @@ public class Balda {
         this.id = id;
         this.ubicacion = ubicacion;
         this.ocupada = false;
-        this.asignacionActual = null;
     }
 
     /**
@@ -57,30 +55,6 @@ public class Balda {
         return ocupada;
     }
 
-    /**
-     * Obtiene la asignación actual de la balda.
-     * @return asignación actual o null si está libre
-     */
-    public Asignacion getAsignacionActual() {
-        return asignacionActual;
-    }
-
-    /**
-     * Asigna la balda a un usuario mediante una asignación.
-     * @param asignacion objeto de asignación
-     */
-    public void asignar(Asignacion asignacion) {
-            this.ocupada = true;
-            this.asignacionActual = asignacion;
-    }
-
-    /**
-     * Libera la balda dejándola disponible.
-     */
-    public void liberar() {
-        this.ocupada = false;
-        this.asignacionActual = null;
-    }
 
     /**
      * Obtiene el estado de la balda en formato texto.

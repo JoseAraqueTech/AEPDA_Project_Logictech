@@ -20,6 +20,7 @@ public class Torneig extends Activitat {
 
     /**
      * Constructor del torneo.
+     * @param id_activitat identificador actividad
      * @param nom nombre del torneo
      * @param data fecha del torneo
      */

@@ -7,6 +7,7 @@ package com.mycompany.clubsociosaepda.view;
 import com.mycompany.clubsociosaepda.controller.GestorClub;
 import com.mycompany.clubsociosaepda.exception.AEDPAException;
 import com.mycompany.clubsociosaepda.exception.PersistenciaException;
+import com.mycompany.clubsociosaepda.model.enums.NivellPintura;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -186,10 +187,13 @@ public class Menu {
         LocalDate data = LocalDate.parse(ask.askString("Data (YYYY-MM-DD): "));
         int tipus = ask.askInt("Tipus (1 = Torneig, 2 = Curs): ", "Tipus invalid", 1, 2);
         String professor = null;
+        NivellPintura nivell = null;
         if (tipus == 2) {
             professor = ask.askString("Professor: ");
+            String nivellText = ask.askString("Nivell (PRINCIPIANT/MITJA/AVANCAT): ").toUpperCase();
+            nivell = NivellPintura.valueOf(nivellText);
         }
-        gestor.altaActivitat(id_activitat, nom, data, tipus, professor);
+        gestor.altaActivitat(id_activitat, nom, data, tipus, professor, nivell);
         System.out.println("Activitat creada correctament.");
     }
 

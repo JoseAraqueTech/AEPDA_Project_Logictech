@@ -21,6 +21,7 @@ public abstract class Activitat {
 
     /**
      * Constructor de la actividad.
+     * @param id_activitat identificador de la actividad
      * @param nom nombre de la actividad
      * @param data fecha de la actividad
      */
@@ -39,6 +40,10 @@ public abstract class Activitat {
         return nom;
     }
 
+    public int getIdActivitat() {
+        return id_activitat;
+    }
+    
     /**
      * Obtiene la fecha de la actividad.
      * @return la fecha de la actividad
