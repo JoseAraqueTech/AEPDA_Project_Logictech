@@ -5,10 +5,6 @@ package com.mycompany.clubsociosaepda;
 
 import com.mycompany.clubsociosaepda.view.Menu;
 
-/**
- *
- * @author josea
- */
 
 /**
  * Clase principal de la aplicación.

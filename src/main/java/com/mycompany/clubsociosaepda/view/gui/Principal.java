@@ -2,20 +2,31 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package com.mycompany.clubsociosaepda.view;
+package com.mycompany.clubsociosaepda.view.gui;
+
+import com.mycompany.clubsociosaepda.controller.GestorClub;
+import com.mycompany.clubsociosaepda.exception.AEDPAException;
+import com.mycompany.clubsociosaepda.exception.PersistenciaException;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author josea
  */
 public class Principal extends javax.swing.JFrame {
-
+    private GestorClub gestor;
     /**
      * Creates new form Principal
      */
     public Principal() {
-        initComponents();
+    initComponents();
+    this.setLocationRelativeTo(null);
+    try {
+        gestor = new GestorClub();
+    } catch (AEDPAException | PersistenciaException e) {
+        JOptionPane.showMessageDialog( this, e.getMessage(),  "Error", JOptionPane.ERROR_MESSAGE);
     }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -151,7 +162,13 @@ public class Principal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        // TODO add your handling code here:
+        AltaUsuariJDialog dialog =
+                   new AltaUsuariJDialog(
+                           this,
+                           true,
+                           gestor
+                   );
+           dialog.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed

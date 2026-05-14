@@ -3,7 +3,6 @@ C:\Users\juan-\Desktop\ProyectoAEDPA\AEPDA_Project_Logictech\src\main\java\com\m
 C:\Users\juan-\Desktop\ProyectoAEDPA\AEPDA_Project_Logictech\src\main\java\com\mycompany\clubsociosaepda\exception\AEDPAException.java
 C:\Users\juan-\Desktop\ProyectoAEDPA\AEPDA_Project_Logictech\src\main\java\com\mycompany\clubsociosaepda\exception\PersistenciaException.java
 C:\Users\juan-\Desktop\ProyectoAEDPA\AEPDA_Project_Logictech\src\main\java\com\mycompany\clubsociosaepda\model\Activitat.java
-C:\Users\juan-\Desktop\ProyectoAEDPA\AEPDA_Project_Logictech\src\main\java\com\mycompany\clubsociosaepda\model\Asignacion.java
 C:\Users\juan-\Desktop\ProyectoAEDPA\AEPDA_Project_Logictech\src\main\java\com\mycompany\clubsociosaepda\model\Balda.java
 C:\Users\juan-\Desktop\ProyectoAEDPA\AEPDA_Project_Logictech\src\main\java\com\mycompany\clubsociosaepda\model\CursPintura.java
 C:\Users\juan-\Desktop\ProyectoAEDPA\AEPDA_Project_Logictech\src\main\java\com\mycompany\clubsociosaepda\model\enums\NivellPintura.java
@@ -11,5 +10,6 @@ C:\Users\juan-\Desktop\ProyectoAEDPA\AEPDA_Project_Logictech\src\main\java\com\m
 C:\Users\juan-\Desktop\ProyectoAEDPA\AEPDA_Project_Logictech\src\main\java\com\mycompany\clubsociosaepda\model\Usuari.java
 C:\Users\juan-\Desktop\ProyectoAEDPA\AEPDA_Project_Logictech\src\main\java\com\mycompany\clubsociosaepda\persistence\AepdaDAO.java
 C:\Users\juan-\Desktop\ProyectoAEDPA\AEPDA_Project_Logictech\src\main\java\com\mycompany\clubsociosaepda\view\AskData.java
+C:\Users\juan-\Desktop\ProyectoAEDPA\AEPDA_Project_Logictech\src\main\java\com\mycompany\clubsociosaepda\view\gui\AltaUsuariJDialog.java
+C:\Users\juan-\Desktop\ProyectoAEDPA\AEPDA_Project_Logictech\src\main\java\com\mycompany\clubsociosaepda\view\gui\Principal.java
 C:\Users\juan-\Desktop\ProyectoAEDPA\AEPDA_Project_Logictech\src\main\java\com\mycompany\clubsociosaepda\view\Menu.java
-C:\Users\juan-\Desktop\ProyectoAEDPA\AEPDA_Project_Logictech\src\main\java\gui\Principal.java
