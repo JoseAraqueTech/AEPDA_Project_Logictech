@@ -32,6 +32,7 @@ CREATE TABLE activitats (
 CREATE TABLE curso_pintura (
     id_activitat INT PRIMARY KEY,
     profesor VARCHAR(100) NOT NULL,
+    nivell varchar(20),
 
     FOREIGN KEY (id_activitat)
         REFERENCES activitats(id_activitat)
