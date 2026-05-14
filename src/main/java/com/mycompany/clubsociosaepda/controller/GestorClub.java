@@ -103,7 +103,6 @@ public class GestorClub {
 
     /**
      * Muestra la información de un usuario a partir de su DNI.
-     * NUEVO: faltaba en GestorClub; Menu.java lo llamaba esperando List<Usuari>.
      *
      * @param dni DNI del usuario
      * @return lista con el usuario encontrado (vacía si no existe)
@@ -146,9 +145,7 @@ public class GestorClub {
      * @param tipus        tipo (1 = Torneig, 2 = CursPintura)
      * @param professor    profesor (solo para CursPintura)
      * @param nivell       nivel de curso de pintura
-     * 
-     * @throws AEDPAException si la actividad ya existe, la fecha es inválida o
-     *                        el tipo es incorrecto
+     * @throws AEDPAException si la actividad ya existe, la fecha es inválida o el tipo es incorrecto
      * @throws SQLException   si ocurre un error de base de datos
      */
     public void altaActivitat(int id_activitat, String nom, LocalDate data, int tipus, String professor, NivellPintura nivell)
@@ -205,7 +202,6 @@ public class GestorClub {
 
     /**
      * Inscribe a un usuario en una actividad.
-     * CORREGIDO: la condición estaba invertida (lanzaba excepción si existía).
      *
      * @param id_activitat identificador de la actividad
      * @param dni          DNI del usuario
@@ -218,7 +214,6 @@ public class GestorClub {
         if (!aepdadao.buscarUsuari(dni)) {
             throw new AEDPAException("Usuari no trobat.");
         }
-        // FIX: era "if (aepdadao.buscarActivitat(...))" sin negación — lógica invertida
         if (!aepdadao.buscarActivitat(id_activitat)) {
             throw new AEDPAException("Activitat no trobada.");
         }
@@ -228,38 +223,25 @@ public class GestorClub {
     /**
      * Muestra las actividades del sistema. Si id_activitat es 0 lista todas;
      * si se indica un id concreto muestra solo esa actividad.
-     * CORREGIDO: antes no hacía nada (sin return ni impresión).
      *
      * @param id_activitat id de la actividad (0 = todas)
+     * @return 
      * @throws AEDPAException      si la actividad concreta no existe
-     * @throws PersistenciaException si ocurre un error de persistencia
      * @throws SQLException         si ocurre un error de base de datos
      */
-    public void mostrarActivitats(int id_activitat)
-            throws AEDPAException, PersistenciaException, SQLException {
-        List<Activitat> activitats;
+    public List<Activitat> mostrarActivitats(int id_activitat) throws AEDPAException, SQLException {
         if (id_activitat == 0) {
-            // Mostrar todas
-            activitats = aepdadao.listarActivitats();
+            return aepdadao.listarActivitats();
         } else {
-            // Mostrar una concreta
             if (!aepdadao.buscarActivitat(id_activitat)) {
                 throw new AEDPAException("Activitat no trobada.");
             }
-            activitats = aepdadao.listaActivitat(id_activitat);
-        }
-        if (activitats.isEmpty()) {
-            System.out.println("No hi ha activitats registrades.");
-        } else {
-            for (Activitat a : activitats) {
-                System.out.println(a);
-            }
+            return aepdadao.listaActivitat(id_activitat);
         }
     }
 
     /**
      * Muestra la información de una actividad buscándola por nombre.
-     * NUEVO: faltaba en GestorClub; Menu.java lo llamaba.
      *
      * @param nom nombre de la actividad
      * @return representación en texto de la actividad
@@ -314,7 +296,6 @@ public class GestorClub {
 
     /**
      * Devuelve la lista de todas las baldas formateadas como cadenas de texto.
-     * NUEVO: faltaba en GestorClub; Menu.java lo llamaba esperando List<String>.
      *
      * @return lista de strings con la información de cada balda
      */
@@ -333,7 +314,6 @@ public class GestorClub {
 
     /**
      * Devuelve un resumen de la disponibilidad de baldas (libres / ocupadas).
-     * NUEVO: faltaba en GestorClub; Menu.java lo llamaba esperando String.
      *
      * @return texto con el número de baldas totales, ocupadas y libres
      */
@@ -354,13 +334,11 @@ public class GestorClub {
 
     /**
      * Asigna una balda a un socio durante un número de meses.
-     * NUEVO: faltaba en GestorClub; Menu.java lo llamaba con (id, dni, mesos).
      *
      * @param id    identificador de la balda
      * @param dni   DNI del socio
      * @param mesos número de meses de asignación
-     * @throws AEDPAException si la balda no existe, el usuario no existe o no
-     *                        es socio
+     * @throws AEDPAException si la balda no existe, el usuario no existe o no es socio
      * @throws SQLException   si ocurre un error de base de datos
      */
     public void asignarBalda(int id, String dni, int mesos) throws AEDPAException, SQLException {
@@ -378,7 +356,6 @@ public class GestorClub {
 
     /**
      * Libera una balda ocupada.
-     * NUEVO: faltaba en GestorClub; Menu.java lo llamaba.
      *
      * @param id identificador de la balda
      * @throws AEDPAException si la balda no existe

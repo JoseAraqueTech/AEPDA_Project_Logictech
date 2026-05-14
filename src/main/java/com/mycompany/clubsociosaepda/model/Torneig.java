@@ -35,21 +35,23 @@ public class Torneig extends Activitat {
      */
    @Override
     public String gestionarActivitat() {
-    String resultat = "";
-     int total = participants.size();
+        String resultat = "";
+         int total = participants.size();
 
-        if (total == 0) {
-        resultat += "No hi ha participants en el torneig.\n";
-    } else {
-        if (total % 2 == 0) {
-            resultat += "Tots els participants juguen.\n";
+            if (total == 0) {
+            resultat += "No hi ha participants en el torneig.\n";
         } else {
-            resultat += "Un participant queda sense jugar.\n";
-        }
-        resultat += "S'ha comprat menjar per al torneig.\n";
-  }
-
-    return resultat;
-}
-
+            if (total % 2 == 0) {
+                resultat += "Tots els participants juguen.\n";
+            } else {
+                resultat += "Un participant queda sense jugar.\n";
+            }
+            resultat += "S'ha comprat menjar per al torneig.\n";
+      }
+        return resultat;
+    }
+    @Override
+    public String toString() {
+        return "TORNEIG: " + nom + " - " + data;
+    }
 }

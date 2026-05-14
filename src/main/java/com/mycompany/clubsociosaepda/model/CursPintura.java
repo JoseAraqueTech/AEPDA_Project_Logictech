@@ -50,23 +50,27 @@ public class CursPintura extends Activitat {
     public NivellPintura getNivell() {
         return nivell;
     }
-
+    
     /**
      * Gestiona el funcionamiento del curso.
      */
     @Override
     public String gestionarActivitat() {
         String resultat = "";
-
         if (participants.isEmpty()) {
             resultat += "No hi ha participants en el curs.\n";
         } else {
             resultat += "Curs impartit per: " + professor + "\n";
             resultat += "Participants inscrits: " + participants.size() + "\n";
         }
-
         resultat += "En aquest curs no es compra menjar.";
-
         return resultat;
+    }
+    
+    @Override
+    public String toString() {
+        return "CURS: " + nom
+                + " - " + professor
+                + " - " + nivell;
     }
 }
