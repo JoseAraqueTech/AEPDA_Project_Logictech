@@ -82,7 +82,7 @@ public class AepdaDAO {
 
     public boolean buscarUsuari(String dni) throws SQLException {
         conectar();
-        ps = conexion.prepareStatement("SELECT 1 FROM usuarios WHERE dni = ?");
+        ps = conexion.prepareStatement("SELECT * FROM usuarios WHERE dni = ?");
         ps.setString(1, dni);
 
         ResultSet rs = ps.executeQuery();
@@ -98,9 +98,9 @@ public class AepdaDAO {
 
     public void ferSoci(String dni, int mesos) throws SQLException {
         conectar();
-        ps = conexion.prepareStatement("UPDATE usuarios " + "SET soci = true, mesos_membresia = ? " + "WHERE dni = ?");
-        ps.setString(1, dni);
-        ps.setInt(2, mesos);
+        ps = conexion.prepareStatement("UPDATE usuarios SET soci = true, mesos_membresia = ? WHERE dni = ?");
+        ps.setInt(1, mesos);
+        ps.setString(2, dni);
         ps.executeUpdate();
         desconectar();
     }
@@ -120,7 +120,7 @@ public class AepdaDAO {
 
     public void insertarUsuari(String dni, String nom, String email, double saldo) throws SQLException {
         conectar();
-        ps = conexion.prepareStatement("INSERT INTO usuarios " + "(dni, nom, email, saldo) " + "VALUES (?, ?, ?, ?)");
+        ps = conexion.prepareStatement("INSERT INTO usuarios (dni, nom, email, saldo) VALUES (?, ?, ?, ?)");
         ps.setString(1, dni);
         ps.setString(2, nom);
         ps.setString(3, email);
@@ -150,7 +150,7 @@ public class AepdaDAO {
 
     public void finalitzarMembresia(String dni) throws SQLException {
         conectar();
-        ps = conexion.prepareStatement( "UPDATE usuarios " + "SET soci = false, mesos_membresia = 0 " + "WHERE dni = ?");
+        ps = conexion.prepareStatement( "UPDATE usuarios SET soci = false, mesos_membresia = 0 WHERE dni = ?");
         ps.setString(1, dni);
         ps.executeUpdate();
         desconectar();
@@ -158,11 +158,12 @@ public class AepdaDAO {
 
     public void insertarActivitat(Activitat a) throws SQLException {
         conectar();
-        ps = conexion.prepareStatement("INSERT INTO activitats " + "(id, nom, data, tipus, professor, nivell) " + "VALUES (?, ?, ?, ?, ?, ?)");
+        ps = conexion.prepareStatement("INSERT INTO activitats (id, nom, data, tipus, professor, nivell) VALUES (?, ?, ?, ?, ?, ?)");
         ps.setInt(1, a.getIdActivitat());
         ps.setString(2, a.getNom());
         ps.setObject(3, a.getData());
-        if (a instanceof CursPintura curs) {
+        if (a instanceof CursPintura) {
+            CursPintura curs = (CursPintura) a;
             ps.setString(4, "CURS");
             ps.setString(5, curs.getProfessor());
             ps.setString(6, curs.getNivell().toString());
@@ -215,9 +216,8 @@ public class AepdaDAO {
     }
 
     public List<Activitat> listaActivitat(int id) throws SQLException {
-        String sql = "SELECT * FROM activitats WHERE id = ?";
         List<Activitat> lista = new ArrayList<>();
-        try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conexion.prepareStatement("SELECT * FROM activitats WHERE id = ?")) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
