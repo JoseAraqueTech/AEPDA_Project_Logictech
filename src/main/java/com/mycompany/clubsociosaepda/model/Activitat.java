@@ -84,4 +84,9 @@ public abstract class Activitat {
      * @return informacion de la actividad
      */
     public abstract String gestionarActivitat();
+    
+    @Override
+    public String toString() {
+        return nom + " - " + data;
+    }
 }

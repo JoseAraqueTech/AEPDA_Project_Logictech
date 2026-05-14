@@ -162,7 +162,8 @@ public class AepdaDAO {
         ps.setInt(1, a.getIdActivitat());
         ps.setString(2, a.getNom());
         ps.setObject(3, a.getData());
-        if (a instanceof CursPintura curs) {
+        if (a instanceof CursPintura) {
+            CursPintura curs = (CursPintura) a;
             ps.setString(4, "CURS");
             ps.setString(5, curs.getProfessor());
             ps.setString(6, curs.getNivell().toString());

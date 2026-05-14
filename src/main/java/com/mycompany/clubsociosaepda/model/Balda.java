@@ -63,4 +63,9 @@ public class Balda {
     public String getEstado() {
         return ocupada ? "ocupada" : "libre";
     }
+    
+    @Override
+    public String toString() {
+        return "Balda " + id + " - " + ubicacion;
+    }
 }

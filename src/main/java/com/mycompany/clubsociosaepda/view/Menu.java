@@ -7,6 +7,7 @@ package com.mycompany.clubsociosaepda.view;
 import com.mycompany.clubsociosaepda.controller.GestorClub;
 import com.mycompany.clubsociosaepda.exception.AEDPAException;
 import com.mycompany.clubsociosaepda.exception.PersistenciaException;
+import com.mycompany.clubsociosaepda.model.Activitat;
 import com.mycompany.clubsociosaepda.model.enums.NivellPintura;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -63,7 +64,6 @@ public class Menu {
                         inscriureActivitat();
                         break;
                     case 7:
-                        // FIX 1: se llama sin parámetros; el método privado los pide internamente
                         mostrarActivitats();
                         break;
                     case 8:
@@ -99,7 +99,6 @@ public class Menu {
                         System.out.println("Opcio incorrecta.");
                 }
             } catch (AEDPAException | PersistenciaException | IOException | SQLException e) {
-                // FIX 2: añadido SQLException al catch porque varios métodos lo lanzan
                 System.out.println("ERROR: " + e.getMessage());
                 opcio = -1;
             }
@@ -222,8 +221,6 @@ public class Menu {
     private void inscriureActivitat() throws AEDPAException, PersistenciaException, IOException, SQLException {
         int id_activitat = ask.askInt("Id activitat: ");
         String dni = ask.askString("DNI: ");
-        // FIX 3: eliminada la lectura de "nomAct" porque GestorClub.inscriureActivitat
-        //         solo necesita id_activitat y dni; la variable no se usaba para nada.
         if (gestor.esTorneig(id_activitat)) {
             gestor.inscriureActivitat(id_activitat, dni);
             System.out.println("Usuari inscrit correctament (amb menjar).");
@@ -235,11 +232,6 @@ public class Menu {
 
     /**
      * Muestra todas las actividades registradas.
-     * FIX 4: era "private List<Activitat> mostrarActivitats(int id_activitat)" —
-     *   - tenía un parámetro que se pedía desde el switch sin argumento
-     *   - el tipo de retorno era List<Activitat> pero no tenía return
-     *   - GestorClub.mostrarActivitats() devuelve void, así que aquí también void
-     *   Ahora pide el id al usuario, llama al gestor y muestra el resultado.
      *
      * @throws AEDPAException si la actividad no existe
      * @throws PersistenciaException si ocurre un error de persistencia
@@ -248,7 +240,14 @@ public class Menu {
      */
     private void mostrarActivitats() throws AEDPAException, PersistenciaException, IOException, SQLException {
         int id_activitat = ask.askInt("Id activitat (0 per veure totes): ");
-        gestor.mostrarActivitats(id_activitat);
+        List<Activitat> activitats = gestor.mostrarActivitats(id_activitat);
+        if (activitats.isEmpty()) {
+            System.out.println("No hi ha activitats.");
+        } else {
+            for (Activitat a : activitats) {
+                System.out.println(a);
+            }
+        }
     }
 
     /**
@@ -319,8 +318,6 @@ public class Menu {
 
     /**
      * Modifica una balda existente.
-     * FIX 5: eliminado "idNou" — GestorClub.modBalda solo acepta (id, ubicacion),
-     *         no permite cambiar el ID de la balda.
      *
      * @throws IOException si ocurre un error leyendo datos
      * @throws AEDPAException si ocurre un error de lógica
@@ -328,7 +325,6 @@ public class Menu {
      */
     private void modificarBalda() throws IOException, AEDPAException, PersistenciaException, SQLException {
         int id = ask.askInt("ID de la balda a canviar: ");
-        // FIX 5: eliminado "int idNou" porque modBalda(id, ubicacion) no acepta nuevo ID
         String ubicacion = ask.askString("Nova ubicacio: ");
         gestor.modBalda(id, ubicacion);
         System.out.println("Balda modificada correctament.");
@@ -349,8 +345,6 @@ public class Menu {
 
     /**
      * Muestra la información de un usuario.
-     * FIX 6: gestor.mostrarUsuari(dni) devuelve List<Usuari> (según AepdaDAO),
-     *         se itera la lista para mostrar cada usuario encontrado.
      *
      * @throws IOException si ocurre un error leyendo datos
      * @throws AEDPAException si ocurre un error de lógica
@@ -359,7 +353,6 @@ public class Menu {
     private void mostrarUsuari() throws IOException, AEDPAException, SQLException {
         String dni = ask.askString("Introdueix el DNI de l'usuari: ");
         System.out.println("\n INFORMACIO DE L'USUARI");
-        // FIX 6: mostrarUsuari retorna List<Usuari>, no String
         List<com.mycompany.clubsociosaepda.model.Usuari> usuaris = gestor.mostrarUsuari(dni);
         if (usuaris.isEmpty()) {
             System.out.println("Usuari no trobat.");
