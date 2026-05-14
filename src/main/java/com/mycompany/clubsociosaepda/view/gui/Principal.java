@@ -9,12 +9,17 @@ import com.mycompany.clubsociosaepda.exception.AEDPAException;
 import com.mycompany.clubsociosaepda.exception.PersistenciaException;
 import javax.swing.JOptionPane;
 
+import com.mycompany.clubsociosaepda.controller.GestorClub;
+
 /**
  *
  * @author josea
  */
 public class Principal extends javax.swing.JFrame {
+
+    
     private GestorClub gestor;
+
     /**
      * Creates new form Principal
      */
@@ -77,6 +82,11 @@ public class Principal extends javax.swing.JFrame {
         jMenu2.add(jMenuItem2);
 
         jMenuItem3.setText("Eliminar Usuari");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem3);
 
         jMenuItem4.setText("Fer Soci");
@@ -182,6 +192,11 @@ public class Principal extends javax.swing.JFrame {
     private void jMenuItem14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem14ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem14ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        BorrarUsuari borrarDialogC = new BorrarUsuari(this,true);
+        borrarDialogC.setVisible(true);
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     /**
      * @param args the command line arguments
