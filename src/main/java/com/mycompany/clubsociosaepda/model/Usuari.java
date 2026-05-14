@@ -20,7 +20,6 @@ public class Usuari {
     protected boolean soci;
     protected int mesosMembresia;
     private int participaciones;
-    private double saldo;
 
     /**
      * Constructor del usuario.
@@ -30,14 +29,13 @@ public class Usuari {
      * @param email correo electrónico
      * @param saldo saldo pendiente del usuario
      */
-    public Usuari(String dni, String nom, String email, double saldo) {
+    public Usuari(String dni, String nom, String email) {
         this.dni = dni;
         this.nom = nom;
         this.email = email;
         this.soci = false;
         this.mesosMembresia = 0;
         this.participaciones = 0;
-        this.saldo = saldo;
     }
 
     /**
@@ -123,39 +121,6 @@ public class Usuari {
         return !soci && participaciones >= 3;
     }
 
-    /**
-     * Retorna el saldo pendent del soci.
-     *
-     * @return saldo pendent
-     */
-    public double getSaldo() {
-        return saldo;
-    }
-
-    /**
-     * Afegeix deute al saldo del soci.
-     *
-     * @param quantitat quantitat a afegir (ha de ser >= 0)
-     */
-    public void afegirDeute(double quantitat) {
-        if (quantitat > 0) {
-            saldo = saldo + quantitat;
-        }
-    }
-
-    /**
-     * Redueix el saldo pendent del soci.
-     *
-     * @param quantitat quantitat a pagar (ha de ser >= 0)
-     */
-    public void pagar(double quantitat) {
-        if (quantitat > 0) {
-            saldo = saldo - quantitat;
-            if (saldo < 0) {
-                saldo = 0;
-            }
-        }
-    }
 
     /**
      * Valida el formato de un email.

@@ -141,8 +141,7 @@ public class Menu {
         String dni = ask.askString("DNI: ");
         String nom = ask.askString("Nom: ");
         String email = ask.askString("Email: ");
-        double saldo = ask.askDouble("Saldo soci:");
-        gestor.altaUsuari(dni, nom, email, saldo);
+        gestor.altaUsuari(dni, nom, email);
         System.out.println("Usuari creat correctament.");
     }
 

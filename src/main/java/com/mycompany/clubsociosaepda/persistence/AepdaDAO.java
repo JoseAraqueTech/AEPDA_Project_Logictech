@@ -50,9 +50,8 @@ public class AepdaDAO {
             String nif = rs.getString("dni");
             String nom = rs.getString("nom");
             String email = rs.getString("email");
-            double saldo = rs.getDouble("saldo");
             boolean soci = rs.getBoolean("es_socio");
-            lista.add(new Usuari(nif, nom, email, saldo));
+            lista.add(new Usuari(nif, nom, email));
         }
         rs.close();
         desconectar();
@@ -69,11 +68,10 @@ public class AepdaDAO {
             String nif = rs.getString("dni");
             String nom = rs.getString("nom");
             String email = rs.getString("email");
-            double saldo = rs.getDouble("saldo");
             boolean soci = rs.getBoolean("es_socio");
             int meses_membresia = rs.getInt("meses_membresia");
             int participaciones = rs.getInt("participaciones");
-            lista.add(new Usuari(nif, nom, email, saldo));
+            lista.add(new Usuari(nif, nom, email));
         }
         rs.close();
         desconectar();
@@ -118,13 +116,12 @@ public class AepdaDAO {
         return soci;
     }
 
-    public void insertarUsuari(String dni, String nom, String email, double saldo) throws SQLException {
+    public void insertarUsuari(String dni, String nom, String email) throws SQLException {
         conectar();
-        ps = conexion.prepareStatement("INSERT INTO usuarios (dni, nom, email, saldo) VALUES (?, ?, ?, ?)");
+        ps = conexion.prepareStatement("INSERT INTO usuarios (dni, nom, email) VALUES (?, ?, ?)");
         ps.setString(1, dni);
         ps.setString(2, nom);
         ps.setString(3, email);
-        ps.setDouble(4, saldo);
         ps.executeUpdate();
         desconectar();
     }

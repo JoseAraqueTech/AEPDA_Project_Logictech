@@ -48,11 +48,10 @@ public class GestorClub {
      * @param dni   DNI del usuario
      * @param nom   nombre del usuario
      * @param email correo electrónico del usuario
-     * @param saldo saldo inicial del usuario
      * @throws AEDPAException si los datos son incorrectos o el usuario ya existe
      * @throws SQLException   si ocurre un error de base de datos
      */
-    public void altaUsuari(String dni, String nom, String email, double saldo)
+    public void altaUsuari(String dni, String nom, String email)
             throws AEDPAException, SQLException {
         if (!Usuari.esDniValid(dni)) {
             throw new AEDPAException("DNI no valid.");
@@ -63,7 +62,7 @@ public class GestorClub {
         if (!Usuari.esEmailValid(email)) {
             throw new AEDPAException("Email no valid.");
         }
-        aepdadao.insertarUsuari(dni, nom, email, saldo);
+        aepdadao.insertarUsuari(dni, nom, email);
     }
 
     /**
