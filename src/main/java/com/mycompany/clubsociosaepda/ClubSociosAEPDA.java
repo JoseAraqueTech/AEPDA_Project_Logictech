@@ -3,8 +3,7 @@
  */
 package com.mycompany.clubsociosaepda;
 
-import com.mycompany.clubsociosaepda.view.Menu;
-import com.mycompany.clubsociosaepda.view.Principal;
+import com.mycompany.clubsociosaepda.view.gui.Principal;
 import java.io.IOException;
 
 
@@ -19,6 +18,7 @@ public class ClubSociosAEPDA {
      * Método principal.
      * 
      * @param args argumentos de ejecución
+     * @throws java.io.IOException
      */
     public static void main(String[] args) throws IOException {
         Principal gui = new Principal();

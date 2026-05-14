@@ -158,7 +158,7 @@ public class AepdaDAO {
 
     public void insertarActivitat(Activitat a) throws SQLException {
         conectar();
-        ps = conexion.prepareStatement("INSERT INTO activitats (id, nom, data, tipus, professor, nivell) VALUES (?, ?, ?, ?, ?, ?)");
+        ps = conexion.prepareStatement("INSERT INTO activitats (id_activitat, nom, data, tipus, professor, nivell) VALUES (?, ?, ?, ?, ?, ?)");
         ps.setInt(1, a.getIdActivitat());
         ps.setString(2, a.getNom());
         ps.setObject(3, a.getData());
@@ -182,7 +182,7 @@ public class AepdaDAO {
         ps = conexion.prepareStatement("SELECT * FROM activitats");
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
-            int id_activitat = rs.getInt("id");
+            int id_activitat = rs.getInt("id_activitat");
             String nom = rs.getString("nom");
 
             LocalDate fecha = rs.getObject("data", LocalDate.class);
@@ -206,7 +206,7 @@ public class AepdaDAO {
 
     public boolean buscarActivitat(int id_activitat) throws SQLException {
         conectar();
-        ps = conexion.prepareStatement("SELECT * FROM activitats WHERE id = ?");
+        ps = conexion.prepareStatement("SELECT * FROM activitats WHERE id_activitat = ?");
         ps.setInt(1, id_activitat);
         ResultSet rs = ps.executeQuery();
         boolean existe = rs.next();
@@ -217,11 +217,11 @@ public class AepdaDAO {
 
     public List<Activitat> listaActivitat(int id) throws SQLException {
         List<Activitat> lista = new ArrayList<>();
-        try (PreparedStatement stmt = conexion.prepareStatement("SELECT * FROM activitats WHERE id = ?")) {
+        try (PreparedStatement stmt = conexion.prepareStatement("SELECT * FROM activitats WHERE id_activitat = ?")) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    int idDb = rs.getInt("id");
+                    int idDb = rs.getInt("id_activitat");
                     String nom = rs.getString("nom");
                     String tipus = rs.getString("tipus");
                     LocalDate data = rs.getDate("data").toLocalDate();
@@ -255,10 +255,10 @@ public class AepdaDAO {
         desconectar();
     }
 
-    public boolean esTorneig(int id) throws SQLException {
-        String sql = "SELECT tipus FROM activitats WHERE id = ?";
+    public boolean esTorneig(int id_activitat) throws SQLException {
+        String sql = "SELECT tipus FROM activitats WHERE id_activitat = ?";
         PreparedStatement stmt = conexion.prepareStatement(sql);
-        stmt.setInt(1, id);
+        stmt.setInt(1, id_activitat);
         ResultSet rs = stmt.executeQuery();
         if (rs.next()) {
             String tipus = rs.getString("tipus");
@@ -269,7 +269,7 @@ public class AepdaDAO {
 
     public void eliminarActivitat(int id_activitat) throws SQLException {
         conectar();
-        ps = conexion.prepareStatement("DELETE FROM activitats WHERE id = ?");
+        ps = conexion.prepareStatement("DELETE FROM activitats WHERE id_activitat = ?");
         ps.setInt(1, id_activitat);
         ps.executeUpdate();
         desconectar();

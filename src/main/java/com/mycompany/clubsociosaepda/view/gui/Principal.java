@@ -7,9 +7,9 @@ package com.mycompany.clubsociosaepda.view.gui;
 import com.mycompany.clubsociosaepda.controller.GestorClub;
 import com.mycompany.clubsociosaepda.exception.AEDPAException;
 import com.mycompany.clubsociosaepda.exception.PersistenciaException;
+import java.awt.HeadlessException;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
-
-import com.mycompany.clubsociosaepda.controller.GestorClub;
 
 /**
  *
@@ -17,21 +17,20 @@ import com.mycompany.clubsociosaepda.controller.GestorClub;
  */
 public class Principal extends javax.swing.JFrame {
 
-    
     private GestorClub gestor;
 
     /**
      * Creates new form Principal
      */
     public Principal() {
-    initComponents();
-    this.setLocationRelativeTo(null);
-    try {
-        gestor = new GestorClub();
-    } catch (AEDPAException | PersistenciaException e) {
-        JOptionPane.showMessageDialog( this, e.getMessage(),  "Error", JOptionPane.ERROR_MESSAGE);
+        initComponents();
+        this.setLocationRelativeTo(null);
+        try {
+            gestor = new GestorClub();
+        } catch (AEDPAException | PersistenciaException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
-}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -79,6 +78,11 @@ public class Principal extends javax.swing.JFrame {
         jMenu2.add(jMenuItem1);
 
         jMenuItem2.setText("Mostrar Usuari");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem2);
 
         jMenuItem3.setText("Eliminar Usuari");
@@ -90,12 +94,27 @@ public class Principal extends javax.swing.JFrame {
         jMenu2.add(jMenuItem3);
 
         jMenuItem4.setText("Fer Soci");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem4);
 
         jMenuItem5.setText("Finalitzar Membresia");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem5);
 
         jMenuItem6.setText("Inscriure Usuari");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem6);
 
         jMenu1.add(jMenu2);
@@ -111,12 +130,27 @@ public class Principal extends javax.swing.JFrame {
         jMenu3.add(jMenuItem7);
 
         jMenuItem8.setText("Eliminar Activitat");
+        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem8ActionPerformed(evt);
+            }
+        });
         jMenu3.add(jMenuItem8);
 
         jMenuItem9.setText("Mostrar Activitats");
+        jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem9ActionPerformed(evt);
+            }
+        });
         jMenu3.add(jMenuItem9);
 
         jMenuItem10.setText("Mostrar Activitat Concreta");
+        jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem10ActionPerformed(evt);
+            }
+        });
         jMenu3.add(jMenuItem10);
 
         jMenu1.add(jMenu3);
@@ -146,6 +180,11 @@ public class Principal extends javax.swing.JFrame {
         jMenu4.add(jMenuItem14);
 
         jMenuItem15.setText("Mostrar Baldes");
+        jMenuItem15.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem15ActionPerformed(evt);
+            }
+        });
         jMenu4.add(jMenuItem15);
 
         jMenuItem16.setText("Disponibilitat baldes");
@@ -172,17 +211,23 @@ public class Principal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        AltaUsuariJDialog dialog =
-                   new AltaUsuariJDialog(
-                           this,
-                           true,
-                           gestor
-                   );
-           dialog.setVisible(true);
+        AltaUsuariJDialog dialog
+                = new AltaUsuariJDialog(
+                        this,
+                        true,
+                        gestor
+                );
+        dialog.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
-        // TODO add your handling code here:
+        AltaActivitatJDialog dialog =
+                new AltaActivitatJDialog(
+                        this,
+                        true,
+                        gestor
+                );
+        dialog.setVisible(true);
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
     private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
@@ -194,9 +239,171 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem14ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        BorrarUsuari borrarDialogC = new BorrarUsuari(this,true);
+        BorrarUsuari borrarDialogC
+                = new BorrarUsuari(this, true, gestor);
         borrarDialogC.setVisible(true);
     }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        try {
+            String dni = JOptionPane.showInputDialog( this, "Introdueix el DNI del usuari:"
+                    );
+            if (dni == null || dni.isBlank()) {
+                return;
+            }
+            String info
+                    = gestor.mostrarUsuari(dni).toString();
+            JOptionPane.showMessageDialog( this, info, "Informació Usuari", JOptionPane.INFORMATION_MESSAGE
+            );
+        } catch (AEDPAException | HeadlessException | SQLException e) {
+            JOptionPane.showMessageDialog(this, "No s'ha pogut mostrar l'usuari:\n" + e.getMessage(), "Error Usuari", JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+            try {
+            String dni = JOptionPane.showInputDialog(
+                            this,
+                            "DNI del usuari:"
+                    );
+            String mesosText = JOptionPane.showInputDialog(
+                            this,
+                            "Mesos de membresia:"
+                    );
+            int mesos = Integer.parseInt(mesosText);
+            gestor.ferSoci(dni, mesos); JOptionPane.showMessageDialog(
+                    this,
+                    "Usuari convertit en soci correctament",
+                    "Soci Registrat",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+        } catch (AEDPAException | HeadlessException | NumberFormatException | SQLException e) {
+            JOptionPane.showMessageDialog(this, "No s'ha pogut convertir l'usuari en soci:\n"
+                    + e.getMessage(),
+                    "Error Soci",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
+
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+            try {
+            String dni = JOptionPane.showInputDialog(
+                            this,
+                            "DNI del usuari:"
+                    );
+            gestor.finalitzarMembresia(dni); JOptionPane.showMessageDialog(
+                    this,
+                    "Membresia finalitzada correctament",
+                    "Baixa Soci",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+        } catch (AEDPAException | HeadlessException | SQLException e) { JOptionPane.showMessageDialog(
+                    this,
+                    "No s'ha pogut finalitzar la membresia:\n"
+                    + e.getMessage(),
+                    "Error Membresia",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        try {
+            String idText = JOptionPane.showInputDialog(
+                            this,
+                            "ID de l'activitat:"
+                    );
+            int id = Integer.parseInt(idText);
+            String dni =
+                    JOptionPane.showInputDialog(
+                            this,
+                            "DNI del usuari:"
+                    );
+            gestor.inscriureActivitat(id, dni); JOptionPane.showMessageDialog(
+                    this,
+                    "Usuari inscrit correctament",
+                    "Inscripció Activitat",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+        } catch (AEDPAException | PersistenciaException | HeadlessException | NumberFormatException | SQLException e) { JOptionPane.showMessageDialog(
+                    this,
+                    "No s'ha pogut inscriure l'usuari:\n"
+                    + e.getMessage(),
+                    "Error Inscripció",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
+
+    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
+            try { String idText = JOptionPane.showInputDialog(
+                                this,
+                                "ID de l'activitat:"
+                        );
+                int id = Integer.parseInt(idText);
+                gestor.eliminarActivitat(id);
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Activitat eliminada correctament",
+                        "Eliminar Activitat",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+            } catch (AEDPAException | HeadlessException | NumberFormatException | SQLException e) { JOptionPane.showMessageDialog(
+                        this,
+                        "No s'ha pogut eliminar l'activitat:\n"
+                        + e.getMessage(),
+                        "Error Activitat",
+                        JOptionPane.ERROR_MESSAGE
+           );
+       }
+    }//GEN-LAST:event_jMenuItem8ActionPerformed
+
+    private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
+                MostrarActivitatsJDialog dialog = new MostrarActivitatsJDialog(
+                    this,
+                    true,
+                    gestor
+            );
+        dialog.setVisible(true);
+    }//GEN-LAST:event_jMenuItem9ActionPerformed
+
+    private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
+        try {
+                String nom =
+                        JOptionPane.showInputDialog(
+                                this,
+                                "Nom de l'activitat:"
+                        );
+                if (nom == null || nom.isBlank()) {
+                    return;
+                }
+                String info = gestor.mostrarActivitatEspecifica(nom); JOptionPane.showMessageDialog(
+                        this,
+                        info,
+                        "Informació Activitat",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+            } catch (AEDPAException | HeadlessException | SQLException e) {JOptionPane.showMessageDialog(
+                        this,
+                        "No s'ha pogut mostrar l'activitat:\n"
+                        + e.getMessage(),
+                        "Error Activitat",
+                        JOptionPane.ERROR_MESSAGE
+                );
+        }
+    }//GEN-LAST:event_jMenuItem10ActionPerformed
+
+    private void jMenuItem15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem15ActionPerformed
+            MostrarBaldesJDialog dialog =
+            new MostrarBaldesJDialog(
+                    this,
+                    true,
+                    gestor
+            );
+            dialog.setVisible(true);
+    }//GEN-LAST:event_jMenuItem15ActionPerformed
 
     /**
      * @param args the command line arguments

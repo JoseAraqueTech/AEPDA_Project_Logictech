@@ -3,18 +3,20 @@ CREATE DATABASE bbdd_aepda;
 USE bbdd_aepda;
 
 CREATE TABLE activitats (
-    id_activitat INT AUTO_INCREMENT PRIMARY KEY,
+    id_activitat INT PRIMARY KEY,
     nom VARCHAR(100) NOT NULL,
     data DATE NOT NULL,
-    tipus VARCHAR(50) NOT NULL
+    tipus VARCHAR(30) NOT NULL,
+    professor VARCHAR(100),
+    nivell VARCHAR(30)
 );
 
 CREATE TABLE usuarios (
     dni VARCHAR(20) PRIMARY KEY,
     nom VARCHAR(100) NOT NULL,
     email VARCHAR(150) UNIQUE NOT NULL,
-    soci BOOLEAN NOT NULL DEFAULT FALSE,
-    meses_membresia INT DEFAULT 0,
+    soci BOOLEAN DEFAULT FALSE,
+    mesos_membresia INT DEFAULT 0,
     participaciones INT DEFAULT 0,
     saldo DOUBLE DEFAULT 0,
     id_activitat INT,
@@ -24,26 +26,9 @@ CREATE TABLE usuarios (
         ON DELETE SET NULL
 );
 
-CREATE TABLE curso_pintura (
-    id_activitat INT PRIMARY KEY,
-    profesor VARCHAR(100) NOT NULL,
-    nivell VARCHAR(20),
-    FOREIGN KEY (id_activitat)
-        REFERENCES activitats(id_activitat)
-        ON DELETE CASCADE
-);
-
-CREATE TABLE torneo (
-    id_activitat INT PRIMARY KEY,
-    FOREIGN KEY (id_activitat)
-        REFERENCES activitats(id_activitat)
-        ON DELETE CASCADE
-);
-
 CREATE TABLE balda (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT PRIMARY KEY,
     ubicacion VARCHAR(100) NOT NULL,
-    ocupada BOOLEAN NOT NULL DEFAULT FALSE,
     asignacion_actual VARCHAR(20),
     FOREIGN KEY (asignacion_actual)
         REFERENCES usuarios(dni)
