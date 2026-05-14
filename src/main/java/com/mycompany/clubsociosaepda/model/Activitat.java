@@ -14,6 +14,7 @@ import java.util.Map;
  */
 public abstract class Activitat {
     
+    protected int id_activitat;
     protected String nom;
     protected LocalDate data;
     protected Map<String, Usuari> participants;
@@ -23,7 +24,8 @@ public abstract class Activitat {
      * @param nom nombre de la actividad
      * @param data fecha de la actividad
      */
-    public Activitat(String nom, LocalDate data) {
+    public Activitat(int id_activitat, String nom, LocalDate data) {
+        this.id_activitat = id_activitat;
         this.nom = nom;
         this.data = data;
         this.participants = new HashMap<>();

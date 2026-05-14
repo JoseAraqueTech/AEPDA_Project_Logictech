@@ -8,7 +8,9 @@ import com.mycompany.clubsociosaepda.controller.GestorClub;
 import com.mycompany.clubsociosaepda.exception.AEDPAException;
 import com.mycompany.clubsociosaepda.exception.PersistenciaException;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Clase encargada de la interacción con el usuario. Muestra el menú y gestiona
@@ -33,7 +35,6 @@ public class Menu {
     /**
      * Inicia la ejecución del menú. Muestra las opciones disponibles y procesa
      * la entrada del usuario hasta que se selecciona la opción de salida.
-     *
      */
     public void start() {
         int opcio;
@@ -61,6 +62,7 @@ public class Menu {
                         inscriureActivitat();
                         break;
                     case 7:
+                        // FIX 1: se llama sin parámetros; el método privado los pide internamente
                         mostrarActivitats();
                         break;
                     case 8:
@@ -91,12 +93,12 @@ public class Menu {
                         eliminarUsuari();
                         break;
                     case 0:
-                        gestor.guardar();
                         break;
                     default:
                         System.out.println("Opcio incorrecta.");
                 }
-            } catch (AEDPAException | PersistenciaException | IOException e) {
+            } catch (AEDPAException | PersistenciaException | IOException | SQLException e) {
+                // FIX 2: añadido SQLException al catch porque varios métodos lo lanzan
                 System.out.println("ERROR: " + e.getMessage());
                 opcio = -1;
             }
@@ -133,8 +135,9 @@ public class Menu {
      *
      * @throws AEDPAException si ocurre un error de lógica
      * @throws IOException si ocurre un error leyendo datos
+     * @throws SQLException si ocurre un error de base de datos
      */
-    private void altaUsuari() throws AEDPAException, IOException {
+    private void altaUsuari() throws AEDPAException, IOException, SQLException {
         String dni = ask.askString("DNI: ");
         String nom = ask.askString("Nom: ");
         String email = ask.askString("Email: ");
@@ -148,8 +151,9 @@ public class Menu {
      *
      * @throws AEDPAException si ocurre un error de lógica
      * @throws IOException si ocurre un error leyendo datos
+     * @throws SQLException si ocurre un error de base de datos
      */
-    private void ferSoci() throws AEDPAException, IOException {
+    private void ferSoci() throws AEDPAException, IOException, SQLException {
         String dni = ask.askString("DNI: ");
         int mesos = ask.askInt("Mesos: ", "Ha de ser >= 1", 1);
         gestor.ferSoci(dni, mesos);
@@ -161,8 +165,9 @@ public class Menu {
      *
      * @throws AEDPAException si ocurre un error de lógica
      * @throws IOException si ocurre un error leyendo datos
+     * @throws SQLException si ocurre un error de base de datos
      */
-    private void finalitzarMembresia() throws AEDPAException, IOException {
+    private void finalitzarMembresia() throws AEDPAException, IOException, SQLException {
         String dni = ask.askString("DNI: ");
         gestor.finalitzarMembresia(dni);
         System.out.println("Membresia finalitzada.");
@@ -173,8 +178,10 @@ public class Menu {
      *
      * @throws AEDPAException si ocurre un error de lógica
      * @throws IOException si ocurre un error leyendo datos
+     * @throws SQLException si ocurre un error de base de datos
      */
-    private void altaActivitat() throws AEDPAException, IOException {
+    private void altaActivitat() throws AEDPAException, IOException, SQLException {
+        int id_activitat = ask.askInt("Id activitat: ");
         String nom = ask.askString("Nom activitat: ");
         LocalDate data = LocalDate.parse(ask.askString("Data (YYYY-MM-DD): "));
         int tipus = ask.askInt("Tipus (1 = Torneig, 2 = Curs): ", "Tipus invalid", 1, 2);
@@ -182,7 +189,7 @@ public class Menu {
         if (tipus == 2) {
             professor = ask.askString("Professor: ");
         }
-        gestor.altaActivitat(nom, data, tipus, professor);
+        gestor.altaActivitat(id_activitat, nom, data, tipus, professor);
         System.out.println("Activitat creada correctament.");
     }
 
@@ -192,10 +199,11 @@ public class Menu {
      * @throws AEDPAException si ocurre un error de lógica
      * @throws PersistenciaException si ocurre un error guardando datos
      * @throws IOException si ocurre un error leyendo datos
+     * @throws SQLException si ocurre un error de base de datos
      */
-    private void eliminarActivitat() throws AEDPAException, PersistenciaException, IOException {
-        String nom = ask.askString("Nom activitat: ");
-        gestor.eliminarActivitat(nom);
+    private void eliminarActivitat() throws AEDPAException, PersistenciaException, IOException, SQLException {
+        int id_activitat = ask.askInt("Id activitat: ");
+        gestor.eliminarActivitat(id_activitat);
         System.out.println("Activitat eliminada.");
     }
 
@@ -205,35 +213,38 @@ public class Menu {
      * @throws AEDPAException si ocurre un error de lógica
      * @throws PersistenciaException si ocurre un error guardando datos
      * @throws IOException si ocurre un error leyendo datos
+     * @throws SQLException si ocurre un error de base de datos
      */
-    private void inscriureActivitat() throws AEDPAException, PersistenciaException, IOException {
+    private void inscriureActivitat() throws AEDPAException, PersistenciaException, IOException, SQLException {
+        int id_activitat = ask.askInt("Id activitat: ");
         String dni = ask.askString("DNI: ");
-        String nomAct = ask.askString("Nom activitat: ");
-        if (gestor.esTorneig(nomAct)) {
-            String resposta = ask.askString("Vols menjar al torneig? (si/no): ");
-            if (resposta.equalsIgnoreCase("si")) {
-                double preuComida = ask.askDouble("Preu del menjar: ");
-                double pagat = ask.askDouble("Quant pagues ara: ");
-                gestor.inscriureActivitat(dni, nomAct);
-                gestor.gestionarComidaTorneig(dni, nomAct, preuComida, pagat);
-                System.out.println("Usuari inscrit correctament (amb menjar).");
-            } else {
-                gestor.inscriureActivitat(dni, nomAct);
-                System.out.println("Usuari inscrit correctament.");
-            }
+        // FIX 3: eliminada la lectura de "nomAct" porque GestorClub.inscriureActivitat
+        //         solo necesita id_activitat y dni; la variable no se usaba para nada.
+        if (gestor.esTorneig(id_activitat)) {
+            gestor.inscriureActivitat(id_activitat, dni);
+            System.out.println("Usuari inscrit correctament (amb menjar).");
         } else {
-            gestor.inscriureActivitat(dni, nomAct);
+            gestor.inscriureActivitat(id_activitat, dni);
             System.out.println("Usuari inscrit correctament.");
         }
     }
 
     /**
      * Muestra todas las actividades registradas.
+     * FIX 4: era "private List<Activitat> mostrarActivitats(int id_activitat)" —
+     *   - tenía un parámetro que se pedía desde el switch sin argumento
+     *   - el tipo de retorno era List<Activitat> pero no tenía return
+     *   - GestorClub.mostrarActivitats() devuelve void, así que aquí también void
+     *   Ahora pide el id al usuario, llama al gestor y muestra el resultado.
+     *
+     * @throws AEDPAException si la actividad no existe
+     * @throws PersistenciaException si ocurre un error de persistencia
+     * @throws IOException si ocurre un error leyendo datos
+     * @throws SQLException si ocurre un error de base de datos
      */
-    private void mostrarActivitats() {
-        for (String s : gestor.mostrarActivitats()) {
-            System.out.println(s);
-        }
+    private void mostrarActivitats() throws AEDPAException, PersistenciaException, IOException, SQLException {
+        int id_activitat = ask.askInt("Id activitat (0 per veure totes): ");
+        gestor.mostrarActivitats(id_activitat);
     }
 
     /**
@@ -242,7 +253,7 @@ public class Menu {
      * @throws AEDPAException si la actividad no existe
      * @throws IOException si ocurre un error leyendo datos
      */
-    private void mostrarActivitatEspecifica() throws AEDPAException, IOException {
+    private void mostrarActivitatEspecifica() throws AEDPAException, IOException, SQLException {
         String nom = ask.askString("Nom activitat: ");
         System.out.println(gestor.mostrarActivitatEspecifica(nom));
     }
@@ -269,7 +280,7 @@ public class Menu {
      * @throws AEDPAException si ocurre un error de lógica
      * @throws IOException si ocurre un error leyendo datos
      */
-    private void asignarBalda() throws AEDPAException, IOException {
+    private void asignarBalda() throws AEDPAException, IOException, SQLException {
         int id = ask.askInt("ID balda: ");
         String dni = ask.askString("DNI: ");
         int mesos = ask.askInt("Mesos: ", "Ha de ser >= 1", 1);
@@ -283,7 +294,7 @@ public class Menu {
      * @throws AEDPAException si ocurre un error de lógica
      * @throws IOException si ocurre un error leyendo datos
      */
-    private void liberarBalda() throws AEDPAException, IOException {
+    private void liberarBalda() throws AEDPAException, IOException, SQLException {
         int id = ask.askInt("ID balda: ");
         gestor.liberarBalda(id);
         System.out.println("Balda alliberada.");
@@ -295,7 +306,7 @@ public class Menu {
      * @throws IOException si ocurre un error leyendo datos
      * @throws AEDPAException si ocurre un error de lógica
      */
-    private void altaBalda() throws IOException, AEDPAException {
+    private void altaBalda() throws IOException, AEDPAException, SQLException {
         int id = ask.askInt("ID: ");
         String ubicacion = ask.askString("Ubicacion: ");
         gestor.crearBalda(id, ubicacion);
@@ -304,43 +315,54 @@ public class Menu {
 
     /**
      * Modifica una balda existente.
+     * FIX 5: eliminado "idNou" — GestorClub.modBalda solo acepta (id, ubicacion),
+     *         no permite cambiar el ID de la balda.
      *
      * @throws IOException si ocurre un error leyendo datos
      * @throws AEDPAException si ocurre un error de lógica
+     * @throws PersistenciaException si ocurre un error de persistencia
      */
-    private void modificarBalda() throws IOException, AEDPAException, PersistenciaException {
+    private void modificarBalda() throws IOException, AEDPAException, PersistenciaException, SQLException {
         int id = ask.askInt("ID de la balda a canviar: ");
-        int idNou = ask.askInt("Nou ID: ");
+        // FIX 5: eliminado "int idNou" porque modBalda(id, ubicacion) no acepta nuevo ID
         String ubicacion = ask.askString("Nova ubicacio: ");
-        gestor.modBalda(id, idNou, ubicacion);
+        gestor.modBalda(id, ubicacion);
         System.out.println("Balda modificada correctament.");
     }
 
     /**
-     * Elimina un Usuari.
+     * Elimina un usuario.
      *
      * @throws IOException si ocurre un error leyendo datos
      * @throws AEDPAException si ocurre un error de lógica
+     * @throws PersistenciaException si ocurre un error de persistencia
      */
-    private void eliminarUsuari() throws AEDPAException, PersistenciaException, IOException {
+    private void eliminarUsuari() throws AEDPAException, PersistenciaException, IOException, SQLException {
         String dni = ask.askString("DNI de l'usuari a eliminar: ");
         gestor.eliminarUsuari(dni);
         System.out.println("Usuari eliminat correctament.");
     }
 
     /**
-     * Muestra la lista de usuarios.
+     * Muestra la información de un usuario.
+     * FIX 6: gestor.mostrarUsuari(dni) devuelve List<Usuari> (según AepdaDAO),
+     *         se itera la lista para mostrar cada usuario encontrado.
      *
      * @throws IOException si ocurre un error leyendo datos
      * @throws AEDPAException si ocurre un error de lógica
+     * @throws SQLException si ocurre un error de base de datos
      */
-    private void mostrarUsuari() throws IOException, AEDPAException {
-
+    private void mostrarUsuari() throws IOException, AEDPAException, SQLException {
         String dni = ask.askString("Introdueix el DNI de l'usuari: ");
-
-        String info = gestor.mostrarUsuari(dni);
-
         System.out.println("\n INFORMACIO DE L'USUARI");
-        System.out.println(info);
+        // FIX 6: mostrarUsuari retorna List<Usuari>, no String
+        List<com.mycompany.clubsociosaepda.model.Usuari> usuaris = gestor.mostrarUsuari(dni);
+        if (usuaris.isEmpty()) {
+            System.out.println("Usuari no trobat.");
+        } else {
+            for (com.mycompany.clubsociosaepda.model.Usuari u : usuaris) {
+                System.out.println(u);
+            }
+        }
     }
 }

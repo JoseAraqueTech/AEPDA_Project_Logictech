@@ -20,8 +20,8 @@ public class CursPintura extends Activitat {
      * @param data fecha del curso
      * @param professor nombre del profesor
      */
-    public CursPintura(String nom, LocalDate data, String professor) {
-        super(nom, data);
+    public CursPintura(int id_activitat, String nom, LocalDate data, String professor) {
+        super(id_activitat, nom, data);
         this.professor = professor;
     }
 

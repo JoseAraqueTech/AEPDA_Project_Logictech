@@ -10,13 +10,13 @@ import com.mycompany.clubsociosaepda.model.Torneig;
 import com.mycompany.clubsociosaepda.model.CursPintura;
 import com.mycompany.clubsociosaepda.model.Balda;
 import com.mycompany.clubsociosaepda.model.Asignacion;
-import com.mycompany.clubsociosaepda.persistence.PersistenciaClub;
 import com.mycompany.clubsociosaepda.exception.AEDPAException;
 import com.mycompany.clubsociosaepda.exception.PersistenciaException;
+import com.mycompany.clubsociosaepda.persistence.AepdaDAO;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 /**
  * Clase que gestiona toda la lógica del club. Se encarga de gestionar usuarios,
@@ -24,574 +24,368 @@ import java.util.Map;
  */
 public class GestorClub {
 
-    private Map<String, Usuari> usuaris;
-    private ArrayList<Activitat> activitats;
-    private Map<Integer, Balda> baldas;
+    private AepdaDAO aepdadao;
 
     /**
-     * Constructor del gestor del club. Carga los datos desde los ficheros y
-     * inicializa las baldas del sistema.
+     * Constructor del gestor del club. Inicializa el DAO de acceso a la base de
+     * datos.
      *
      * @throws PersistenciaException si hay error al cargar datos
      * @throws AEDPAException si ocurre un error de logica
      */
     public GestorClub() throws PersistenciaException, AEDPAException {
-        activitats = PersistenciaClub.carregarActivitats();
-        baldas = new HashMap<>();
-        usuaris = new HashMap<>();
-        inicializarBaldas();
-        carregarAssignacions();
-
+        aepdadao = new AepdaDAO();
     }
 
-    /**
-     * Inicializa las baldas del sistema.
-     */
-    private void inicializarBaldas() throws AEDPAException {
-        crearBalda(1, "T - 1");
-        crearBalda(2, "T - 2");
-        crearBalda(3, "U - 1");
-        crearBalda(4, "U - 2");
-        crearBalda(5, "V - 1");
-        crearBalda(6, "V - 2");
-        crearBalda(7, "W - 1");
-        crearBalda(8, "W - 2");
-    }
+    // =========================================================================
+    // USUARIS
+    // =========================================================================
 
     /**
-     * Obtiene las asignaciones activas.
-     */
-    private ArrayList<Asignacion> getAsignacionesActivas() {
-        ArrayList<Asignacion> lista = new ArrayList<>();
-        for (Balda b : baldas.values()) {
-            if (b.estaOcupada()) {
-                lista.add(b.getAsignacionActual());
-            }
-        }
-        return lista;
-    }
-
-    /**
-     * Carga las asignaciones guardadas.
-     */
-    private void carregarAssignacions() throws PersistenciaException {
-        ArrayList<String[]> dades = PersistenciaClub.carregarAssignacions();
-        for (String[] d : dades) {
-            int idBalda = Integer.parseInt(d[0]);
-            String dni = d[1];
-            int mesos = 1;
-            Balda b = baldas.get(idBalda);
-            Usuari u = usuaris.get(dni);
-            if (b != null && u != null) {
-                if (!b.estaOcupada()) {
-                    Asignacion a = new Asignacion(b, u, mesos);
-                    b.asignar(a);
-                }
-            }
-        }
-    }
-
-    /**
-     * Crea una nueva balda.
+     * Registra un nuevo usuario en el sistema. Valida el DNI, el email y que no
+     * exista ya un usuario con el mismo DNI.
      *
-     * @param id identificador de la balda
-     * @param ubicacion ubicacion de la balda
-     * @throws AEDPAException si la balda ya existe
-    */
-    public void crearBalda(int id, String ubicacion) throws AEDPAException {
-        if (baldas.containsKey(id)) {
-            throw new AEDPAException("La balda ja existeix.");
-        }
-        baldas.put(id, new Balda(id, ubicacion));
-    }
-
-    /**
-     * Busca una actividad por nombre.
-     *
-     * @param nom nombre de la actividad
-     * @return actividad encontrada o null
-     */
-    private Activitat buscarActivitat(String nom) {
-        for (Activitat a : activitats) {
-            if (a.getNom().equalsIgnoreCase(nom)) {
-                return a;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Registra un nuevo usuario en el sistema. Solicita los datos y valida que
-     * el DNI y el email sean correctos. También comprueba que no exista ya un
-     * usuario con el mismo DNI
-     *
-     * @param dni DNI del usuario
-     * @param nom nombre del usuario
-     * @param email correo electronico del usuario
+     * @param dni   DNI del usuario
+     * @param nom   nombre del usuario
+     * @param email correo electrónico del usuario
      * @param saldo saldo inicial del usuario
-     * @throws AEDPAException si los datos son incorrectos
+     * @throws AEDPAException si los datos son incorrectos o el usuario ya existe
+     * @throws SQLException   si ocurre un error de base de datos
      */
-    public void altaUsuari(String dni, String nom, String email, double saldo) throws AEDPAException {
-
+    public void altaUsuari(String dni, String nom, String email, double saldo)
+            throws AEDPAException, SQLException {
         if (!Usuari.esDniValid(dni)) {
             throw new AEDPAException("DNI no valid.");
         }
-
-        if (usuaris.containsKey(dni)) {
+        if (aepdadao.buscarUsuari(dni)) {
             throw new AEDPAException("Aquest usuari ja existeix.");
         }
-
         if (!Usuari.esEmailValid(email)) {
             throw new AEDPAException("Email no valid.");
         }
-
-        usuaris.put(dni, new Usuari(dni, nom, email, saldo));
-
+        aepdadao.insertarUsuari(dni, nom, email, saldo);
     }
 
     /**
-     * Convierte un usuario en socio. Solicita el DNI del usuario y los meses de
-     * membresía.
+     * Convierte un usuario en socio.
      *
-     * @param dni DNI del usuario
-     * @param mesos mesos meses de membresia
-     * @throws AEDPAException si no hay usuarios, no existe el usuario o ya es
-     * socio
+     * @param dni   DNI del usuario
+     * @param mesos meses de membresía
+     * @throws AEDPAException si el usuario no existe o ya es socio
+     * @throws SQLException   si ocurre un error de base de datos
      */
-    public void ferSoci(String dni, int mesos) throws AEDPAException {
-        if (usuaris.isEmpty()) {
-            throw new AEDPAException("No hi ha usuaris.");
-        }
-        Usuari u = usuaris.get(dni);
-        if (u == null) {
+    public void ferSoci(String dni, int mesos) throws AEDPAException, SQLException {
+        if (!aepdadao.buscarUsuari(dni)) {
             throw new AEDPAException("Usuari no trobat.");
         }
-        if (u.esSoci()) {
+        if (aepdadao.esSoci(dni)) {
             throw new AEDPAException("Ja es soci.");
         }
-        u.ferSoci(mesos);
+        aepdadao.ferSoci(dni, mesos);
     }
 
     /**
      * Finaliza la membresía de un usuario.
      *
      * @param dni DNI del usuario
-     * @throws AEDPAException si no hay usuarios, no existe el usuario o no es
-     * socio
+     * @throws AEDPAException si el usuario no existe o no es socio
+     * @throws SQLException   si ocurre un error de base de datos
      */
-    public void finalitzarMembresia(String dni) throws AEDPAException {
-        Usuari u = usuaris.get(dni);
-
-        if (u == null) {
+    public void finalitzarMembresia(String dni) throws AEDPAException, SQLException {
+        if (!aepdadao.buscarUsuari(dni)) {
             throw new AEDPAException("Usuari no trobat.");
         }
-
-        if (!u.esSoci()) {
+        if (!aepdadao.esSoci(dni)) {
             throw new AEDPAException("No es soci.");
         }
-        u.finalitzarMembresia();
+        aepdadao.finalitzarMembresia(dni);
     }
 
     /**
-     * Crea una nueva actividad en el sistema. Permite elegir entre tipo Torneig
-     * o Curs de Pintura.
+     * Muestra la información de un usuario a partir de su DNI.
+     * NUEVO: faltaba en GestorClub; Menu.java lo llamaba esperando List<Usuari>.
      *
-     * @param nom nombre de la actividad
-     * @param data fecha de la actividad
-     * @param tipus tipo de actividad
-     * @param professor profesor del curso de pintura
-     * @throws AEDPAException si la actividad ya existe o el formato de fecha es
-     * incorrecto
+     * @param dni DNI del usuario
+     * @return lista con el usuario encontrado (vacía si no existe)
+     * @throws AEDPAException si el usuario no existe
+     * @throws SQLException   si ocurre un error de base de datos
      */
-    public void altaActivitat(String nom, LocalDate data, int tipus, String professor) throws AEDPAException {
-        if (buscarActivitat(nom) != null) {
+    public List<Usuari> mostrarUsuari(String dni) throws AEDPAException, SQLException {
+        if (!aepdadao.buscarUsuari(dni)) {
+            throw new AEDPAException("Usuari no trobat.");
+        }
+        return aepdadao.mostrarUsuari(dni);
+    }
+
+    /**
+     * Elimina un usuario del sistema.
+     * NUEVO: faltaba en GestorClub; Menu.java lo llamaba.
+     *
+     * @param dni DNI del usuario a eliminar
+     * @throws AEDPAException      si el usuario no existe
+     * @throws PersistenciaException si ocurre un error de persistencia
+     * @throws SQLException         si ocurre un error de base de datos
+     */
+    public void eliminarUsuari(String dni) throws AEDPAException, PersistenciaException, SQLException {
+        if (!aepdadao.buscarUsuari(dni)) {
+            throw new AEDPAException("Usuari no trobat.");
+        }
+        aepdadao.eliminarUsuari(dni);
+    }
+
+    // =========================================================================
+    // ACTIVITATS
+    // =========================================================================
+
+    /**
+     * Crea una nueva actividad en el sistema.
+     *
+     * @param id_activitat identificador de la actividad
+     * @param nom          nombre de la actividad
+     * @param data         fecha de la actividad
+     * @param tipus        tipo (1 = Torneig, 2 = CursPintura)
+     * @param professor    profesor (solo para CursPintura)
+     * @throws AEDPAException si la actividad ya existe, la fecha es inválida o
+     *                        el tipo es incorrecto
+     * @throws SQLException   si ocurre un error de base de datos
+     */
+    public void altaActivitat(int id_activitat, String nom, LocalDate data, int tipus, String professor)
+            throws AEDPAException, SQLException {
+        if (aepdadao.buscarActivitat(id_activitat)) {
             throw new AEDPAException("Ja existeix aquesta activitat.");
         }
-
         int any = data.getYear();
         if (any < 1980 || any > 2050) {
             throw new AEDPAException("L'any ha d'estar entre 1980 i 2050.");
         }
-
         Activitat a;
-
         if (tipus == 1) {
-            a = new Torneig(nom, data);
+            a = new Torneig(id_activitat, nom, data);
         } else if (tipus == 2) {
             if (professor == null || professor.isEmpty()) {
                 throw new AEDPAException("El professor no pot estar buit.");
             }
-            a = new CursPintura(nom, data, professor);
+            a = new CursPintura(id_activitat, nom, data, professor);
         } else {
             throw new AEDPAException("Tipus d'activitat invalid.");
         }
-
-        activitats.add(a);
+        aepdadao.insertarActivitat(a);
     }
 
     /**
      * Elimina una actividad del sistema.
      *
-     * @param nom nombre de la actividad
-     * @throws AEDPAException si no hay actividades o no se encuentra la
-     * actividad
-     * @throws PersistenciaException si hay error al guardar los datos
+     * @param id_activitat identificador de la actividad
+     * @throws AEDPAException si la actividad no existe
+     * @throws SQLException   si ocurre un error de base de datos
      */
-    public void eliminarActivitat(String nom) throws AEDPAException, PersistenciaException {
-        Activitat a = buscarActivitat(nom);
-
-        if (a == null) {
+    public void eliminarActivitat(int id_activitat) throws AEDPAException, SQLException {
+        if (!aepdadao.buscarActivitat(id_activitat)) {
             throw new AEDPAException("Activitat no trobada.");
         }
-
-        activitats.remove(a);
-        PersistenciaClub.guardarActivitats(activitats);
+        aepdadao.eliminarActivitat(id_activitat);
     }
 
     /**
-     * Modifica una balda existente.
+     * Comprueba si una actividad es de tipo Torneig.
      *
-     * @param id identificador actual
-     * @param idNou nuevo identificador
-     * @param ubicacion nueva ubicacion
-     * @throws AEDPAException si la balda no existe
-     * @throws PersistenciaException si hay errores de persistencia
-    */
-    public void modBalda(int id, int idNou, String ubicacion) throws AEDPAException, PersistenciaException {
-        Balda b = baldas.get(id);
-
-        if (b == null) {
-            throw new AEDPAException("Balda no trobada.");
-        }
-
-        b.setUbicacion(ubicacion);
-        b.setId(idNou);
-
-    }
-
-    /**
-     * Inscribe a un usuario en una actividad del club. Comprueba que existan
-     * usuarios y actividades registradas, valida que el usuario exista y que
-     * pueda participar. Si el usuario supera el número máximo de
-     * participaciones sin ser socio, se le indica que debe hacerse socio o
-     * pagar.
-     *
-     * @param dni DNI del usuario
-     * @param nomAct nombre de la actividad
-     * @throws AEDPAException si no hay usuarios, no hay actividades, el usuario
-     * no existe, la actividad no existe o no puede participar
-     * @throws PersistenciaException si ocurre un error al guardar los datos
+     * @param id_activitat identificador de la actividad
+     * @return true si es Torneig, false si es CursPintura
+     * @throws AEDPAException si la actividad no existe
+     * @throws SQLException   si ocurre un error de base de datos
      */
-    public void inscriureActivitat(String dni, String nomAct) throws AEDPAException, PersistenciaException {
+    public boolean esTorneig(int id_activitat) throws AEDPAException, SQLException {
+        if (!aepdadao.buscarActivitat(id_activitat)) {
+            throw new AEDPAException("Activitat no trobada.");
+        }
+        return aepdadao.esTorneig(id_activitat);
+    }
 
-        Usuari u = usuaris.get(dni);
-        if (u == null) {
+    /**
+     * Inscribe a un usuario en una actividad.
+     * CORREGIDO: la condición estaba invertida (lanzaba excepción si existía).
+     *
+     * @param id_activitat identificador de la actividad
+     * @param dni          DNI del usuario
+     * @throws AEDPAException      si el usuario o la actividad no existen
+     * @throws PersistenciaException si ocurre un error de persistencia
+     * @throws SQLException         si ocurre un error de base de datos
+     */
+    public void inscriureActivitat(int id_activitat, String dni)
+            throws AEDPAException, PersistenciaException, SQLException {
+        if (!aepdadao.buscarUsuari(dni)) {
             throw new AEDPAException("Usuari no trobat.");
         }
-
-        if (!u.potParticipar()) {
-            throw new AEDPAException("Ha superat el limit de participacions.");
-        }
-
-        Activitat a = buscarActivitat(nomAct);
-        if (a == null) {
+        // FIX: era "if (aepdadao.buscarActivitat(...))" sin negación — lógica invertida
+        if (!aepdadao.buscarActivitat(id_activitat)) {
             throw new AEDPAException("Activitat no trobada.");
         }
-
-        a.afegirParticipant(dni, u);
-        u.incrementarParticipaciones();
-
-        PersistenciaClub.guardarActivitats(activitats);
+        aepdadao.inscribirUsuari(id_activitat, dni);
     }
 
     /**
-     * Gestiona el pagament del menjar d'un torneig per a un soci.
+     * Muestra las actividades del sistema. Si id_activitat es 0 lista todas;
+     * si se indica un id concreto muestra solo esa actividad.
+     * CORREGIDO: antes no hacía nada (sin return ni impresión).
      *
-     * @param dni DNI del usuario
-     * @param nomAct Nombre del torneo
-     * @param preuComida Precio de la comida
-     * @param pagat Cantidad pagada ahora
-     * @throws AEDPAException si la actividad no es un torneo o el usuario no es
-     * socio
-     * @throws PersistenciaException si hay problemas de persistencia
+     * @param id_activitat id de la actividad (0 = todas)
+     * @throws AEDPAException      si la actividad concreta no existe
+     * @throws PersistenciaException si ocurre un error de persistencia
+     * @throws SQLException         si ocurre un error de base de datos
      */
-    public void gestionarComidaTorneig(String dni, String nomAct, double preuComida, double pagat) throws AEDPAException, PersistenciaException {
-
-        Usuari u = usuaris.get(dni);
-        if (u == null) {
-            throw new AEDPAException("Usuari no trobat.");
-        }
-
-        if (!u.esSoci()) {
-            throw new AEDPAException("Només els socis poden comprar menjar del club.");
-        }
-
-        Activitat a = buscarActivitat(nomAct);
-        if (a == null) {
-            throw new AEDPAException("Activitat no trobada.");
-        }
-
-        if (!(a instanceof Torneig)) {
-            throw new AEDPAException("Aquesta activitat no és un torneig.");
-        }
-
-        if (preuComida < 0 || pagat < 0) {
-            throw new AEDPAException("Els imports no poden ser negatius.");
-        }
-
-        double deute = preuComida - pagat;
-        if (deute < 0) {
-            deute = 0;
-        }
-
-        if (deute > 0) {
-            u.afegirDeute(deute);
-        }
-
-        PersistenciaClub.guardarUsuaris(usuaris);
-    }
-
-    /**
-     * Muestra todas las actividades registradas.
-     *
-     * @return lista de actividades
-     */
-    public ArrayList<String> mostrarActivitats() {
-        ArrayList<String> llista = new ArrayList<>();
-
-        for (Activitat a : activitats) {
-            llista.add(a.getNom() + " - " + a.getData());
-        }
-
-        return llista;
-    }
-
-    /**
-     * Muestra la información de una actividad concreta junto a sus
-     * participantes.
-     *
-     * @param nom nombre de la actividad
-     * @return informacion de la actividad
-     * @throws AEDPAException si no hay actividades o no se encuentra
-     */
-    public String mostrarActivitatEspecifica(String nom) throws AEDPAException {
-        Activitat a = buscarActivitat(nom);
-
-        if (a == null) {
-            throw new AEDPAException("Activitat no trobada.");
-        }
-
-        String resultat = a.getNom() + "\n";
-
-        if (a.getParticipants().isEmpty()) {
-            resultat += "Sense participants.";
+    public void mostrarActivitats(int id_activitat)
+            throws AEDPAException, PersistenciaException, SQLException {
+        List<Activitat> activitats;
+        if (id_activitat == 0) {
+            // Mostrar todas
+            activitats = aepdadao.listarActivitats();
         } else {
-            for (Usuari u : a.getParticipants().values()) {
-                resultat += u.getNom() + "\n";
+            // Mostrar una concreta
+            if (!aepdadao.buscarActivitat(id_activitat)) {
+                throw new AEDPAException("Activitat no trobada.");
+            }
+            activitats = aepdadao.listaActivitat(id_activitat);
+        }
+        if (activitats.isEmpty()) {
+            System.out.println("No hi ha activitats registrades.");
+        } else {
+            for (Activitat a : activitats) {
+                System.out.println(a);
             }
         }
+    }
 
+    /**
+     * Muestra la información de una actividad buscándola por nombre.
+     * NUEVO: faltaba en GestorClub; Menu.java lo llamaba.
+     *
+     * @param nom nombre de la actividad
+     * @return representación en texto de la actividad
+     * @throws AEDPAException si no se encuentra ninguna actividad con ese nombre
+     * @throws SQLException   si ocurre un error de base de datos
+     */
+    public String mostrarActivitatEspecifica(String nom) throws AEDPAException, SQLException {
+        List<Activitat> totes = aepdadao.listarActivitats();
+        for (Activitat a : totes) {
+            if (a.getNom().equalsIgnoreCase(nom)) {
+                return a.toString();
+            }
+        }
+        throw new AEDPAException("Activitat '" + nom + "' no trobada.");
+    }
+
+    // =========================================================================
+    // BALDAS
+    // =========================================================================
+
+    /**
+     * Crea una nueva balda.
+     *
+     * @param id       identificador de la balda
+     * @param ubicacion ubicación de la balda
+     * @throws AEDPAException si la balda ya existe
+     * @throws SQLException   si ocurre un error de base de datos
+     */
+    public void crearBalda(int id, String ubicacion) throws AEDPAException, SQLException {
+        if (aepdadao.buscarBalda(id)) {
+            throw new AEDPAException("La balda ja existeix.");
+        }
+        aepdadao.insertarBalda(id, ubicacion);
+    }
+
+    /**
+     * Modifica la ubicación de una balda existente.
+     *
+     * @param id       identificador de la balda a modificar
+     * @param ubicacion nueva ubicación
+     * @throws AEDPAException      si la balda no existe
+     * @throws PersistenciaException si ocurre un error de persistencia
+     * @throws SQLException         si ocurre un error de base de datos
+     */
+    public void modBalda(int id, String ubicacion)
+            throws AEDPAException, PersistenciaException, SQLException {
+        if (!aepdadao.buscarBalda(id)) {
+            throw new AEDPAException("Balda no trobada.");
+        }
+        aepdadao.actualizarBalda(id, ubicacion);
+    }
+
+    /**
+     * Devuelve la lista de todas las baldas formateadas como cadenas de texto.
+     * NUEVO: faltaba en GestorClub; Menu.java lo llamaba esperando List<String>.
+     *
+     * @return lista de strings con la información de cada balda
+     */
+    public List<String> mostrarBaldas() {
+        List<String> resultat = new ArrayList<>();
+        try {
+            List<Balda> baldas = aepdadao.listarBaldas();
+            for (Balda b : baldas) {
+                resultat.add(b.toString());
+            }
+        } catch (SQLException e) {
+            resultat.add("Error carregant baldes: " + e.getMessage());
+        }
         return resultat;
     }
 
     /**
-     * Muestra todas las baldas del sistema junto a su estado (ocupada o libre)
-     * y el usuario asignado si corresponde.
+     * Devuelve un resumen de la disponibilidad de baldas (libres / ocupadas).
+     * NUEVO: faltaba en GestorClub; Menu.java lo llamaba esperando String.
      *
-     * @return lista de baldas
-     */
-    public ArrayList<String> mostrarBaldas() {
-        ArrayList<String> llista = new ArrayList<>();
-
-        for (Balda b : baldas.values()) {
-            String estat = b.estaOcupada() ? "OCUPADA" : "LLIURE";
-            String text = "Balda " + b.getId() + " - " + estat;
-
-            if (b.estaOcupada()) {
-                text += " (Soci: " + b.getAsignacionActual().getSocio().getNom() + ")";
-            }
-
-            llista.add(text);
-        }
-
-        return llista;
-    }
-
-    /**
-     * Muestra el número de baldas libres y ocupadas.
-     *
-     * @return informacion de baldas libres y ocupadas
+     * @return texto con el número de baldas totales, ocupadas y libres
      */
     public String mostrarDisponibilitatBaldas() {
-        int lliures = 0;
-        int ocupades = 0;
-
-        for (Balda b : baldas.values()) {
-            if (b.estaOcupada()) {
-                ocupades++;
-            } else {
-                lliures++;
-            }
+        try {
+            List<Balda> totes = aepdadao.listarBaldas();
+            List<Balda> ocupades = aepdadao.listarBaldasOcupadas();
+            int total = totes.size();
+            int ocupades_num = ocupades.size();
+            int lliures = total - ocupades_num;
+            return "Total baldes: " + total
+                    + " | Ocupades: " + ocupades_num
+                    + " | Lliures: " + lliures;
+        } catch (SQLException e) {
+            return "Error carregant disponibilitat: " + e.getMessage();
         }
-
-        return "Lliures: " + lliures + " | Ocupades: " + ocupades;
     }
 
     /**
-     * Asigna una balda a un usuario socio durante un número de meses.
+     * Asigna una balda a un socio durante un número de meses.
+     * NUEVO: faltaba en GestorClub; Menu.java lo llamaba con (id, dni, mesos).
      *
-     * @param id identificador de la balda
-     * @param dni DNI del usuario
-     * @param mesos meses de asignacion
-     * @throws AEDPAException si no hay usuarios, la balda no existe, está
-     * ocupada o el usuario no es válido
+     * @param id    identificador de la balda
+     * @param dni   DNI del socio
+     * @param mesos número de meses de asignación
+     * @throws AEDPAException si la balda no existe, el usuario no existe o no
+     *                        es socio
+     * @throws SQLException   si ocurre un error de base de datos
      */
-    public void asignarBalda(int id, String dni, int mesos) throws AEDPAException {
-        Balda b = baldas.get(id);
-
-        if (b == null) {
-            throw new AEDPAException("Balda no existeix.");
+    public void asignarBalda(int id, String dni, int mesos) throws AEDPAException, SQLException {
+        if (!aepdadao.buscarBalda(id)) {
+            throw new AEDPAException("Balda no trobada.");
         }
-
-        if (b.estaOcupada()) {
-            throw new AEDPAException("Balda ocupada.");
+        if (!aepdadao.buscarUsuari(dni)) {
+            throw new AEDPAException("Usuari no trobat.");
         }
-
-        Usuari u = usuaris.get(dni);
-
-        if (u == null || !u.esSoci()) {
-            throw new AEDPAException("Usuari no valid.");
+        if (!aepdadao.esSoci(dni)) {
+            throw new AEDPAException("L'usuari no es soci. Nomes els socis poden tenir una balda.");
         }
-
-        if (mesos <= 0) {
-            throw new AEDPAException("Els mesos han de ser majors que 0.");
-        }
-
-        b.asignar(new Asignacion(b, u, mesos));
+        aepdadao.asignarBalda(dni, id);
     }
 
     /**
      * Libera una balda ocupada.
+     * NUEVO: faltaba en GestorClub; Menu.java lo llamaba.
      *
      * @param id identificador de la balda
-     * @throws AEDPAException si la balda no existe o ya está libre
+     * @throws AEDPAException si la balda no existe
+     * @throws SQLException   si ocurre un error de base de datos
      */
-    public void liberarBalda(int id) throws AEDPAException {
-        Balda b = baldas.get(id);
-        if (b == null) {
-            throw new AEDPAException("No existeix.");
+    public void liberarBalda(int id) throws AEDPAException, SQLException {
+        if (!aepdadao.buscarBalda(id)) {
+            throw new AEDPAException("Balda no trobada.");
         }
-        if (!b.estaOcupada()) {
-            throw new AEDPAException("Ja lliure.");
-        }
-        b.liberar();
+        aepdadao.liberarBalda(id);
     }
-
-    /**
-     * Guarda todos los datos del sistema en los ficheros.
-     *
-     * @throws PersistenciaException si ocurre un error al guardar
-     */
-    public void guardar() throws PersistenciaException {
-        PersistenciaClub.guardarActivitats(activitats);
-        PersistenciaClub.guardarAssignacions(getAsignacionesActivas());
-    }
-
-    /**
-     * Indica si una activitat és un torneig.
-     *
-     * @param nomAct Nom de l'activitat
-     * @return true si l'activitat és un torneig, false en cas contrari
-     * @throws AEDPAException si l'activitat no existeix
-     */
-    public boolean esTorneig(String nomAct) throws AEDPAException {
-        Activitat a = buscarActivitat(nomAct);
-        if (a == null) {
-            throw new AEDPAException("Activitat no trobada.");
-        }
-        return a instanceof Torneig;
-    }
-
-    /**
-     * Elimina un usuario del sistema.
-     *
-     * @param dni DNI del usuario a eliminar
-     * @throws AEDPAException si el usuario no existe
-     * @throws PersistenciaException si hay problemas de persistencia
-     */
-    public void eliminarUsuari(String dni) throws AEDPAException, PersistenciaException {
-
-        Usuari u = usuaris.get(dni);
-        if (u == null) {
-            throw new AEDPAException("Usuari no trobat.");
-        }
-
-        usuaris.remove(dni);
-
-        PersistenciaClub.guardarUsuaris(usuaris);
-    }
-
-    /**
-     * Devuelve la informacion completa de un usuario.
-     *
-     * @param dni DNI del usuario
-     * @return informacion en formato texto
-     * @throws AEDPAException si el usuario no existe
-     */
-    public String mostrarUsuari(String dni) throws AEDPAException {
-
-        Usuari u = usuaris.get(dni);
-        if (u == null) {
-            throw new AEDPAException("Usuari no trobat.");
-        }
-
-        StringBuilder info = new StringBuilder();
-
-        info.append("Nom: ").append(u.getNom()).append("\n");
-        info.append("DNI: ").append(u.getDni()).append("\n");
-        info.append("Email: ").append(u.getEmail()).append("\n");
-
-        info.append("És soci: ").append(u.esSoci()).append("\n");
-        info.append("Mesos de membresia: ").append(u.getMesosMembresia()).append("\n");
-
-        boolean matriculaPagada = u.esSoci();
-        info.append("Matrícula pagada: ").append(matriculaPagada).append("\n");
-        info.append("Saldo pendent: ").append(u.getSaldo()).append(" €\n\n");
-        info.append("Baldas assignades:\n");
-        boolean teBalda = false;
-
-        for (Balda b : baldas.values()) {
-            if (b.estaOcupada() && b.getAsignacionActual().getSocio().getDni().equals(dni)) {
-                teBalda = true;
-                info.append(" - Balda ").append(b.getId())
-                        .append(" (Ubicació: ").append(b.getUbicacion()).append(")")
-                        .append(" | Activa: ").append(b.getAsignacionActual().isActiva())
-                        .append(" | Venç: ").append(b.getAsignacionActual().getFechaVencimiento())
-                        .append("\n");
-            }
-        }
-
-        if (!teBalda) {
-            info.append(" - Cap balda assignada.\n");
-        }
-
-        info.append("\n");
-        info.append("Activitats on participa:\n");
-        boolean participa = false;
-
-        for (Activitat a : activitats) {
-            if (a.getParticipants().containsKey(u.getDni())) {
-                participa = true;
-                info.append(" - ").append(a.getNom())
-                        .append(" (").append(a.getData()).append(")\n");
-            }
-        }
-
-        if (!participa) {
-            info.append("No participa en cap activitat.\n");
-        }
-
-        return info.toString();
-    }
-
 }

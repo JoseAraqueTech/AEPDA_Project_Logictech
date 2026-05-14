@@ -23,8 +23,8 @@ public class Torneig extends Activitat {
      * @param nom nombre del torneo
      * @param data fecha del torneo
      */
-    public Torneig(String nom, LocalDate data) {
-        super(nom, data);
+    public Torneig(int id_activitat, String nom, LocalDate data) {
+        super(id_activitat, nom, data);
     }
 
     /**
