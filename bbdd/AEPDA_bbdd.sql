@@ -3,7 +3,22 @@ CREATE TABLE usuarios (
     nom VARCHAR(100) NOT NULL,
     email VARCHAR(150) UNIQUE NOT NULL,
     soci BOOLEAN NOT NULL DEFAULT FALSE,
-    meses_membresia INT DEFAULT 0
+    meses_membresia INT DEFAULT 0,
+    participaciones int DEFAULT 0,
+    id_activitat INT,
+    ADD CONSTRAINT fk_usuario_activitat
+    FOREIGN KEY (id_activitat)
+    REFERENCES activitats(id_activitat)
+    ON DELETE SET NULL
+);
+
+CREATE TABLE socios (
+    dni VARCHAR(20) PRIMARY KEY,
+    saldo DOUBLE,
+
+    FOREIGN KEY (dni)
+    REFERENCES usuarios(dni)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE activitats (
@@ -13,20 +28,6 @@ CREATE TABLE activitats (
     tipus VARCHAR(50) NOT NULL
 );
 
-CREATE TABLE participacions (
-    dni_usuario VARCHAR(20),
-    id_activitat INT,
-
-    PRIMARY KEY (dni_usuario, id_activitat),
-
-    FOREIGN KEY (dni_usuario)
-        REFERENCES usuarios(dni)
-        ON DELETE CASCADE,
-
-    FOREIGN KEY (id_activitat)
-        REFERENCES activitats(id_activitat)
-        ON DELETE CASCADE
-);
 
 CREATE TABLE curso_pintura (
     id_activitat INT PRIMARY KEY,
