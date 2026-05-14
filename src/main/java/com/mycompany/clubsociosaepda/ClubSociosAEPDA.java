@@ -4,6 +4,8 @@
 package com.mycompany.clubsociosaepda;
 
 import com.mycompany.clubsociosaepda.view.Menu;
+import com.mycompany.clubsociosaepda.view.Principal;
+import java.io.IOException;
 
 /**
  *
@@ -22,18 +24,9 @@ public class ClubSociosAEPDA {
      * 
      * @param args argumentos de ejecución
      */
-    public static void main(String[] args) {
-
-        try {
-
-            Menu menu = new Menu();
-            menu.start();
-
-        } catch (Exception e) {
-
-            System.out.println("ERROR inesperado: " + e.getMessage());
-        }
-        
+    public static void main(String[] args) throws IOException {
+        Principal gui = new Principal();
+        gui.setVisible(true);
     }
     
 }
